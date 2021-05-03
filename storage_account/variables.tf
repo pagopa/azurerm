@@ -19,6 +19,12 @@ variable "account_tier" {
   type = string
 }
 
+variable "access_tier" {
+  type        = string
+  description = "Defines the access tier for BlobStorage, FileStorage and StorageV2 accounts."
+  default     = null
+}
+
 variable "account_replication_type" {
   type = string
 }
