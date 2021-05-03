@@ -23,10 +23,6 @@ variable "account_replication_type" {
   type = string
 }
 
-variable "account_tier" {
-  type = string
-}
-
 variable "blob_properties_delete_retention_policy_days" {
   type        = number
   description = "Enable soft delete policy and specify the number of days that the blob should be retained"
