@@ -34,6 +34,6 @@ resource "azurerm_storage_account" "this" {
 
 # Enable advanced threat protection
 resource "azurerm_advanced_threat_protection" "this" {
-  target_resource_id = azurerm_storage_account.storage_account.id
+  target_resource_id = azurerm_storage_account.this.id
   enabled            = var.advanced_threat_protection
 }
