@@ -71,3 +71,7 @@ variable "advanced_threat_protection" {
   type    = string
   default = false
 }
+
+variable "tags" {
+  type = map(any)
+}
