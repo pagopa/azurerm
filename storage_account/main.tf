@@ -7,6 +7,7 @@ resource "azurerm_storage_account" "this" {
   account_replication_type  = var.account_replication_type
   access_tier               = var.access_tier
   enable_https_traffic_only = true
+  min_tls_version           = var.min_tls_version
 
   dynamic "blob_properties" {
     for_each = var.blob_properties_delete_retention_policy_days == null ? [] : ["dummy"]

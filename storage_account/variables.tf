@@ -33,6 +33,11 @@ variable "blob_properties_delete_retention_policy_days" {
   default     = null
 }
 
+variable "min_tls_version" {
+  type    = string
+  default = "TLS1_2"
+}
+
 
 # Note: If specifying network_rules, one of either ip_rules or virtual_network_subnet_ids must be specified
 # and default_action must be set to Deny.

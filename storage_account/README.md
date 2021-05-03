@@ -32,6 +32,7 @@ No modules.
 | <a name="input_enable_versioning"></a> [enable\_versioning](#input\_enable\_versioning) | Enable versioning in the blob storage account. | `bool` | `false` | no |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_lock"></a> [lock](#input\_lock) | n/a | <pre>object({<br>    name       = string<br>    lock_level = string<br>    notes      = string<br>  })</pre> | `null` | no |
+| <a name="input_min_tls_version"></a> [min\_tls\_version](#input\_min\_tls\_version) | n/a | `string` | `"TLS1_2"` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_network_rules"></a> [network\_rules](#input\_network\_rules) | n/a | <pre>object({<br>    default_action             = string # Valid option Deny Allow<br>    bypass                     = set(string)<br>    ip_rules                   = list(string)<br>    virtual_network_subnet_ids = list(string)<br>  })</pre> | `null` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
