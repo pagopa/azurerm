@@ -23,7 +23,7 @@ variable "account_replication_type" {
   type = string
 }
 
-variable "access_tier" {
+variable "account_tier" {
   type = string
 }
 
@@ -38,6 +38,10 @@ variable "min_tls_version" {
   default = "TLS1_2"
 }
 
+variable "enable_https_traffic_only" {
+  type    = bool
+  default = true
+}
 
 # Note: If specifying network_rules, one of either ip_rules or virtual_network_subnet_ids must be specified
 # and default_action must be set to Deny.
