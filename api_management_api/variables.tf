@@ -59,6 +59,10 @@ variable "xml_content" {
 }
 
 variable "product_ids" {
-  type = list(string)
+  type    = list(string)
   default = []
+}
+
+variable "tags" {
+  type = map(any)
 }

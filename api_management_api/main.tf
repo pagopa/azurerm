@@ -15,6 +15,8 @@ resource "azurerm_api_management_api" "this" {
     content_format = var.content_format
     content_value  = var.content_value
   }
+
+  tags = var.tags
 }
 
 
