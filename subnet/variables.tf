@@ -1,11 +1,40 @@
-output "id" {
-  value = azurerm_subnet.subnet.id
+variable "name" {
+  type = string
 }
 
-output "name" {
-  value = azurerm_subnet.subnet.name
+variable "resource_group_name" {
+  type = string
 }
 
-output "address_prefix" {
-  value = azurerm_subnet.subnet.address_prefix
+variable "virtual_network_name" {
+  type = string
+}
+
+variable "address_prefixes" {
+  type        = list(string)
+  description = "The address prefixes to use for the subnet."
+  default     = []
+}
+
+variable "delegation" {
+  type = object({
+    name = string
+    service_delegation = object({
+      name    = string
+      actions = list(string)
+    })
+  })
+
+  default = null
+}
+
+variable "service_endpoints" {
+  type    = list(string)
+  default = []
+}
+
+variable "enforce_private_link_endpoint_network_policies" {
+  type        = bool
+  description = "Enable or Disable network policies for the private link endpoint on the subnet."
+  default     = false
 }
