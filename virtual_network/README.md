@@ -33,6 +33,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_address_space"></a> [address\_space](#output\_address\_space) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | n/a |
