@@ -37,9 +37,27 @@ variable "node_count" {
 }
 
 variable "availability_zones" {
-    type = list(string)
-    description = "A list of Availability Zones across which the Node Pool should be spread."
-    default = []
+  type        = list(string)
+  description = "A list of Availability Zones across which the Node Pool should be spread."
+  default     = []
+}
+
+variable "dns_prefix_private_cluster" {
+  type        = string
+  description = "Specifies the DNS prefix to use with private clusters. Changing this forces a new resource to be created."
+  default     = null
+}
+
+variable "automatic_channel_upgrade" {
+  type        = string
+  description = "The upgrade channel for this Kubernetes Cluster"
+  default     = null
+}
+
+variable "api_server_authorized_ip_ranges" {
+  type        = string
+  description = "The IP ranges to whitelist for incoming traffic to the masters."
+  default     = null
 }
 
 variable "log_analytics_workspace_name" {

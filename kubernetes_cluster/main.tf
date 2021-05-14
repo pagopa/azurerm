@@ -11,6 +11,11 @@ resource "azurerm_kubernetes_cluster" "this" {
     availability_zones = var.availability_zones
   }
 
+  dns_prefix_private_cluster = var.dns_prefix_private_cluster
+
+  automatic_channel_upgrade       = var.automatic_channel_upgrade
+  api_server_authorized_ip_ranges = var.api_server_authorized_ip_ranges
+
   identity {
     type = "SystemAssigned"
   }
