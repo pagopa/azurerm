@@ -62,7 +62,3 @@ variable "product_ids" {
   type    = list(string)
   default = []
 }
-
-variable "tags" {
-  type = map(any)
-}
