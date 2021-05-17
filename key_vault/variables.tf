@@ -20,6 +20,12 @@ variable "sku_name" {
   default = "standard"
 }
 
+variable "terraform_cloud_object_id" {
+  type        = string
+  default     = null
+  description = "Terraform cloud object id to create its access policy."
+}
+
 variable "tags" {
   type = map(any)
 }
