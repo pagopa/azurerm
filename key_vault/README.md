@@ -17,6 +17,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_key_vault.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault) | resource |
+| [azurerm_key_vault_access_policy.terraform_cloud_policy](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_access_policy) | resource |
 
 ## Inputs
 
@@ -28,6 +29,7 @@ No modules.
 | <a name="input_sku_name"></a> [sku\_name](#input\_sku\_name) | n/a | `string` | `"standard"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | n/a | yes |
 | <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | n/a | `string` | `null` | no |
+| <a name="input_terraform_cloud_object_id"></a> [terraform\_cloud\_object\_id](#input\_terraform\_cloud\_object\_id) | Terraform cloud object id to create its access policy. | `string` | `null` | no |
 
 ## Outputs
 
