@@ -46,7 +46,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   # }
 
   network_interface {
-    name    = "example"
+    name    = format("%s-nic", var.name)
     primary = true
 
     ip_configuration {
