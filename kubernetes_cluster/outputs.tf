@@ -11,7 +11,7 @@ output "fqdn" {
 }
 
 output "private_fqdn" {
-  value = azurerm_kubernetes_cluster.this.fqdn
+  value = azurerm_kubernetes_cluster.this.private_fqdn
 }
 
 output "client_certificate" {
