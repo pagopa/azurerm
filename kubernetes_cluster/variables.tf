@@ -29,6 +29,12 @@ variable "vm_size" {
   description = "The size of the Virtual Machine"
 }
 
+variable "kubernetes_version" {
+  type        = string
+  description = "Version of Kubernetes specified when creating the AKS managed cluster."
+  default     = null
+}
+
 variable "availability_zones" {
   type        = list(string)
   description = "A list of Availability Zones across which the Node Pool should be spread."
