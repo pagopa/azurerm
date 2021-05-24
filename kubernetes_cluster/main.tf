@@ -40,5 +40,30 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
+  addon_profile {
+
+    oms_agent {
+      enabled                    = var.log_analytics_workspace_id != null ? true : false
+      log_analytics_workspace_id = var.log_analytics_workspace_id
+    }
+
+    aci_connector_linux {
+      enabled = false
+    }
+
+    azure_policy {
+      enabled = false
+    }
+
+    http_application_routing {
+      enabled = false
+    }
+
+    kube_dashboard {
+      enabled = false
+    }
+  }
+
+
   tags = var.tags
 }

@@ -108,6 +108,13 @@ variable "max_count" {
   default     = null
 }
 
+# Logs 
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "The ID of the Log Analytics Workspace which the OMS Agent should send data to."
+  default     = null
+}
+
 variable "tags" {
   type = map(any)
 }
