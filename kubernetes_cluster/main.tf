@@ -40,5 +40,14 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
+  addon_profile {
+
+    oms_agent {
+      enabled                    = var.log_analytics_workspace_id != null ? true : false
+      log_analytics_workspace_id = var.log_analytics_workspace_id
+    }
+  }
+
+
   tags = var.tags
 }
