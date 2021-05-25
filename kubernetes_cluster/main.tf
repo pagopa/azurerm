@@ -40,6 +40,11 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
+  role_based_access_control {
+    enabled = var.rbac_enabled
+  }
+
+
   addon_profile {
 
     oms_agent {

@@ -115,6 +115,13 @@ variable "log_analytics_workspace_id" {
   default     = null
 }
 
+# Active directory integration
+variable "rbac_enabled" {
+  type        = bool
+  description = "Is Role Based Access Control based on Azure AD enabled?"
+  default     = false
+}
+
 variable "tags" {
   type = map(any)
 }
