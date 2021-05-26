@@ -17,3 +17,7 @@ output "gateway_url" {
 output "gateway_hostname" {
   value = regex("https?://([\\d\\w\\-\\.]+)", azurerm_api_management.this.gateway_url)[0]
 }
+
+output "principal_id" {
+  value = azurerm_api_management.this.identity[0].principal_id
+}

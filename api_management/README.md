@@ -44,4 +44,5 @@ No modules.
 | <a name="output_gateway_url"></a> [gateway\_url](#output\_gateway\_url) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
+| <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id) | n/a |
 | <a name="output_private_ip_addresses"></a> [private\_ip\_addresses](#output\_private\_ip\_addresses) | n/a |
