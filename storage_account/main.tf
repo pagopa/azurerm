@@ -41,7 +41,7 @@ resource "azurerm_advanced_threat_protection" "this" {
 # this is a tempory implementation till an official one will be released:
 # https://github.com/terraform-providers/terraform-provider-azurerm/issues/8268
 resource "azurerm_template_deployment" "versioning" {
-   count = var.enable_versioning ? 1 : 0
+  count = var.enable_versioning ? 1 : 0
   depends_on          = [azurerm_storage_account.this]
 
   name                = var.versioning_name
@@ -78,8 +78,8 @@ resource "azurerm_template_deployment" "versioning" {
 }
 
 resource "azurerm_management_lock" "management_lock" {
-  depends_on = [azurerm_storage_account.this]
   count      = var.lock ? 1 : 0
+  depends_on = [azurerm_storage_account.this]
 
   name       = var.lock_name
   scope      = azurerm_storage_account.this.id
