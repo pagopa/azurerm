@@ -8,6 +8,7 @@ resource "azurerm_storage_account" "this" {
   access_tier               = var.access_tier
   enable_https_traffic_only = var.enable_https_traffic_only
   min_tls_version           = var.min_tls_version
+  allow_blob_public_access  = var.allow_blob_public_access
 
   dynamic "blob_properties" {
     for_each = var.blob_properties_delete_retention_policy_days == null ? [] : ["dummy"]
