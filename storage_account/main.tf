@@ -37,3 +37,52 @@ resource "azurerm_advanced_threat_protection" "this" {
   target_resource_id = azurerm_storage_account.this.id
   enabled            = var.advanced_threat_protection
 }
+
+# this is a tempory implementation till an official one will be released:
+# https://github.com/terraform-providers/terraform-provider-azurerm/issues/8268
+resource "azurerm_template_deployment" "versioning" {
+  count = var.enable_versioning ? 1 : 0
+  depends_on          = [azurerm_storage_account.this]
+
+  name                = var.versioning_name
+  resource_group_name = var.resource_group_name
+  deployment_mode     = "Incremental"
+  parameters = {
+    "storageAccount" = azurerm_storage_account.this.name
+  }
+
+  template_body = <<DEPLOY
+        {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "storageAccount": {
+                    "type": "string",
+                    "metadata": {
+                        "description": "Storage Account Name"}
+                }
+            },
+            "variables": {},
+            "resources": [
+                {
+                    "type": "Microsoft.Storage/storageAccounts/blobServices",
+                    "apiVersion": "2019-06-01",
+                    "name": "[concat(parameters('storageAccount'), '/default')]",
+                    "properties": {
+                        "IsVersioningEnabled": ${var.enable_versioning}
+                    }
+                }
+            ]
+        }
+    DEPLOY
+}
+
+resource "azurerm_management_lock" "management_lock" {
+  count      = var.lock ? 1 : 0
+  depends_on = [azurerm_storage_account.this]
+
+  name       = var.lock_name
+  scope      = azurerm_storage_account.this.id
+  lock_level = var.lock_level
+  notes      = var.lock_notes
+}
