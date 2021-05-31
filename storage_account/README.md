@@ -37,9 +37,13 @@ No modules.
 | <a name="input_blob_properties_delete_retention_policy_days"></a> [blob\_properties\_delete\_retention\_policy\_days](#input\_blob\_properties\_delete\_retention\_policy\_days) | Enable soft delete policy and specify the number of days that the blob should be retained | `number` | `null` | no |
 | <a name="input_enable_https_traffic_only"></a> [enable\_https\_traffic\_only](#input\_enable\_https\_traffic\_only) | n/a | `bool` | `true` | no |
 | <a name="input_enable_versioning"></a> [enable\_versioning](#input\_enable\_versioning) | Enable versioning in the blob storage account. | `bool` | `false` | no |
-| <a name="input_lock"></a> [lock](#input\_lock) | n/a | <pre>object({<br>    name       = string<br>    lock_level = string<br>    notes      = string<br>  })</pre> | `null` | no |
+| <a name="input_lock_enabled"></a> [lock\_enabled](#input\_lock\_enabled) | n/a | `bool` | `false` | no |
+| <a name="input_lock_level"></a> [lock\_level](#input\_lock\_level) | n/a | `string` | `null` | no |
+| <a name="input_lock_name"></a> [lock\_name](#input\_lock\_name) | n/a | `string` | `null` | no |
+| <a name="input_lock_notes"></a> [lock\_notes](#input\_lock\_notes) | n/a | `string` | `null` | no |
 | <a name="input_min_tls_version"></a> [min\_tls\_version](#input\_min\_tls\_version) | n/a | `string` | `"TLS1_2"` | no |
 | <a name="input_network_rules"></a> [network\_rules](#input\_network\_rules) | n/a | <pre>object({<br>    default_action             = string # Valid option Deny Allow<br>    bypass                     = set(string)<br>    ip_rules                   = list(string)<br>    virtual_network_subnet_ids = list(string)<br>  })</pre> | `null` | no |
+| <a name="input_versioning_name"></a> [versioning\_name](#input\_versioning\_name) | n/a | `string` | `null` | no |
 
 ## Outputs
 

@@ -78,7 +78,7 @@ resource "azurerm_template_deployment" "versioning" {
 }
 
 resource "azurerm_management_lock" "management_lock" {
-  count      = var.lock ? 1 : 0
+  count      = var.lock_enabled ? 1 : 0
   depends_on = [azurerm_storage_account.this]
 
   name       = var.lock_name
