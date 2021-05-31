@@ -65,6 +65,12 @@ variable "remote_exec_inline_commands" {
   default     = []
 }
 
+variable "pip_allocation_method" {
+  type        = string
+  default     = "Dynamic"
+  description = "Public IP allocation method."
+}
+
 variable "tags" {
   type = map(any)
 }
