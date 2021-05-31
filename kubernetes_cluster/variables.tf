@@ -47,6 +47,11 @@ variable "private_cluster_enabled" {
   description = "Provides a Private IP Address for the Kubernetes API on the Virtual Network where the Kubernetes Cluster is located."
 }
 
+variable "vnet_id" {
+  type        = string
+  description = "Virtual network id, where the k8s cluster is deployed."
+}
+
 variable "vnet_subnet_id" {
   type        = string
   description = "The ID of a Subnet where the Kubernetes Node Pool should exist."

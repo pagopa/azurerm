@@ -17,7 +17,6 @@ resource "azurerm_kubernetes_cluster" "this" {
     min_count           = var.min_count
     max_count           = var.max_count
 
-
     tags = var.tags
   }
 
@@ -69,6 +68,11 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
-
   tags = var.tags
+}
+
+resource "azurerm_role_assignment" "vnet_role" {
+  scope                = var.vnet_id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.this.identity[0].principal_id
 }
