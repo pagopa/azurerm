@@ -64,12 +64,32 @@ variable "enable_versioning" {
   default     = false
 }
 
-variable "lock" {
-  type = object({
-    name       = string
-    lock_level = string
-    notes      = string
-  })
+# versioning
+
+variable "versioning_name" {
+  type    = string
+  default = null
+}
+
+# lock
+
+variable "lock_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "lock_name" {
+  type    = string
+  default = null
+}
+
+variable "lock_level" {
+  type    = string
+  default = null
+}
+
+variable "lock_notes" {
+  type    = string
   default = null
 }
 
