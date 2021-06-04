@@ -62,3 +62,13 @@ variable "product_ids" {
   type    = list(string)
   default = []
 }
+
+variable "api_operation_policies" {
+  type = list(object({
+    operation_id = string
+    xml_content  = string
+    }
+  ))
+  default     = []
+  description = "List of api policy for given operation."
+}
