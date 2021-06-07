@@ -10,6 +10,9 @@ resource "azurerm_api_management_api" "this" {
   protocols             = var.protocols
   service_url           = var.service_url
   subscription_required = var.subscription_required
+  version               = var.api_version
+  version_set_id        = var.version_set_id
+
 
   import {
     content_format = var.content_format
@@ -17,7 +20,6 @@ resource "azurerm_api_management_api" "this" {
   }
 
 }
-
 
 resource "azurerm_api_management_api_policy" "this" {
   api_name            = azurerm_api_management_api.this.name

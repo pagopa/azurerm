@@ -72,3 +72,15 @@ variable "api_operation_policies" {
   default     = []
   description = "List of api policy for given operation."
 }
+
+variable "api_version" {
+  type        = string
+  description = "The Version number of this API, if this API is versioned."
+  default     = null
+}
+
+variable "version_set_id" {
+  type        = string
+  description = "The ID of the Version Set which this API is associated with."
+  default     = null
+}
