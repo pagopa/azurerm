@@ -23,7 +23,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | Key vault name | `string` | n/a | yes |
+| <a name="input_key_vault_name"></a> [key\_vault\_name](#input\_key\_vault\_name) | Key vault name | `string` | n/a | yes |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Key vault resource group | `string` | n/a | yes |
 | <a name="input_secrets"></a> [secrets](#input\_secrets) | List of secrets to read | `list(string)` | `[]` | no |
 
