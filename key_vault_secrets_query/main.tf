@@ -1,6 +1,6 @@
 data "azurerm_key_vault" "this" {
-  name                = "io-p-kv-azuredevops"
-  resource_group_name = "io-p-rg-operations"
+  name                = var.key_vault_name
+  resource_group_name = var.resource_group
 }
 
 data "azurerm_key_vault_secret" "this" {
