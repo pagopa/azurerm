@@ -1,6 +1,6 @@
 
 resource "azurerm_api_management_api" "this" {
-  name                  = var.name
+  name                  = var.api_version != null ? join("-", [var.name, var.api_version]) : var.name
   resource_group_name   = var.resource_group_name
   api_management_name   = var.api_management_name
   revision              = var.revision
@@ -39,12 +39,12 @@ resource "azurerm_api_management_product_api" "this" {
 }
 
 resource "azurerm_api_management_api_operation_policy" "api_operation_policy" {
-  count = length(var.api_operation_policies)
+  for_each = { for p in var.api_operation_policies : format("%s%s", p.operation_id, var.api_version == null ? "" : var.api_version) => p }
 
   api_name            = azurerm_api_management_api.this.name
   api_management_name = var.api_management_name
   resource_group_name = var.resource_group_name
-  operation_id        = var.api_operation_policies[count.index].operation_id
+  operation_id        = each.value.operation_id
 
-  xml_content = var.api_operation_policies[count.index].xml_content
+  xml_content = each.value.xml_content
 }
