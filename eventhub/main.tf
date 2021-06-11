@@ -1,11 +1,17 @@
 locals {
-  hubs = { for h in var.eventhubs : h.name => h }
+  consumers = { for hc in flatten([for h in var.eventhubs :
+    [for c in h.consumers : {
+      hub  = h.name
+      name = c
+  }]]) : format("%s.%s", hc.hub, hc.name) => hc }
 
   keys = { for hk in flatten([for h in var.eventhubs :
     [for k in h.keys : {
       hub = h.name
       key = k
   }]]) : format("%s.%s", hk.hub, hk.key.name) => hk }
+
+  hubs = { for h in var.eventhubs : h.name => h }
 }
 
 resource "azurerm_eventhub_namespace" "this" {
@@ -51,6 +57,18 @@ resource "azurerm_eventhub" "events" {
   resource_group_name = var.resource_group_name
   partition_count     = each.value.partitions
   message_retention   = each.value.message_retention
+}
+
+resource "azurerm_eventhub_consumer_group" "events" {
+  for_each = local.consumers
+
+  name                = each.value.name
+  namespace_name      = azurerm_eventhub_namespace.this.name
+  eventhub_name       = each.value.hub
+  resource_group_name = var.resource_group_name
+  user_metadata       = "terraform"
+
+  depends_on = [azurerm_eventhub.events]
 }
 
 resource "azurerm_eventhub_authorization_rule" "events" {
