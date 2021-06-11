@@ -1,3 +1,4 @@
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
@@ -56,3 +57,4 @@ No modules.
 | <a name="output_kube_config"></a> [kube\_config](#output\_kube\_config) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_private_fqdn"></a> [private\_fqdn](#output\_private\_fqdn) | n/a |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

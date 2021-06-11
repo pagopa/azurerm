@@ -1,3 +1,4 @@
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
@@ -50,3 +51,4 @@ No modules.
 | <a name="output_ip"></a> [ip](#output\_ip) | Jumpbox VM IP |
 | <a name="output_tls_private_key"></a> [tls\_private\_key](#output\_tls\_private\_key) | n/a |
 | <a name="output_username"></a> [username](#output\_username) | Jumpbox VM username |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
