@@ -40,7 +40,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   role_based_access_control {
-    enabled = var.rbac_enabled #tfsec:ignore:AZU007
+    enabled = var.rbac_enabled
   }
 
 
