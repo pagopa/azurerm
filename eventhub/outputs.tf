@@ -1,19 +1,19 @@
-output "eventhub_namespace_name" {
-  value = azurerm_eventhub_namespace.this.name
+output "namespace_id" {
+  description = "Id of Event Hub Namespace."
+  value       = azurerm_eventhub_namespace.this.id
 }
 
-output "id" {
-  value = azurerm_eventhub.eventhub[*].id
+output "hub_ids" {
+  description = "Map of hubs and their ids."
+  value       = { for k, v in azurerm_eventhub.events : k => v.id }
 }
 
-output "names" {
-  value = azurerm_eventhub.eventhub[*].name
-}
-
-output "rule_ids" {
-  value = azurerm_eventhub_authorization_rule.eventhub_rule[*].id
-}
-
-output "rule_names" {
-  value = azurerm_eventhub_authorization_rule.eventhub_rule[*].name
+output "keys" {
+  description = "Map of hubs with keys => primary_key / secondary_key mapping."
+  sensitive   = true
+  value = { for k, h in azurerm_eventhub_authorization_rule.events : h.name => {
+    primary_key   = h.primary_key
+    secondary_key = h.secondary_key
+    }
+  }
 }

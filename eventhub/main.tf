@@ -1,3 +1,13 @@
+locals {
+  hubs = { for h in var.eventhubs : h.name => h }
+
+  keys = { for hk in flatten([for h in var.eventhubs :
+    [for k in h.keys : {
+      hub = h.name
+      key = k
+  }]]) : format("%s.%s", hk.hub, hk.key.name) => hk }
+}
+
 resource "azurerm_eventhub_namespace" "this" {
   name                     = var.name
   location                 = var.location
@@ -33,22 +43,27 @@ resource "azurerm_eventhub_namespace" "this" {
   tags = var.tags
 }
 
-resource "azurerm_eventhub" "eventhub" {
-  count               = length(var.eventhubs)
-  name                = var.eventhubs[count.index].name
+resource "azurerm_eventhub" "events" {
+  for_each = local.hubs
+
+  name                = each.key
   namespace_name      = azurerm_eventhub_namespace.this.name
   resource_group_name = var.resource_group_name
-  partition_count     = var.eventhubs[count.index].partition_count
-  message_retention   = var.eventhubs[count.index].message_retention
+  partition_count     = each.value.partitions
+  message_retention   = each.value.message_retention
 }
 
-resource "azurerm_eventhub_authorization_rule" "eventhub_rule" {
-  count               = length(var.eventhub_authorization_rules)
-  name                = var.eventhub_authorization_rules[count.index].name
+resource "azurerm_eventhub_authorization_rule" "events" {
+  for_each = local.keys
+
+  name                = each.value.key.name
   namespace_name      = azurerm_eventhub_namespace.this.name
+  eventhub_name       = each.value.hub
   resource_group_name = var.resource_group_name
-  eventhub_name       = var.eventhub_authorization_rules[count.index].eventhub_name
-  listen              = var.eventhub_authorization_rules[count.index].listen
-  send                = var.eventhub_authorization_rules[count.index].send
-  manage              = var.eventhub_authorization_rules[count.index].manage
+
+  listen = each.value.key.listen
+  send   = each.value.key.send
+  manage = each.value.key.manage
+
+  depends_on = [azurerm_eventhub.events]
 }
