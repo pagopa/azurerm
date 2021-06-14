@@ -8,6 +8,11 @@ output "hub_ids" {
   value       = { for k, v in azurerm_eventhub.events : k => v.id }
 }
 
+output "key_ids" {
+  description = "List of key ids."
+  value       = local.keys
+}
+
 output "keys" {
   description = "Map of hubs with keys => primary_key / secondary_key mapping."
   sensitive   = true
