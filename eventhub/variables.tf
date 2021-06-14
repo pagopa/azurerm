@@ -19,11 +19,20 @@ variable "auto_inflate_enabled" {
 }
 
 variable "eventhubs" {
+  description = "A list of event hubs to add to namespace."
   type = list(object({
     name              = string
-    partition_count   = number
+    partitions        = number
     message_retention = number
+    consumers         = list(string)
+    keys = list(object({
+      name   = string
+      listen = bool
+      send   = bool
+      manage = bool
+    }))
   }))
+  default = []
 }
 
 variable "sku" {
@@ -56,12 +65,6 @@ variable "network_rulesets" {
     }))
   }))
   default = []
-}
-
-variable "eventhub_authorization_rules" {
-  description = "The list of eventhub authorization rules. Each rule is expressed as a dictionary. Each dictionary can contain the keys name, eventhub_name ,listen, send, manage"
-  type        = list(any)
-  default     = []
 }
 
 variable "zone_redundant" {

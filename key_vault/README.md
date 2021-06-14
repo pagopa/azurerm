@@ -1,3 +1,4 @@
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
@@ -38,3 +39,4 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_vault_uri"></a> [vault\_uri](#output\_vault\_uri) | n/a |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

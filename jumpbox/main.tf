@@ -10,6 +10,7 @@ resource "azurerm_network_security_group" "vm_sg" {
   location            = var.location
   resource_group_name = var.resource_group_name
 
+  #tfsec:ignore:AZU017
   security_rule {
     name                       = "SSH"
     priority                   = 1001
@@ -22,6 +23,7 @@ resource "azurerm_network_security_group" "vm_sg" {
     destination_address_prefix = "*"
   }
 
+  #tfsec:ignore:AZU024
   security_rule {
     name                       = "RDP"
     priority                   = 1002

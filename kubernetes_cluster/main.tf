@@ -21,7 +21,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   automatic_channel_upgrade       = var.automatic_channel_upgrade
-  api_server_authorized_ip_ranges = var.api_server_authorized_ip_ranges
+  api_server_authorized_ip_ranges = var.api_server_authorized_ip_ranges #tfsec:ignore:AZU008
 
   identity {
     type = "SystemAssigned"
@@ -47,7 +47,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   addon_profile {
 
     oms_agent {
-      enabled                    = var.log_analytics_workspace_id != null ? true : false
+      enabled                    = var.log_analytics_workspace_id != null ? true : false #tfsec:ignore:AZU009
       log_analytics_workspace_id = var.log_analytics_workspace_id
     }
 

@@ -120,11 +120,11 @@ variable "log_analytics_workspace_id" {
   default     = null
 }
 
-# Active directory integration
+# Kubernetes RBAC
 variable "rbac_enabled" {
   type        = bool
-  description = "Is Role Based Access Control based on Azure AD enabled?"
-  default     = false
+  description = "Is Role Based Access Control Enabled?"
+  default     = true
 }
 
 variable "tags" {

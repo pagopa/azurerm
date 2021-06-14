@@ -1,3 +1,4 @@
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
@@ -38,3 +39,4 @@ No modules.
 | <a name="output_admin_username"></a> [admin\_username](#output\_admin\_username) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_login_server"></a> [login\_server](#output\_login\_server) | n/a |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

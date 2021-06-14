@@ -1,3 +1,4 @@
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
@@ -47,3 +48,4 @@ No modules.
 | <a name="output_port"></a> [port](#output\_port) | n/a |
 | <a name="output_primary_access_key"></a> [primary\_access\_key](#output\_primary\_access\_key) | n/a |
 | <a name="output_ssl_port"></a> [ssl\_port](#output\_ssl\_port) | n/a |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
