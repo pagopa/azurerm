@@ -20,7 +20,7 @@ variable "virtual_network_id" {
 variable "subnet_id" {
   type        = string
   default     = null
-  description = "The id of the subnet that will be used to deploy the database."
+  description = "The id of the subnet that will be used for the eventhub."
 }
 
 variable "auto_inflate_enabled" {
