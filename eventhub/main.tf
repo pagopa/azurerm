@@ -125,7 +125,7 @@ resource "azurerm_private_endpoint" "eventhub" {
   }
 }
 
-resource "azurerm_private_dns_a_record" "private_dns_a_record_postgresql" {
+resource "azurerm_private_dns_a_record" "private_dns_a_record_eventhub" {
   count = var.sku != "Basic" ? 1 : 0
 
   name                = "eventhub"
