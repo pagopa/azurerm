@@ -2,6 +2,10 @@ output "id" {
   value = azurerm_postgresql_server.this.id
 }
 
+output "name" {
+  value = azurerm_postgresql_server.this.name
+}
+
 output "fqdn" {
   value = azurerm_postgresql_server.this.fqdn
 }
