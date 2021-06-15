@@ -85,3 +85,52 @@ resource "azurerm_eventhub_authorization_rule" "events" {
 
   depends_on = [azurerm_eventhub.events]
 }
+
+resource "azurerm_private_dns_zone" "eventhub" {
+  count = var.sku != "Basic" ? 1 : 0
+
+  name                = "privatelink.servicebus.windows.net"
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "eventhub" {
+  count = var.sku != "Basic" ? 1 : 0
+
+  name                  = format("%s-private-dns-zone-link", var.name)
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.eventhub[0].name
+  virtual_network_id    = var.virtual_network_id
+
+  tags = var.tags
+}
+
+resource "azurerm_private_endpoint" "eventhub" {
+  count = var.sku != "Basic" ? 1 : 0
+
+  name                = format("%s-private-endpoint", var.name)
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = var.subnet_id
+
+  private_dns_zone_group {
+    name                 = format("%s-private-dns-zone-group", var.name)
+    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
+  }
+
+  private_service_connection {
+    name                           = format("%s-private-service-connection", var.name)
+    private_connection_resource_id = azurerm_eventhub_namespace.this.id
+    is_manual_connection           = false
+    subresource_names              = ["namespace"]
+  }
+}
+
+resource "azurerm_private_dns_a_record" "private_dns_a_record_eventhub" {
+  count = var.sku != "Basic" ? 1 : 0
+
+  name                = "eventhub"
+  zone_name           = azurerm_private_dns_zone.eventhub[0].name
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  records             = azurerm_private_endpoint.eventhub[0].private_service_connection.*.private_ip_address
+}

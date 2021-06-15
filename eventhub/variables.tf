@@ -12,6 +12,17 @@ variable "resource_group_name" {
   type = string
 }
 
+variable "virtual_network_id" {
+  type        = string
+  description = "The ID of the Virtual Network that should be linked to the DNS Zone."
+}
+
+variable "subnet_id" {
+  type        = string
+  default     = null
+  description = "The id of the subnet that will be used for the eventhub."
+}
+
 variable "auto_inflate_enabled" {
   type        = bool
   description = "Is Auto Inflate enabled for the EventHub Namespace?"
