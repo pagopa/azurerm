@@ -69,7 +69,8 @@ resource "azurerm_app_service" "this" {
     ignore_changes = [
       site_config.0.scm_type,
       site_config.0.linux_fx_version, # deployments are made outside of Terraform
-      app_settings["DOCKER_CUSTOM_IMAGE_NAME"]
+      app_settings["DOCKER_CUSTOM_IMAGE_NAME"],
+      identity.0.identity_ids
     ]
   }
 }
