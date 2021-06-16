@@ -18,3 +18,15 @@ output "administrator_login_password" {
   value     = var.administrator_login_password
   sensitive = true
 }
+
+output "replica_id" {
+  value = var.enable_replica ? azurerm_postgresql_server.replica[0].id : ""
+}
+
+output "replica_name" {
+  value = var.enable_replica ? azurerm_postgresql_server.replica[0].name : ""
+}
+
+output "replica_fqdn" {
+  value = var.enable_replica ? azurerm_postgresql_server.replica[0].fqdn : ""
+}
