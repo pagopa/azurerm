@@ -83,6 +83,18 @@ variable "geo_redundant_backup_enabled" {
   default     = false
 }
 
+variable "enable_replica" {
+  type        = bool
+  description = "Create a replica server"
+  default     = false
+}
+
+variable "create_mode" {
+  type        = string
+  description = "The creation mode. Can be used to restore or replicate existing servers."
+  default     = "Replica"
+}
+
 variable "tags" {
   type = map(any)
 }
