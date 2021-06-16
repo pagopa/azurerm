@@ -80,11 +80,18 @@ variable "network_profile" {
   type = object({
     docker_bridge_cidr = string
     dns_service_ip     = string
+    network_policy     = string
     network_plugin     = string
     outbound_type      = string
     service_cidr       = string
   })
   default = null
+}
+
+variable "outbound_ip_address_ids" {
+  type        = list(string)
+  default     = []
+  description = "The ID of the Public IP Addresses which should be used for outbound communication for the cluster load balancer."
 }
 
 # Autoscaling
