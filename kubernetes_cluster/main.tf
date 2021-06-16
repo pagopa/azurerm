@@ -33,11 +33,18 @@ resource "azurerm_kubernetes_cluster" "this" {
     content {
       docker_bridge_cidr = p.value.docker_bridge_cidr
       dns_service_ip     = p.value.dns_service_ip
+      network_policy     = p.value.network_policy
       network_plugin     = p.value.network_plugin
       outbound_type      = p.value.outbound_type
       service_cidr       = p.value.service_cidr
+      load_balancer_sku  = "Standard"
+      load_balancer_profile {
+        outbound_ip_address_ids = var.outbound_ip_address_ids
+
+      }
     }
   }
+
 
   role_based_access_control {
     enabled = var.rbac_enabled
