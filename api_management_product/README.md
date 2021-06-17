@@ -33,7 +33,7 @@ No modules.
 | <a name="input_published"></a> [published](#input\_published) | Is this Product Published? | `bool` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the Resource Group in which the API Management Service should be exist. | `string` | n/a | yes |
 | <a name="input_subscription_required"></a> [subscription\_required](#input\_subscription\_required) | Is a Subscription required to access API's included in this Product? | `bool` | n/a | yes |
-| <a name="input_groups"></a> [groups](#input\_groups) | The groups that the product is included | `list(string)` | `[]` | no |
+| <a name="input_groups"></a> [groups](#input\_groups) | The groups that the product is included | `set(string)` | `[]` | no |
 | <a name="input_policy_xml"></a> [policy\_xml](#input\_policy\_xml) | The XML Content for this Product Policy. | `string` | `null` | no |
 
 ## Outputs

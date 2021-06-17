@@ -45,7 +45,7 @@ variable "policy_xml" {
 }
 
 variable "groups" {
-  type        = list(string)
+  type        = set(string)
   description = "The groups that the product is included"
   default     = []
 }
