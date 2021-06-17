@@ -1,0 +1,28 @@
+resource "azurerm_api_management_product" "this" {
+  product_id            = var.product_id
+  resource_group_name   = var.resource_group_name
+  api_management_name   = var.api_management_name
+  display_name          = var.display_name
+  description           = var.description
+  subscription_required = var.subscription_required
+  approval_required     = var.approval_required
+  published             = var.published
+}
+
+resource "azurerm_api_management_product_policy" "this" {
+  count = var.policy_xml == null ? 0 : 1
+
+  product_id          = azurerm_api_management_product.this.product_id
+  api_management_name = var.api_management_name
+  resource_group_name = var.resource_group_name
+  xml_content         = var.policy_xml
+}
+
+resource "azurerm_api_management_product_group" "this" {
+  for_each = var.groups
+
+  product_id          = azurerm_api_management_product.this.product_id
+  resource_group_name = var.resource_group_name
+  api_management_name = var.api_management_name
+  group_name          = each.key
+}
