@@ -113,6 +113,16 @@ resource "azurerm_private_dns_a_record" "private_dns_a_record_postgresql" {
   records             = azurerm_private_endpoint.postgresql_private_endpoint.private_service_connection.*.private_ip_address
 }
 
+resource "azurerm_private_dns_a_record" "replica" {
+  count = var.enable_replica ? 1 : 0
+
+  name                = "postgresql-rep"
+  zone_name           = azurerm_private_dns_zone.private_dns_zone_postgres.name
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  records             = azurerm_private_endpoint.replica[0].private_service_connection.*.private_ip_address
+}
+
 resource "azurerm_postgresql_virtual_network_rule" "network_rule" {
   name                                 = format("%s-vnet-rule", var.name)
   resource_group_name                  = var.resource_group_name
