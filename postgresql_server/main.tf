@@ -19,6 +19,10 @@ resource "azurerm_postgresql_server" "this" {
   ssl_enforcement_enabled          = var.ssl_enforcement_enabled
   ssl_minimal_tls_version_enforced = var.ssl_minimal_tls_version_enforced
 
+  create_mode               = var.create_mode
+  creation_source_server_id = var.creation_source_server_id
+  restore_point_in_time     = var.restore_point_in_time
+
   tags = var.tags
 }
 
@@ -45,7 +49,7 @@ resource "azurerm_postgresql_server" "replica" {
   ssl_enforcement_enabled          = var.ssl_enforcement_enabled
   ssl_minimal_tls_version_enforced = var.ssl_minimal_tls_version_enforced
 
-  create_mode               = var.create_mode
+  create_mode               = "Replica"
   creation_source_server_id = azurerm_postgresql_server.this.id
 
   tags = var.tags
