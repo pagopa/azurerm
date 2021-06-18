@@ -23,7 +23,8 @@ resource "azurerm_postgresql_server" "this" {
 }
 
 resource "azurerm_postgresql_server" "replica" {
-  count               = var.enable_replica ? 1 : 0
+  count = var.enable_replica ? 1 : 0
+
   name                = format("%s-rep", var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -65,7 +66,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_virtu
 }
 
 resource "azurerm_private_endpoint" "postgresql_private_endpoint" {
-  name                = format("%s-private-endpoint", var.name)
+  name                = format("%s-private-endpoint", azurerm_postgresql_server.this.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id
@@ -76,8 +77,29 @@ resource "azurerm_private_endpoint" "postgresql_private_endpoint" {
   }
 
   private_service_connection {
-    name                           = format("%s-private-service-connection", var.name)
+    name                           = format("%s-private-service-connection", azurerm_postgresql_server.this.name)
     private_connection_resource_id = azurerm_postgresql_server.this.id
+    is_manual_connection           = false
+    subresource_names              = ["postgreSqlServer"]
+  }
+}
+
+resource "azurerm_private_endpoint" "replica" {
+  count = var.enable_replica ? 1 : 0
+
+  name                = format("%s-private-endpoint", azurerm_postgresql_server.replica[0].name)
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = var.subnet_id
+
+  private_dns_zone_group {
+    name                 = format("%s-private-dns-zone-group", var.name)
+    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zone_postgres.id]
+  }
+
+  private_service_connection {
+    name                           = format("%s-private-service-connection", azurerm_postgresql_server.replica[0].name)
+    private_connection_resource_id = azurerm_postgresql_server.replica[0].id
     is_manual_connection           = false
     subresource_names              = ["postgreSqlServer"]
   }

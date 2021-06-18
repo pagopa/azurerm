@@ -29,6 +29,7 @@ variable "administrator_login" {
 variable "administrator_login_password" {
   type        = string
   description = "The Password associated with the administrator_login for the PostgreSQL Server."
+  sensitive   = true
 }
 
 variable "sku_name" {
