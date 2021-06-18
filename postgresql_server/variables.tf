@@ -96,6 +96,12 @@ variable "create_mode" {
   default     = "Replica"
 }
 
+variable "configuration" {
+  description = "Map with PostgreSQL configurations."
+  type        = map(string)
+  default     = {}
+}
+
 variable "tags" {
   type = map(any)
 }

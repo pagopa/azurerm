@@ -54,6 +54,8 @@ resource "azurerm_postgresql_server" "replica" {
 resource "azurerm_private_dns_zone" "private_dns_zone_postgres" {
   name                = "privatelink.postgres.database.azure.com"
   resource_group_name = var.resource_group_name
+
+  tags = var.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_virtual_network_link" {
@@ -82,6 +84,8 @@ resource "azurerm_private_endpoint" "postgresql_private_endpoint" {
     is_manual_connection           = false
     subresource_names              = ["postgreSqlServer"]
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_private_endpoint" "replica" {
@@ -103,6 +107,8 @@ resource "azurerm_private_endpoint" "replica" {
     is_manual_connection           = false
     subresource_names              = ["postgreSqlServer"]
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_private_dns_a_record" "private_dns_a_record_postgresql" {
@@ -129,4 +135,13 @@ resource "azurerm_postgresql_virtual_network_rule" "network_rule" {
   server_name                          = azurerm_postgresql_server.this.name
   subnet_id                            = var.subnet_id
   ignore_missing_vnet_service_endpoint = true
+}
+
+resource "azurerm_postgresql_configuration" "main" {
+  for_each = var.configuration
+
+  name                = each.key
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_postgresql_server.this.name
+  value               = each.value
 }
