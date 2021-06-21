@@ -55,23 +55,31 @@ resource "azurerm_postgresql_server" "replica" {
   tags = var.tags
 }
 
-resource "azurerm_private_dns_zone" "private_dns_zone_postgres" {
-  name                = "privatelink.postgres.database.azure.com"
+locals {
+  private_dns_zone_name = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].name : var.private_dns_zone_name
+  private_dns_zone_id   = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].id : var.private_dns_zone_id
+}
+
+resource "azurerm_private_dns_zone" "this" {
+  count = var.private_dns_zone_id == null ? 1 : 0
+
+  name                = var.private_dns_zone_name
   resource_group_name = var.resource_group_name
 
   tags = var.tags
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_virtual_network_link" {
+resource "azurerm_private_dns_zone_virtual_network_link" "this" {
+
   name                  = format("%s-private-dns-zone-link", var.name)
   resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_postgres.name
+  private_dns_zone_name = local.private_dns_zone_name
   virtual_network_id    = var.virtual_network_id
 
   tags = var.tags
 }
 
-resource "azurerm_private_endpoint" "postgresql_private_endpoint" {
+resource "azurerm_private_endpoint" "this" {
   name                = format("%s-private-endpoint", azurerm_postgresql_server.this.name)
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -79,7 +87,7 @@ resource "azurerm_private_endpoint" "postgresql_private_endpoint" {
 
   private_dns_zone_group {
     name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zone_postgres.id]
+    private_dns_zone_ids = [local.private_dns_zone_id]
   }
 
   private_service_connection {
@@ -102,7 +110,7 @@ resource "azurerm_private_endpoint" "replica" {
 
   private_dns_zone_group {
     name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zone_postgres.id]
+    private_dns_zone_ids = [local.private_dns_zone_id]
   }
 
   private_service_connection {
@@ -113,24 +121,6 @@ resource "azurerm_private_endpoint" "replica" {
   }
 
   tags = var.tags
-}
-
-resource "azurerm_private_dns_a_record" "private_dns_a_record_postgresql" {
-  name                = "postgresql"
-  zone_name           = azurerm_private_dns_zone.private_dns_zone_postgres.name
-  resource_group_name = var.resource_group_name
-  ttl                 = 300
-  records             = azurerm_private_endpoint.postgresql_private_endpoint.private_service_connection.*.private_ip_address
-}
-
-resource "azurerm_private_dns_a_record" "replica" {
-  count = var.enable_replica ? 1 : 0
-
-  name                = "postgresql-rep"
-  zone_name           = azurerm_private_dns_zone.private_dns_zone_postgres.name
-  resource_group_name = var.resource_group_name
-  ttl                 = 300
-  records             = azurerm_private_endpoint.replica[0].private_service_connection.*.private_ip_address
 }
 
 resource "azurerm_postgresql_virtual_network_rule" "network_rule" {

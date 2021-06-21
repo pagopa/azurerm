@@ -113,6 +113,16 @@ variable "configuration" {
   default     = {}
 }
 
+variable "private_dns_zone_id" {
+  type    = string
+  default = null
+}
+
+variable "private_dns_zone_name" {
+  type    = string
+  default = "privatelink.postgres.database.azure.com"
+}
+
 variable "tags" {
   type = map(any)
 }
