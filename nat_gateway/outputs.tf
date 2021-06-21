@@ -7,9 +7,9 @@ output "resource_guid" {
 }
 
 output "public_ip_address" {
-  value = azurerm_public_ip.this.ip_address
+  value = azurerm_public_ip.this.*.ip_address
 }
 
 output "public_ip_fqdn" {
-  value = azurerm_public_ip.this.fqdn
+  value = azurerm_public_ip.this.*.fqdn
 }
