@@ -10,6 +10,10 @@ output "fqdn" {
   value = azurerm_postgresql_server.this.fqdn
 }
 
+output "private_dns_zone_id" {
+  value = local.private_dns_zone_id
+}
+
 output "administrator_login" {
   value = var.administrator_login
 }
