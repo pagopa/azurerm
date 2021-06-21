@@ -23,5 +23,5 @@ output "kube_config" {
 }
 
 output "kubelet_identity_id" {
-  value = azurerm_kubernetes_cluster.this.kubelet_identity.0.id
+  value = azurerm_kubernetes_cluster.this.kubelet_identity.0.object_id
 }
