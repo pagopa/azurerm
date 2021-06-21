@@ -64,6 +64,7 @@ No modules.
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
+| <a name="output_private_dns_zone_id"></a> [private\_dns\_zone\_id](#output\_private\_dns\_zone\_id) | n/a |
 | <a name="output_replica_fqdn"></a> [replica\_fqdn](#output\_replica\_fqdn) | n/a |
 | <a name="output_replica_id"></a> [replica\_id](#output\_replica\_id) | n/a |
 | <a name="output_replica_name"></a> [replica\_name](#output\_replica\_name) | n/a |
