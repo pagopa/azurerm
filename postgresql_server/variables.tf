@@ -29,6 +29,7 @@ variable "administrator_login" {
 variable "administrator_login_password" {
   type        = string
   description = "The Password associated with the administrator_login for the PostgreSQL Server."
+  sensitive   = true
 }
 
 variable "sku_name" {
@@ -91,8 +92,35 @@ variable "enable_replica" {
 
 variable "create_mode" {
   type        = string
-  description = "The creation mode. Can be used to restore or replicate existing servers."
-  default     = "Replica"
+  description = "The creation mode. Can be used to restore or replicate existing servers. Possible values are Default, Replica, GeoRestore, and PointInTimeRestore"
+  default     = "Default"
+}
+
+variable "creation_source_server_id" {
+  type        = string
+  description = "For creation modes other then default the source server ID to use."
+  default     = null
+}
+
+variable "restore_point_in_time" {
+  type        = string
+  description = "When create_mode is PointInTimeRestore the point in time to restore from creation_source_server_id."
+  default     = null
+}
+variable "configuration" {
+  description = "Map with PostgreSQL configurations."
+  type        = map(string)
+  default     = {}
+}
+
+variable "private_dns_zone_id" {
+  type    = string
+  default = null
+}
+
+variable "private_dns_zone_name" {
+  type    = string
+  default = "privatelink.postgres.database.azure.com"
 }
 
 variable "tags" {
