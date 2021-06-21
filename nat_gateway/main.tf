@@ -1,6 +1,6 @@
 resource "azurerm_public_ip" "this" {
   count               = var.public_ips_count
-  name                = format("%s-pip%s", var.name, count.index)
+  name                = format("%s-pip-%02d", var.name, count.index + 1)
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
