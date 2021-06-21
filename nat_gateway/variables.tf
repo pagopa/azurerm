@@ -34,6 +34,12 @@ variable "subnet_ids" {
   description = "List of subnets id to which associate the nat gateway"
 }
 
+variable "public_ips_count" {
+  type        = number
+  default     = 1
+  description = "Number of public ips associated to the nat gateway"
+}
+
 variable "tags" {
   type = map(any)
 }
