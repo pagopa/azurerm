@@ -45,7 +45,7 @@ resource "azurerm_api_management_logger" "this" {
 resource "azurerm_api_management_diagnostic" "this" {
   count = var.application_insights_instrumentation_key != null ? 1 : 0
 
-  identifier               = format("%s-applicationinsights", var.name)
+  identifier               = "applicationinsights"
   resource_group_name      = var.resource_group_name
   api_management_name      = azurerm_api_management.this.name
   api_management_logger_id = azurerm_api_management_logger.this[0].id
