@@ -54,6 +54,52 @@ variable "policy_path" {
   default = null
 }
 
+variable "hostname_configuration" {
+  description = "nested block: NestingList, min items: 0, max items: 1"
+  type = set(object(
+    {
+      developer_portal = list(object(
+        {
+          certificate                  = string
+          certificate_password         = string
+          host_name                    = string
+          key_vault_id                 = string
+          negotiate_client_certificate = bool
+        }
+      ))
+      management = list(object(
+        {
+          certificate                  = string
+          certificate_password         = string
+          host_name                    = string
+          key_vault_id                 = string
+          negotiate_client_certificate = bool
+        }
+      ))
+      portal = list(object(
+        {
+          certificate                  = string
+          certificate_password         = string
+          host_name                    = string
+          key_vault_id                 = string
+          negotiate_client_certificate = bool
+        }
+      ))
+      proxy = list(object(
+        {
+          certificate                  = string
+          certificate_password         = string
+          default_ssl_binding          = bool
+          host_name                    = string
+          key_vault_id                 = string
+          negotiate_client_certificate = bool
+        }
+      ))
+    }
+  ))
+  default = []
+}
+
 variable "tags" {
   type = map(any)
 }
