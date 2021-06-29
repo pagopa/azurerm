@@ -18,6 +18,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_api_management.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management) | resource |
+| [azurerm_api_management_diagnostic.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_diagnostic) | resource |
 | [azurerm_api_management_logger.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_logger) | resource |
 
 ## Inputs
@@ -31,6 +32,15 @@ No modules.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | n/a | yes |
 | <a name="input_application_insights_instrumentation_key"></a> [application\_insights\_instrumentation\_key](#input\_application\_insights\_instrumentation\_key) | The instrumentation key used to push data to Application Insights. | `string` | `null` | no |
+| <a name="input_diagnostic_always_log_errors"></a> [diagnostic\_always\_log\_errors](#input\_diagnostic\_always\_log\_errors) | Always log errors. Send telemetry if there is an erroneous condition, regardless of sampling settings. | `bool` | `true` | no |
+| <a name="input_diagnostic_backend_request"></a> [diagnostic\_backend\_request](#input\_diagnostic\_backend\_request) | Number of payload bytes to log (up to 8192) and a list of headers to log, min items: 0, max items: 1 | <pre>set(object(<br>    {<br>      body_bytes     = number<br>      headers_to_log = set(string)<br>    }<br>  ))</pre> | `[]` | no |
+| <a name="input_diagnostic_backend_response"></a> [diagnostic\_backend\_response](#input\_diagnostic\_backend\_response) | Number of payload bytes to log (up to 8192) and a list of headers to log, min items: 0, max items: 1 | <pre>set(object(<br>    {<br>      body_bytes     = number<br>      headers_to_log = set(string)<br>    }<br>  ))</pre> | `[]` | no |
+| <a name="input_diagnostic_frontend_request"></a> [diagnostic\_frontend\_request](#input\_diagnostic\_frontend\_request) | Number of payload bytes to log (up to 8192) and a list of headers to log, min items: 0, max items: 1 | <pre>set(object(<br>    {<br>      body_bytes     = number<br>      headers_to_log = set(string)<br>    }<br>  ))</pre> | `[]` | no |
+| <a name="input_diagnostic_frontend_response"></a> [diagnostic\_frontend\_response](#input\_diagnostic\_frontend\_response) | Number of payload bytes to log (up to 8192) and a list of headers to log, min items: 0, max items: 1 | <pre>set(object(<br>    {<br>      body_bytes     = number<br>      headers_to_log = set(string)<br>    }<br>  ))</pre> | `[]` | no |
+| <a name="input_diagnostic_http_correlation_protocol"></a> [diagnostic\_http\_correlation\_protocol](#input\_diagnostic\_http\_correlation\_protocol) | The HTTP Correlation Protocol to use. Possible values are None, Legacy or W3C. | `string` | `"W3C"` | no |
+| <a name="input_diagnostic_log_client_ip"></a> [diagnostic\_log\_client\_ip](#input\_diagnostic\_log\_client\_ip) | Log client IP address. | `bool` | `true` | no |
+| <a name="input_diagnostic_sampling_percentage"></a> [diagnostic\_sampling\_percentage](#input\_diagnostic\_sampling\_percentage) | Sampling (%). For high traffic APIs, please read the documentation to understand performance implications and log sampling. Valid values are between 0.0 and 100.0. | `number` | `5` | no |
+| <a name="input_diagnostic_verbosity"></a> [diagnostic\_verbosity](#input\_diagnostic\_verbosity) | Logging verbosity. Possible values are verbose, information or error. | `string` | `"error"` | no |
 | <a name="input_notification_sender_email"></a> [notification\_sender\_email](#input\_notification\_sender\_email) | Email address from which the notification will be sent. | `string` | `null` | no |
 | <a name="input_policy_path"></a> [policy\_path](#input\_policy\_path) | n/a | `string` | `null` | no |
 | <a name="input_sku_name"></a> [sku\_name](#input\_sku\_name) | n/a | `string` | `"A string consisting of two parts separated by an underscore(_). The first part is the name, valid values include: Consumption, Developer, Basic, Standard and Premium. The second part is the capacity (e.g. the number of deployed units of the sku), which must be a positive integer (e.g. Developer_1)."` | no |
@@ -41,6 +51,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_diagnostic_id"></a> [diagnostic\_id](#output\_diagnostic\_id) | n/a |
 | <a name="output_gateway_hostname"></a> [gateway\_hostname](#output\_gateway\_hostname) | n/a |
 | <a name="output_gateway_url"></a> [gateway\_url](#output\_gateway\_url) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
