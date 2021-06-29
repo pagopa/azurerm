@@ -48,6 +48,12 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   role_based_access_control {
     enabled = var.rbac_enabled
+    azure_active_directory {
+      managed = true
+      admin_group_object_ids = [
+        var.aad_admin_group_id
+      ]
+    }
   }
 
 
@@ -76,6 +82,12 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   tags = var.tags
+}
+
+resource "azurerm_role_assignment" "aks" {
+  scope                = azurerm_kubernetes_cluster.this.id
+  role_definition_name = "Monitoring Metrics Publisher"
+  principal_id         = azurerm_kubernetes_cluster.this.addon_profile[0].oms_agent[0].oms_agent_identity[0].object_id
 }
 
 resource "azurerm_role_assignment" "vnet_role" {
