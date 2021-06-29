@@ -23,5 +23,5 @@ output "principal_id" {
 }
 
 output "diagnostic_id" {
-  value = azurerm_api_management_diagnostic.this.id
+  value = azurerm_api_management_diagnostic.this[0].id
 }
