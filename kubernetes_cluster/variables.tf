@@ -17,6 +17,11 @@ variable "location" {
   type = string
 }
 
+variable "aad_admin_group_id" {
+  description = "ID of the Azure AD group for cluster-admin access"
+  type        = string
+}
+
 variable "node_pool_name" {
   type        = string
   default     = "default"
