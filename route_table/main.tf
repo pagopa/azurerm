@@ -1,5 +1,6 @@
 
 resource "azurerm_route_table" "this" {
+  count                         = length(var.routes) > 0 ? 1 : 0
   name                          = var.name
   location                      = var.location
   resource_group_name           = var.resource_group_name
@@ -19,7 +20,7 @@ resource "azurerm_route_table" "this" {
 }
 
 resource "azurerm_subnet_route_table_association" "this" {
-  count          = length(var.subnet_ids)
+  count          = length(var.routes) > 0 ? length(var.subnet_ids) : 0
   subnet_id      = var.subnet_ids[count.index]
-  route_table_id = azurerm_route_table.this.id
+  route_table_id = azurerm_route_table.this[0].id
 }

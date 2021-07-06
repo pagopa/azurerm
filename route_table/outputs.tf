@@ -1,7 +1,7 @@
 output "id" {
-  value = azurerm_route_table.this.id
+  value = length(var.routes) > 0 ? azurerm_route_table.this[0].id : null
 }
 
 output "subnets" {
-  value = azurerm_route_table.this.subnets
+  value = length(var.routes) > 0 ? azurerm_route_table.this[0].subnets : []
 }
