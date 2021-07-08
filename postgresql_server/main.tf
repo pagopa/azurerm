@@ -139,3 +139,82 @@ resource "azurerm_postgresql_configuration" "main" {
   server_name         = azurerm_postgresql_server.this.name
   value               = each.value
 }
+
+resource "azurerm_monitor_metric_alert" "this" {
+  for_each = var.monitor_metric_alert_criteria
+
+  name                = format("%s-%s", azurerm_postgresql_server.this.name, upper(each.key))
+  resource_group_name = var.resource_group_name
+  scopes              = [azurerm_postgresql_server.this.id]
+  frequency           = each.value.frequency
+  window_size         = each.value.window_size
+
+  dynamic "action" {
+    for_each = var.action
+    content {
+      # action_group_id - (required) is a type of string
+      action_group_id = action.value["action_group_id"]
+      # webhook_properties - (optional) is a type of map of string
+      webhook_properties = action.value["webhook_properties"]
+    }
+  }
+
+  criteria {
+    aggregation      = each.value.aggregation
+    metric_namespace = "Microsoft.DBforPostgreSQL/servers"
+    metric_name      = each.value.metric_name
+    operator         = each.value.operator
+    threshold        = each.value.threshold
+
+    dynamic "dimension" {
+      for_each = each.value.dimension
+      content {
+        name     = dimension.value.name
+        operator = dimension.value.operator
+        values   = dimension.value.value
+      }
+    }
+  }
+
+  tags = var.tags
+}
+
+
+resource "azurerm_monitor_metric_alert" "replica" {
+  for_each = var.enable_replica ? var.replica_monitor_metric_alert_criteria : []
+
+  name                = format("%s-%s", azurerm_postgresql_server.replica[0].name, upper(each.key))
+  resource_group_name = var.resource_group_name
+  scopes              = [azurerm_postgresql_server.replica[0].id]
+  frequency           = each.value.frequency
+  window_size         = each.value.window_size
+
+  dynamic "action" {
+    for_each = var.replica_action
+    content {
+      # action_group_id - (required) is a type of string
+      action_group_id = action.value["action_group_id"]
+      # webhook_properties - (optional) is a type of map of string
+      webhook_properties = action.value["webhook_properties"]
+    }
+  }
+
+  criteria {
+    aggregation      = each.value.aggregation
+    metric_namespace = "Microsoft.DBforPostgreSQL/servers"
+    metric_name      = each.value.metric_name
+    operator         = each.value.operator
+    threshold        = each.value.threshold
+
+    dynamic "dimension" {
+      for_each = each.value.dimension
+      content {
+        name     = dimension.value.name
+        operator = dimension.value.operator
+        values   = dimension.value.value
+      }
+    }
+  }
+
+  tags = var.tags
+}
