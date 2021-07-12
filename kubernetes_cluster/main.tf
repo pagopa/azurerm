@@ -127,7 +127,7 @@ resource "azurerm_monitor_metric_alert" "this" {
       content {
         name     = dimension.value.name
         operator = dimension.value.operator
-        values   = dimension.value.value
+        values   = dimension.value.values
       }
     }
   }
