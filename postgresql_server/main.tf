@@ -181,7 +181,7 @@ resource "azurerm_monitor_metric_alert" "this" {
 
 
 resource "azurerm_monitor_metric_alert" "replica" {
-  for_each = var.enable_replica ? var.replica_monitor_metric_alert_criteria : []
+  for_each = var.enable_replica ? var.replica_monitor_metric_alert_criteria : {}
 
   name                = format("%s-%s", azurerm_postgresql_server.replica[0].name, upper(each.key))
   resource_group_name = var.resource_group_name
