@@ -95,3 +95,42 @@ resource "azurerm_role_assignment" "vnet_role" {
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_kubernetes_cluster.this.identity[0].principal_id
 }
+
+resource "azurerm_monitor_metric_alert" "this" {
+  for_each = var.metric_alerts
+
+  name                = format("%s-%s", azurerm_kubernetes_cluster.this.name, upper(each.key))
+  resource_group_name = var.resource_group_name
+  scopes              = [azurerm_kubernetes_cluster.this.id]
+  frequency           = each.value.frequency
+  window_size         = each.value.window_size
+
+  dynamic "action" {
+    for_each = var.action
+    content {
+      # action_group_id - (required) is a type of string
+      action_group_id = action.value["action_group_id"]
+      # webhook_properties - (optional) is a type of map of string
+      webhook_properties = action.value["webhook_properties"]
+    }
+  }
+
+  criteria {
+    aggregation      = each.value.aggregation
+    metric_namespace = each.value.metric_namespace
+    metric_name      = each.value.metric_name
+    operator         = each.value.operator
+    threshold        = each.value.threshold
+
+    dynamic "dimension" {
+      for_each = each.value.dimension
+      content {
+        name     = dimension.value.name
+        operator = dimension.value.operator
+        values   = dimension.value.value
+      }
+    }
+  }
+
+  tags = var.tags
+}
