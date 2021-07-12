@@ -31,7 +31,6 @@ resource "azurerm_key_vault_access_policy" "terraform_cloud_policy" {
     "Recover", "Backup", "Restore"
   ]
 
-  #tfsec:ignore:GEN003
   secret_permissions = ["Get", "List", "Set", "Delete", "Recover", "Backup",
     "Restore"
   ]

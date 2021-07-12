@@ -69,7 +69,7 @@ resource "azurerm_linux_virtual_machine" "jumpbox" {
   size                            = var.size
   computer_name                   = var.name
   admin_username                  = var.admin_username
-  disable_password_authentication = true #tfsec:ignore:GEN003
+  disable_password_authentication = true
 
   admin_ssh_key {
     username   = var.admin_username
