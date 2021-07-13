@@ -34,6 +34,12 @@ variable "vm_size" {
   description = "The size of the Virtual Machine"
 }
 
+variable "sku_tier" {
+  type        = string
+  description = "The SKU Tier that should be used for this Kubernetes Cluster."
+  default     = "Free"
+}
+
 variable "kubernetes_version" {
   type        = string
   description = "Version of Kubernetes specified when creating the AKS managed cluster."
