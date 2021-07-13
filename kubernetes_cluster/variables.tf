@@ -160,11 +160,13 @@ EOD
     # Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D.
     window_size = string
 
-    dimension = map(object({
-      name     = string
-      operator = string
-      values   = list(string)
-    }))
+    dimension = list(object(
+      {
+        name     = string
+        operator = string
+        values   = list(string)
+      }
+    ))
   }))
 }
 
