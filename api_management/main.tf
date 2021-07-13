@@ -97,3 +97,73 @@ resource "azurerm_api_management_diagnostic" "this" {
     }
   }
 }
+
+
+
+resource "azurerm_monitor_metric_alert" "this" {
+  for_each = var.metric_alerts
+
+  name                = format("%s-%s", azurerm_api_management.this.name, upper(each.key))
+  description         = each.value.description
+  resource_group_name = var.resource_group_name
+  scopes              = [azurerm_api_management.this.id]
+  frequency           = each.value.frequency
+  window_size         = each.value.window_size
+
+  dynamic "action" {
+    for_each = var.action
+    content {
+      action_group_id    = action.value["action_group_id"]
+      webhook_properties = action.value["webhook_properties"]
+    }
+  }
+
+  dynamic "criteria" {
+    for_each = each.value.criteria
+    content {
+      aggregation            = criteria.value["aggregation"]
+      metric_name            = criteria.value["metric_name"]
+      metric_namespace       = criteria.value["metric_namespace"]
+      operator               = criteria.value["operator"]
+      skip_metric_validation = criteria.value["skip_metric_validation"]
+      threshold              = criteria.value["threshold"]
+
+      dynamic "dimension" {
+        for_each = criteria.value.dimension
+        content {
+          name     = dimension.value["name"]
+          operator = dimension.value["operator"]
+          values   = dimension.value["values"]
+        }
+      }
+
+    }
+  }
+
+  dynamic "dynamic_criteria" {
+    for_each = each.value.dynamic_criteria
+    content {
+      aggregation              = dynamic_criteria.value["aggregation"]
+      alert_sensitivity        = dynamic_criteria.value["alert_sensitivity"]
+      evaluation_failure_count = dynamic_criteria.value["evaluation_failure_count"]
+      evaluation_total_count   = dynamic_criteria.value["evaluation_total_count"]
+      ignore_data_before       = dynamic_criteria.value["ignore_data_before"]
+      metric_name              = dynamic_criteria.value["metric_name"]
+      metric_namespace         = dynamic_criteria.value["metric_namespace"]
+      operator                 = dynamic_criteria.value["operator"]
+      skip_metric_validation   = dynamic_criteria.value["skip_metric_validation"]
+
+      dynamic "dimension" {
+        for_each = dynamic_criteria.value.dimension
+        content {
+          name     = dimension.value["name"]
+          operator = dimension.value["operator"]
+          values   = dimension.value["values"]
+        }
+      }
+
+    }
+  }
+
+  tags = var.tags
+}
