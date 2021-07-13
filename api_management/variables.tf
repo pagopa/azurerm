@@ -129,6 +129,75 @@ variable "diagnostic_frontend_response" {
 }
 
 
+variable "metric_alerts" {
+  default = {}
+
+  description = <<EOD
+Map of name = criteria objects
+EOD
+
+  type = map(object({
+    description = string
+    # Possible values are PT1M, PT5M, PT15M, PT30M and PT1H
+    frequency = string
+    # Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D.
+    window_size = string
+
+    criteria = set(object(
+      {
+        # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]
+        aggregation = string
+        dimension = list(object(
+          {
+            name     = string
+            operator = string
+            values   = list(string)
+          }
+        ))
+        metric_name      = string
+        metric_namespace = string
+        # criteria.0.operator to be one of [Equals NotEquals GreaterThan GreaterThanOrEqual LessThan LessThanOrEqual]
+        operator               = string
+        skip_metric_validation = bool
+        threshold              = number
+      }
+    ))
+
+    dynamic_criteria = set(object(
+      {
+        # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]
+        aggregation       = string
+        alert_sensitivity = string
+        dimension = list(object(
+          {
+            name     = string
+            operator = string
+            values   = list(string)
+          }
+        ))
+        evaluation_failure_count = number
+        evaluation_total_count   = number
+        ignore_data_before       = string
+        metric_name              = string
+        metric_namespace         = string
+        operator                 = string
+        skip_metric_validation   = bool
+      }
+    ))
+  }))
+}
+
+variable "action" {
+  description = "The ID of the Action Group and optional map of custom string properties to include with the post webhook operation."
+  type = set(object(
+    {
+      action_group_id    = string
+      webhook_properties = map(string)
+    }
+  ))
+  default = []
+}
+
 variable "tags" {
   type = map(any)
 }
