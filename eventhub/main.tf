@@ -139,6 +139,7 @@ resource "azurerm_monitor_metric_alert" "this" {
   for_each = var.metric_alerts
 
   name                = format("%s-%s", azurerm_eventhub_namespace.this.name, upper(each.key))
+  description         = each.value.description
   resource_group_name = var.resource_group_name
   scopes              = [azurerm_eventhub_namespace.this.id]
   frequency           = each.value.frequency

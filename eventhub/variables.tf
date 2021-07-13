@@ -96,6 +96,7 @@ EOD
     # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]
     aggregation = string
     metric_name = string
+    description = string
     # criteria.0.operator to be one of [Equals NotEquals GreaterThan GreaterThanOrEqual LessThan LessThanOrEqual]
     operator  = string
     threshold = number
