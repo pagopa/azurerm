@@ -198,6 +198,12 @@ variable "action" {
   default = []
 }
 
+variable "redis_connection_string" {
+  type        = string
+  description = "Connection string for redis external cache"
+  default     = null
+}
+
 variable "tags" {
   type = map(any)
 }
