@@ -70,6 +70,7 @@ resource "azurerm_virtual_network_gateway" "gw" {
   active_active = var.active_active
   enable_bgp    = var.enable_bgp
   sku           = var.sku
+  generation    = var.generation
 
   ip_configuration {
     name                          = "${var.name}-gw-config"

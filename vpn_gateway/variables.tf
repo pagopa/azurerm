@@ -26,6 +26,12 @@ variable "active_active" {
   default     = false
 }
 
+variable "generation" {
+  type        = string
+  description = "The Generation of the Virtual Network gateway"
+  default     = null
+}
+
 variable "sku" {
   description = "Configuration of the size and capacity of the virtual network gateway."
 }
