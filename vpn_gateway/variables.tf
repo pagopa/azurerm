@@ -37,7 +37,14 @@ variable "sku" {
 }
 
 variable "pip_sku" {
-  description = "Public IP SKU of the gateway"
+  type        = string
+  description = "The SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Basic."
+  default     = "Basic"
+}
+
+variable "pip_allocation_method" {
+  description = "Defines the allocation method for this IP address. Possible values are Static or Dynamic."
+  default     = "Dynamic"
 }
 
 variable "vpn_client_configuration" {
