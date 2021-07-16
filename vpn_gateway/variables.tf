@@ -30,10 +30,32 @@ variable "sku" {
   description = "Configuration of the size and capacity of the virtual network gateway."
 }
 
-variable "client_configuration" {
+variable "vpn_client_configuration" {
   description = "If set it will activate point-to-site configuration."
-  type        = object({ address_space = string, protocols = list(string), certificate = string })
-  default     = null
+  type = set(object(
+    {
+      aad_audience          = string
+      aad_issuer            = string
+      aad_tenant            = string
+      address_space         = list(string)
+      radius_server_address = string
+      radius_server_secret  = string
+      revoked_certificate = set(object(
+        {
+          name       = string
+          thumbprint = string
+        }
+      ))
+      root_certificate = set(object(
+        {
+          name             = string
+          public_cert_data = string
+        }
+      ))
+      vpn_client_protocols = set(string)
+    }
+  ))
+  default = []
 }
 
 variable "local_networks" {

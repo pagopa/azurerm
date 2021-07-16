@@ -79,18 +79,31 @@ resource "azurerm_virtual_network_gateway" "gw" {
   }
 
   dynamic "vpn_client_configuration" {
-    for_each = var.client_configuration != null ? [var.client_configuration] : []
-    iterator = vpn
+    for_each = var.vpn_client_configuration
     content {
-      address_space = [vpn.value.address_space]
+      aad_audience          = vpn_client_configuration.value["aad_audience"]
+      aad_issuer            = vpn_client_configuration.value["aad_issuer"]
+      aad_tenant            = vpn_client_configuration.value["aad_tenant"]
+      address_space         = vpn_client_configuration.value["address_space"]
+      radius_server_address = vpn_client_configuration.value["radius_server_address"]
+      radius_server_secret  = vpn_client_configuration.value["radius_server_secret"]
+      vpn_client_protocols  = vpn_client_configuration.value["vpn_client_protocols"]
 
-      root_certificate {
-        name = "VPN-Certificate"
-
-        public_cert_data = vpn.value.certificate
+      dynamic "revoked_certificate" {
+        for_each = vpn_client_configuration.value.revoked_certificate
+        content {
+          name       = revoked_certificate.value["name"]
+          thumbprint = revoked_certificate.value["thumbprint"]
+        }
       }
 
-      vpn_client_protocols = vpn.value.protocols
+      dynamic "root_certificate" {
+        for_each = vpn_client_configuration.value.root_certificate
+        content {
+          name             = root_certificate.value["name"]
+          public_cert_data = root_certificate.value["public_cert_data"]
+        }
+      }
     }
   }
 
