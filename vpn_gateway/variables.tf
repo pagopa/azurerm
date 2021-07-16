@@ -20,6 +20,12 @@ variable "enable_bgp" {
   default     = false
 }
 
+variable "active_active" {
+  description = "If true, an active-active Virtual Network Gateway will be created. An active-active gateway requires a HighPerformance or an UltraPerformance sku. If false, an active-standby gateway will be created. Defaults to false."
+  type        = bool
+  default     = false
+}
+
 variable "sku" {
   description = "Configuration of the size and capacity of the virtual network gateway."
 }
