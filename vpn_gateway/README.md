@@ -33,6 +33,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_location"></a> [location](#input\_location) | The Azure Region in which to create resource. | `any` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of virtual gateway. | `any` | n/a | yes |
+| <a name="input_pip_sku"></a> [pip\_sku](#input\_pip\_sku) | Public IP SKU of the gateway | `any` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group to deploy resources in. | `any` | n/a | yes |
 | <a name="input_sku"></a> [sku](#input\_sku) | Configuration of the size and capacity of the virtual network gateway. | `any` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | Id of subnet where gateway should be deployed, have to be names GatewaySubnet. | `any` | n/a | yes |
@@ -47,5 +48,8 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | The fqdn for gateway. |
+| <a name="output_gateway_id"></a> [gateway\_id](#output\_gateway\_id) | The ID of the virtual network gateway. |
 <!-- END_TF_DOCS -->

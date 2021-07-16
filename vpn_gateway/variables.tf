@@ -36,6 +36,10 @@ variable "sku" {
   description = "Configuration of the size and capacity of the virtual network gateway."
 }
 
+variable "pip_sku" {
+  description = "Public IP SKU of the gateway"
+}
+
 variable "vpn_client_configuration" {
   description = "If set it will activate point-to-site configuration."
   type = list(object(
