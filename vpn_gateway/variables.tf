@@ -75,6 +75,11 @@ variable "log_analytics_workspace_id" {
   default     = null
 }
 
+variable "log_storage_account_id" {
+  description = "Specifies the ID of a Storage Account where Logs should be sent."
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to all resources created."
   type        = map(string)

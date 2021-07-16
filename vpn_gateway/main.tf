@@ -28,7 +28,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw_pip" {
 
   log {
     category = "DDoSProtectionNotifications"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
@@ -36,7 +36,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw_pip" {
 
   log {
     category = "DDoSMitigationFlowLogs"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
@@ -44,7 +44,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw_pip" {
 
   log {
     category = "DDoSMitigationReports"
-
+    enabled  = false
     retention_policy {
       enabled = false
     }
@@ -52,7 +52,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw_pip" {
 
   metric {
     category = "AllMetrics"
-
+    enabled  = false
     retention_policy {
       enabled = false
     }
@@ -119,7 +119,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw" {
 
   log {
     category = "GatewayDiagnosticLog"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
@@ -127,7 +127,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw" {
 
   log {
     category = "TunnelDiagnosticLog"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
@@ -135,7 +135,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw" {
 
   log {
     category = "RouteDiagnosticLog"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
@@ -143,7 +143,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw" {
 
   log {
     category = "IKEDiagnosticLog"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
@@ -151,7 +151,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw" {
 
   log {
     category = "P2SDiagnosticLog"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
@@ -159,7 +159,68 @@ resource "azurerm_monitor_diagnostic_setting" "gw" {
 
   metric {
     category = "AllMetrics"
+    enabled  = true
+    retention_policy {
+      enabled = false
+    }
+  }
+}
 
+
+resource "azurerm_monitor_diagnostic_setting" "gw_logs" {
+  count              = var.log_storage_account_id != null ? 1 : 0
+  name               = "gw-logs"
+  target_resource_id = azurerm_virtual_network_gateway.gw.id
+  storage_account_id = var.log_storage_account_id
+
+  log {
+    category = "GatewayDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "TunnelDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "RouteDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "IKEDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "P2SDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = false
     retention_policy {
       enabled = false
     }
