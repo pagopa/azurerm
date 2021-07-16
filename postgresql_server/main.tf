@@ -56,6 +56,11 @@ resource "azurerm_postgresql_server" "replica" {
 }
 
 locals {
+  firewall_rules = [for rule in var.network_rules.ip_rules : {
+    start : cidrhost(rule, 0)
+    end : cidrhost(rule, pow(2, (32 - parseint(split("/", rule)[1], 10))) - 1)
+  }]
+
   private_dns_zone_name = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].name : var.private_dns_zone_name
   private_dns_zone_id   = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].id : var.private_dns_zone_id
 }
@@ -123,12 +128,34 @@ resource "azurerm_private_endpoint" "replica" {
   tags = var.tags
 }
 
-resource "azurerm_postgresql_virtual_network_rule" "network_rule" {
+resource "azurerm_postgresql_virtual_network_rule" "this" {
+  count = length(var.network_rules.subnet_ids)
+
   name                                 = format("%s-vnet-rule", var.name)
   resource_group_name                  = var.resource_group_name
   server_name                          = azurerm_postgresql_server.this.name
-  subnet_id                            = var.subnet_id
+  subnet_id                            = var.network_rules.subnet_ids[count.index]
   ignore_missing_vnet_service_endpoint = true
+}
+
+resource "azurerm_postgresql_firewall_rule" "this" {
+  count = length(local.firewall_rules)
+
+  name                = format("%s-fw-rule-%d", var.name, count.index)
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_postgresql_server.this.name
+  start_ip_address    = local.firewall_rules[count.index].start
+  end_ip_address      = local.firewall_rules[count.index].end
+}
+
+resource "azurerm_postgresql_firewall_rule" "azure" {
+  count = var.network_rules.allow_access_to_azure_services ? 1 : 0
+
+  name                = format("%s-allow-azure-access", var.name)
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_postgresql_server.this.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }
 
 resource "azurerm_postgresql_configuration" "main" {
