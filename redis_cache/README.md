@@ -47,5 +47,6 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_port"></a> [port](#output\_port) | n/a |
 | <a name="output_primary_access_key"></a> [primary\_access\_key](#output\_primary\_access\_key) | n/a |
+| <a name="output_primary_connection_string"></a> [primary\_connection\_string](#output\_primary\_connection\_string) | n/a |
 | <a name="output_ssl_port"></a> [ssl\_port](#output\_ssl\_port) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
