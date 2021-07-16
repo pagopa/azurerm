@@ -255,7 +255,7 @@ resource "azurerm_postgresql_virtual_network_rule" "replica" {
 
   name                                 = format("%s-rep-vnet-rule", var.name)
   resource_group_name                  = var.resource_group_name
-  server_name                          = azurerm_postgresql_server.replica.name
+  server_name                          = azurerm_postgresql_server.replica[0].name
   subnet_id                            = var.subnet_id
   ignore_missing_vnet_service_endpoint = true
 }
@@ -265,7 +265,7 @@ resource "azurerm_postgresql_firewall_rule" "replica" {
 
   name                = format("%s-rep-fw-rule-%d", var.name, count.index)
   resource_group_name = var.resource_group_name
-  server_name         = azurerm_postgresql_server.replica.name
+  server_name         = azurerm_postgresql_server.replica[0].name
   start_ip_address    = local.replica_firewall_rules[count.index].start
   end_ip_address      = local.replica_firewall_rules[count.index].end
 }
@@ -275,7 +275,7 @@ resource "azurerm_postgresql_firewall_rule" "azure_replica" {
 
   name                = format("%s-rep-allow-azure-access", var.name)
   resource_group_name = var.resource_group_name
-  server_name         = azurerm_postgresql_server.replica.name
+  server_name         = azurerm_postgresql_server.replica[0].name
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "0.0.0.0"
 }
