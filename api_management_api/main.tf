@@ -22,6 +22,7 @@ resource "azurerm_api_management_api" "this" {
 }
 
 resource "azurerm_api_management_api_policy" "this" {
+  count               = var.xml_content == null ? 0 : 1
   api_name            = azurerm_api_management_api.this.name
   api_management_name = var.api_management_name
   resource_group_name = var.resource_group_name
