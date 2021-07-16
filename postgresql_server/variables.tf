@@ -21,6 +21,18 @@ variable "subnet_id" {
   description = "The id of the subnet that will be used to deploy the database."
 }
 
+variable "network_rules" {
+  description = "Network rules restricting access to the postgresql server."
+  type = object({
+    ip_rules                       = list(string)
+    allow_access_to_azure_services = bool
+  })
+  default = {
+    ip_rules                       = []
+    allow_access_to_azure_services = false
+  }
+}
+
 variable "administrator_login" {
   type        = string
   description = "The Administrator Login for the PostgreSQL Server."
@@ -107,6 +119,7 @@ variable "restore_point_in_time" {
   description = "When create_mode is PointInTimeRestore the point in time to restore from creation_source_server_id."
   default     = null
 }
+
 variable "configuration" {
   description = "Map with PostgreSQL configurations."
   type        = map(string)
@@ -206,6 +219,18 @@ variable "replica_action" {
     }
   ))
   default = []
+}
+
+variable "replica_network_rules" {
+  description = "Network rules restricting access to the replica postgresql server."
+  type = object({
+    ip_rules                       = list(string)
+    allow_access_to_azure_services = bool
+  })
+  default = {
+    ip_rules                       = []
+    allow_access_to_azure_services = false
+  }
 }
 
 
