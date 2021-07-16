@@ -13,9 +13,9 @@ resource "azurerm_public_ip" "gw" {
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  allocation_method = "Static"
+  allocation_method = var.pip_allocation_method
   domain_name_label = format("%sgw%s", lower(replace(var.name, "/[[:^alnum:]]/", "")), random_string.dns.result)
-  sku               = "Standard"
+  sku               = var.pip_sku
 
   tags = var.tags
 }
