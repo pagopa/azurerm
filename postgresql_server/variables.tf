@@ -15,16 +15,20 @@ variable "virtual_network_id" {
   description = "The ID of the Virtual Network that should be linked to the DNS Zone."
 }
 
+variable "subnet_id" {
+  type        = string
+  default     = null
+  description = "The id of the subnet that will be used to deploy the database."
+}
+
 variable "network_rules" {
   description = "Network rules restricting access to the postgresql server."
   type = object({
     ip_rules                       = list(string)
-    subnet_ids                     = list(string)
     allow_access_to_azure_services = bool
   })
   default = {
     ip_rules                       = []
-    subnet_ids                     = []
     allow_access_to_azure_services = false
   }
 }
@@ -215,6 +219,18 @@ variable "replica_action" {
     }
   ))
   default = []
+}
+
+variable "replica_network_rules" {
+  description = "Network rules restricting access to the replica postgresql server."
+  type = object({
+    ip_rules                       = list(string)
+    allow_access_to_azure_services = bool
+  })
+  default = {
+    ip_rules                       = []
+    allow_access_to_azure_services = false
+  }
 }
 
 

@@ -61,6 +61,11 @@ locals {
     end : cidrhost(rule, pow(2, (32 - parseint(split("/", rule)[1], 10))) - 1)
   }]
 
+  replica_firewall_rules = [for rule in var.replica_network_rules.ip_rules : {
+    start : cidrhost(rule, 0)
+    end : cidrhost(rule, pow(2, (32 - parseint(split("/", rule)[1], 10))) - 1)
+  }]
+
   private_dns_zone_name = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].name : var.private_dns_zone_name
   private_dns_zone_id   = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].id : var.private_dns_zone_id
 }
@@ -128,13 +133,11 @@ resource "azurerm_private_endpoint" "replica" {
   tags = var.tags
 }
 
-resource "azurerm_postgresql_virtual_network_rule" "this" {
-  count = length(var.network_rules.subnet_ids)
-
+resource "azurerm_postgresql_virtual_network_rule" "network_rule" {
   name                                 = format("%s-vnet-rule", var.name)
   resource_group_name                  = var.resource_group_name
   server_name                          = azurerm_postgresql_server.this.name
-  subnet_id                            = var.network_rules.subnet_ids[count.index]
+  subnet_id                            = var.subnet_id
   ignore_missing_vnet_service_endpoint = true
 }
 
@@ -244,4 +247,35 @@ resource "azurerm_monitor_metric_alert" "replica" {
   }
 
   tags = var.tags
+}
+
+
+resource "azurerm_postgresql_virtual_network_rule" "replica" {
+  count = var.enable_replica ? 1 : 0
+
+  name                                 = format("%s-rep-vnet-rule", var.name)
+  resource_group_name                  = var.resource_group_name
+  server_name                          = azurerm_postgresql_server.replica.name
+  subnet_id                            = var.subnet_id
+  ignore_missing_vnet_service_endpoint = true
+}
+
+resource "azurerm_postgresql_firewall_rule" "replica" {
+  count = var.enable_replica ? length(local.replica_firewall_rules) : 0
+
+  name                = format("%s-rep-fw-rule-%d", var.name, count.index)
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_postgresql_server.replica.name
+  start_ip_address    = local.replica_firewall_rules[count.index].start
+  end_ip_address      = local.replica_firewall_rules[count.index].end
+}
+
+resource "azurerm_postgresql_firewall_rule" "azure_replica" {
+  count = var.enable_replica && var.replica_network_rules.allow_access_to_azure_services ? 1 : 0
+
+  name                = format("%s-rep-allow-azure-access", var.name)
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_postgresql_server.replica.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }
