@@ -32,7 +32,7 @@ variable "sku" {
 
 variable "vpn_client_configuration" {
   description = "If set it will activate point-to-site configuration."
-  type = set(object(
+  type = list(object(
     {
       aad_audience          = string
       aad_issuer            = string
@@ -40,19 +40,19 @@ variable "vpn_client_configuration" {
       address_space         = list(string)
       radius_server_address = string
       radius_server_secret  = string
-      revoked_certificate = set(object(
+      revoked_certificate = list(object(
         {
           name       = string
           thumbprint = string
         }
       ))
-      root_certificate = set(object(
+      root_certificate = list(object(
         {
           name             = string
           public_cert_data = string
         }
       ))
-      vpn_client_protocols = set(string)
+      vpn_client_protocols = list(string)
     }
   ))
   default = []
