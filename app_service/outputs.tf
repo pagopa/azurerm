@@ -13,3 +13,7 @@ output "default_site_hostname" {
 output "principal_id" {
   value = azurerm_app_service.this.identity[0].principal_id
 }
+
+output "custom_domain_verification_id" {
+  value = azurerm_app_service.this.custom_domain_verification_id
+}
