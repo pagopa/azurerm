@@ -60,12 +60,6 @@ variable "storage_mb" {
   default     = 5120
 }
 
-variable "auto_grow_enabled" {
-  type        = bool
-  description = "Enable/Disable auto-growing of the storage. Storage auto-grow prevents your server from running out of storage and becoming read-only. If storage auto grow is enabled, the storage automatically grows without impacting the workload."
-  default     = true
-}
-
 variable "public_network_access_enabled" {
   type        = bool
   description = "Whether or not public network access is allowed for this server."

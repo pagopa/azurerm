@@ -13,7 +13,7 @@ resource "azurerm_postgresql_server" "this" {
   backup_retention_days        = var.backup_retention_days
   geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
 
-  auto_grow_enabled = var.auto_grow_enabled
+  auto_grow_enabled = true
 
   public_network_access_enabled    = var.public_network_access_enabled
   ssl_enforcement_enabled          = var.ssl_enforcement_enabled
@@ -22,6 +22,14 @@ resource "azurerm_postgresql_server" "this" {
   create_mode               = var.create_mode
   creation_source_server_id = var.creation_source_server_id
   restore_point_in_time     = var.restore_point_in_time
+
+
+  lifecycle {
+    ignore_changes = [
+      # Autogrow is enabled
+      storage_mb,
+    ]
+  }
 
   tags = var.tags
 }
@@ -43,7 +51,7 @@ resource "azurerm_postgresql_server" "replica" {
   backup_retention_days        = var.backup_retention_days
   geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
 
-  auto_grow_enabled = var.auto_grow_enabled
+  auto_grow_enabled = true
 
   public_network_access_enabled    = var.public_network_access_enabled
   ssl_enforcement_enabled          = var.ssl_enforcement_enabled
@@ -51,6 +59,13 @@ resource "azurerm_postgresql_server" "replica" {
 
   create_mode               = "Replica"
   creation_source_server_id = azurerm_postgresql_server.this.id
+
+  lifecycle {
+    ignore_changes = [
+      # Autogrow is enabled
+      storage_mb,
+    ]
+  }
 
   tags = var.tags
 }
