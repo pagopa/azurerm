@@ -9,9 +9,15 @@ variable "resource_group_name" {
 }
 
 variable "lb_port" {
-  description = "Protocols to be used for lb rules. Format as [frontend_port, protocol, backend_port, backend_pool_name]"
-  type        = map(any)
-  default     = {}
+  description = "Protocols to be used for lb rules. Format as name => {frontend_port, protocol, backend_port, backend_pool_name, probe_name}"
+  type = map(object({
+    frontend_port     = string
+    protocol          = string
+    backend_port      = string
+    backend_pool_name = string
+    probe_name        = string
+  }))
+  default = {}
 }
 
 variable "lb_probe_unhealthy_threshold" {
@@ -77,9 +83,13 @@ variable "lb_sku" {
 }
 
 variable "lb_probe" {
-  description = "(Optional) Protocols to be used for lb health probes. Format as [protocol, port, request_path]"
-  type        = map(any)
-  default     = {}
+  description = "(Optional) Protocols to be used for lb health probes. Format as name => {protocol, port, request_path}"
+  type = map(object({
+    protocol     = string
+    port         = string
+    request_path = string
+  }))
+  default = {}
 }
 
 variable "lb_backend_pools" {
