@@ -94,12 +94,12 @@ resource "azurerm_private_dns_zone" "eventhub" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "eventhub" {
-  count = var.sku != "Basic" ? 1 : 0
+  count = var.sku != "Basic" ? length(var.virtual_network_ids) : 0
 
-  name                  = format("%s-private-dns-zone-link", var.name)
+  name                  = format("%s-private-dns-zone-link-%02d", var.name, count.index + 1)
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.eventhub[0].name
-  virtual_network_id    = var.virtual_network_id
+  virtual_network_id    = var.virtual_network_ids[count.index]
 
   tags = var.tags
 }
