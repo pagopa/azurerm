@@ -12,9 +12,9 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "virtual_network_id" {
-  type        = string
-  description = "The ID of the Virtual Network that should be linked to the DNS Zone."
+variable "virtual_network_ids" {
+  type        = list(string)
+  description = "The IDs of the Virtual Network that should be linked to the DNS Zone."
 }
 
 variable "subnet_id" {
