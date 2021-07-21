@@ -8,14 +8,8 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "remote_port" {
-  description = "Protocols to be used for remote vm access. [protocol, backend_port].  Frontend port will be automatically generated starting at 50000 and in the output."
-  type        = map(any)
-  default     = {}
-}
-
 variable "lb_port" {
-  description = "Protocols to be used for lb rules. Format as [frontend_port, protocol, backend_port]"
+  description = "Protocols to be used for lb rules. Format as [frontend_port, protocol, backend_port, backend_pool_name]"
   type        = map(any)
   default     = {}
 }
@@ -35,7 +29,7 @@ variable "lb_probe_interval" {
 variable "frontend_name" {
   description = "(Required) Specifies the name of the frontend ip configuration."
   type        = string
-  default     = "myPublicIP"
+  default     = "LoadBalancerFrontEnd"
 }
 
 variable "allocation_method" {
@@ -86,6 +80,25 @@ variable "lb_probe" {
   description = "(Optional) Protocols to be used for lb health probes. Format as [protocol, port, request_path]"
   type        = map(any)
   default     = {}
+}
+
+variable "lb_backend_pools" {
+  description = "(Optional) Backend pool and ip address configuration"
+  type = list(object(
+    {
+      name = string
+      ips = list(object(
+        {
+          ip      = string
+          vnet_id = string
+      }))
+  }))
+  default = [
+    {
+      name = "default"
+      ips  = []
+    }
+  ]
 }
 
 variable "pip_sku" {

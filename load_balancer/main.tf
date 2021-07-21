@@ -1,3 +1,15 @@
+locals {
+  lb_backend_pool = { for pool in var.lb_backend_pools :
+    pool.name => pool
+  }
+  lb_backend_pool_address = { for backend_address in flatten([for pool in var.lb_backend_pools :
+    [for ip in pool.ips : {
+      pool_name  = pool.name
+      ip_address = ip.ip
+      vnet_id    = ip.vnet_id
+  }]]) : format("%s.%s", backend_address.pool, backend_address.ip) => backend_address }
+}
+
 resource "azurerm_public_ip" "this" {
   count = var.type == "public" ? 1 : 0
 
@@ -27,22 +39,21 @@ resource "azurerm_lb" "this" {
   }
 }
 
-resource "azurerm_lb_backend_address_pool" "default" {
-  name                = "BackEndAddressPool"
+resource "azurerm_lb_backend_address_pool" "this" {
+  for_each = local.lb_backend_pool
+
+  name                = format("%s-pool", each.key)
   loadbalancer_id     = azurerm_lb.this.id
   resource_group_name = var.resource_group_name
 }
 
-resource "azurerm_lb_nat_rule" "this" {
-  count = length(var.remote_port)
+resource "azurerm_lb_backend_address_pool_address" "this" {
+  for_each = local.lb_backend_pool_address
 
-  name                           = "NAT-${count.index}"
-  resource_group_name            = var.resource_group_name
-  loadbalancer_id                = azurerm_lb.this.id
-  protocol                       = "tcp"
-  frontend_port                  = "5000${count.index + 1}"
-  backend_port                   = element(var.remote_port[element(keys(var.remote_port), count.index)], 1)
-  frontend_ip_configuration_name = var.frontend_name
+  name                    = each.key
+  backend_address_pool_id = azurerm_lb_backend_address_pool.this[each.value.pool_name].id
+  virtual_network_id      = each.value.vnet_id
+  ip_address              = each.value.ip_address
 }
 
 resource "azurerm_lb_probe" "this" {
@@ -69,7 +80,7 @@ resource "azurerm_lb_rule" "this" {
   backend_port                   = element(var.lb_port[element(keys(var.lb_port), count.index)], 2)
   frontend_ip_configuration_name = var.frontend_name
   enable_floating_ip             = false
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.default.id
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.this[element(var.lb_port[element(keys(var.lb_port), count.index)], 3)].id
   idle_timeout_in_minutes        = 5
   probe_id                       = element(azurerm_lb_probe.this.*.id, count.index)
 }
