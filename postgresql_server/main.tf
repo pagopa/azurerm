@@ -83,6 +83,8 @@ locals {
 
   private_dns_zone_name = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].name : var.private_dns_zone_name
   private_dns_zone_id   = var.private_dns_zone_id == null ? azurerm_private_dns_zone.this[0].id : var.private_dns_zone_id
+
+  configuration_replica = var.enable_replica ? var.configuration_replica : {}
 }
 
 resource "azurerm_private_dns_zone" "this" {
@@ -182,6 +184,15 @@ resource "azurerm_postgresql_configuration" "main" {
   name                = each.key
   resource_group_name = var.resource_group_name
   server_name         = azurerm_postgresql_server.this.name
+  value               = each.value
+}
+
+resource "azurerm_postgresql_configuration" "replica" {
+  for_each = local.configuration_replica
+
+  name                = each.key
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_postgresql_server.replica[0].name
   value               = each.value
 }
 

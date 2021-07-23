@@ -120,6 +120,12 @@ variable "configuration" {
   default     = {}
 }
 
+variable "configuration_replica" {
+  description = "Map with PostgreSQL configurations."
+  type        = map(string)
+  default     = {}
+}
+
 variable "private_dns_zone_id" {
   type    = string
   default = null
