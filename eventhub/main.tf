@@ -144,7 +144,7 @@ resource "azurerm_monitor_metric_alert" "this" {
   scopes              = [azurerm_eventhub_namespace.this.id]
   frequency           = each.value.frequency
   window_size         = each.value.window_size
-  enabled             = var.alert_enabled
+  enabled             = var.alerts_enabled
 
   dynamic "action" {
     for_each = var.action

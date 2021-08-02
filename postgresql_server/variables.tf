@@ -136,7 +136,7 @@ variable "private_dns_zone_name" {
   default = "privatelink.postgres.database.azure.com"
 }
 
-variable "alert_enabled" {
+variable "alerts_enabled" {
   type        = bool
   default     = true
   description = "Should Metric Alerts be enabled?"

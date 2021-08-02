@@ -204,7 +204,7 @@ resource "azurerm_monitor_metric_alert" "this" {
   scopes              = [azurerm_postgresql_server.this.id]
   frequency           = each.value.frequency
   window_size         = each.value.window_size
-  enabled             = var.alert_enabled
+  enabled             = var.alerts_enabled
 
   dynamic "action" {
     for_each = var.action
@@ -245,7 +245,7 @@ resource "azurerm_monitor_metric_alert" "replica" {
   scopes              = [azurerm_postgresql_server.replica[0].id]
   frequency           = each.value.frequency
   window_size         = each.value.window_size
-  enabled             = var.alert_enabled
+  enabled             = var.alerts_enabled
 
   dynamic "action" {
     for_each = var.replica_action

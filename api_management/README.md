@@ -33,7 +33,7 @@ No modules.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | n/a | yes |
 | <a name="input_action"></a> [action](#input\_action) | The ID of the Action Group and optional map of custom string properties to include with the post webhook operation. | <pre>set(object(<br>    {<br>      action_group_id    = string<br>      webhook_properties = map(string)<br>    }<br>  ))</pre> | `[]` | no |
-| <a name="input_alert_enabled"></a> [alert\_enabled](#input\_alert\_enabled) | Should Metrics Alert be enabled? | `bool` | `true` | no |
+| <a name="input_alerts_enabled"></a> [alerts\_enabled](#input\_alerts\_enabled) | Should Metrics Alert be enabled? | `bool` | `true` | no |
 | <a name="input_application_insights_instrumentation_key"></a> [application\_insights\_instrumentation\_key](#input\_application\_insights\_instrumentation\_key) | The instrumentation key used to push data to Application Insights. | `string` | `null` | no |
 | <a name="input_diagnostic_always_log_errors"></a> [diagnostic\_always\_log\_errors](#input\_diagnostic\_always\_log\_errors) | Always log errors. Send telemetry if there is an erroneous condition, regardless of sampling settings. | `bool` | `true` | no |
 | <a name="input_diagnostic_backend_request"></a> [diagnostic\_backend\_request](#input\_diagnostic\_backend\_request) | Number of payload bytes to log (up to 8192) and a list of headers to log, min items: 0, max items: 1 | <pre>set(object(<br>    {<br>      body_bytes     = number<br>      headers_to_log = set(string)<br>    }<br>  ))</pre> | `[]` | no |

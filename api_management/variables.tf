@@ -204,7 +204,7 @@ variable "redis_connection_string" {
   default     = null
 }
 
-variable "alert_enabled" {
+variable "alerts_enabled" {
   type        = bool
   default     = true
   description = "Should Metrics Alert be enabled?"

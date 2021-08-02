@@ -126,7 +126,7 @@ variable "action" {
   default = []
 }
 
-variable "alert_enabled" {
+variable "alerts_enabled" {
   type        = bool
   default     = true
   description = "Should Metrics Alert be enabled?"
