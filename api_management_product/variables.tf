@@ -28,6 +28,12 @@ variable "subscription_required" {
   description = "Is a Subscription required to access API's included in this Product?"
 }
 
+variable "subscription_limit" {
+  type        = number
+  description = "The number of subscriptions a user can have to this Product at the same time."
+  default     = null
+}
+
 variable "approval_required" {
   type        = bool
   description = "Do subscribers need to be approved prior to being able to use the Product?"

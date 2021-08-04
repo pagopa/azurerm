@@ -1,4 +1,3 @@
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
@@ -35,6 +34,7 @@ No modules.
 | <a name="input_subscription_required"></a> [subscription\_required](#input\_subscription\_required) | Is a Subscription required to access API's included in this Product? | `bool` | n/a | yes |
 | <a name="input_groups"></a> [groups](#input\_groups) | The groups that the product is included | `set(string)` | `[]` | no |
 | <a name="input_policy_xml"></a> [policy\_xml](#input\_policy\_xml) | The XML Content for this Product Policy. | `string` | `null` | no |
+| <a name="input_subscription_limit"></a> [subscription\_limit](#input\_subscription\_limit) | The number of subscriptions a user can have to this Product at the same time. | `number` | `null` | no |
 
 ## Outputs
 
@@ -42,4 +42,3 @@ No modules.
 |------|-------------|
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_product_id"></a> [product\_id](#output\_product\_id) | n/a |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
