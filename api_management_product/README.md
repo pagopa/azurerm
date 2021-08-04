@@ -34,7 +34,7 @@ No modules.
 | <a name="input_subscription_required"></a> [subscription\_required](#input\_subscription\_required) | Is a Subscription required to access API's included in this Product? | `bool` | n/a | yes |
 | <a name="input_groups"></a> [groups](#input\_groups) | The groups that the product is included | `set(string)` | `[]` | no |
 | <a name="input_policy_xml"></a> [policy\_xml](#input\_policy\_xml) | The XML Content for this Product Policy. | `string` | `null` | no |
-| <a name="input_subscription_limit"></a> [subscription\_limit](#input\_subscription\_limit) | The number of subscriptions a user can have to this Product at the same time. | `number` | `null` | no |
+| <a name="input_subscriptions_limit"></a> [subscriptions\_limit](#input\_subscriptions\_limit) | The number of subscriptions a user can have to this Product at the same time. | `number` | `null` | no |
 
 ## Outputs
 
