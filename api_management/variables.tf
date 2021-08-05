@@ -204,6 +204,18 @@ variable "redis_connection_string" {
   default     = null
 }
 
+variable "key_vault_id" {
+  type        = string
+  default     = null
+  description = "Key vault id."
+}
+
+variable "certificate_names" {
+  type        = list(string)
+  default     = []
+  description = "List of key vault certificate name"
+}
+
 variable "tags" {
   type = map(any)
 }
