@@ -176,3 +176,18 @@ resource "azurerm_api_management_redis_cache" "this" {
   api_management_id = azurerm_api_management.this.id
   connection_string = var.redis_connection_string
 }
+
+data "azurerm_key_vault_certificate" "key_vault_certificate" {
+  count        = var.key_vault_id != null ? length(var.certificate_names) : 0
+  name         = var.certificate_names[count.index]
+  key_vault_id = var.key_vault_id
+}
+
+resource "azurerm_api_management_certificate" "this" {
+  count               = var.key_vault_id != null ? length(var.certificate_names) : 0
+  name                = var.certificate_names[count.index]
+  api_management_name = azurerm_api_management.this.name
+  resource_group_name = var.resource_group_name
+
+  key_vault_secret_id = trimsuffix(data.azurerm_key_vault_certificate.key_vault_certificate[count.index].secret_id, data.azurerm_key_vault_certificate.key_vault_certificate[count.index].version)
+}
