@@ -216,6 +216,24 @@ variable "certificate_names" {
   description = "List of key vault certificate name"
 }
 
+variable "sign_up_enabled" {
+  type        = bool
+  default     = false
+  description = "Can users sign up on the development portal?"
+}
+
+variable "sign_up_terms_of_service" {
+  type = object(
+    {
+      consent_required = bool
+      enabled          = bool
+      text             = string
+    }
+  )
+  default     = null
+  description = "the development portal terms_of_service"
+}
+
 variable "tags" {
   type = map(any)
 }
