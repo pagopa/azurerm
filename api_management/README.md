@@ -51,6 +51,8 @@ No modules.
 | <a name="input_notification_sender_email"></a> [notification\_sender\_email](#input\_notification\_sender\_email) | Email address from which the notification will be sent. | `string` | `null` | no |
 | <a name="input_policy_path"></a> [policy\_path](#input\_policy\_path) | n/a | `string` | `null` | no |
 | <a name="input_redis_connection_string"></a> [redis\_connection\_string](#input\_redis\_connection\_string) | Connection string for redis external cache | `string` | `null` | no |
+| <a name="input_sign_up_enabled"></a> [sign\_up\_enabled](#input\_sign\_up\_enabled) | Can users sign up on the development portal? | `bool` | `false` | no |
+| <a name="input_sign_up_terms_of_service"></a> [sign\_up\_terms\_of\_service](#input\_sign\_up\_terms\_of\_service) | the development portal terms\_of\_service | <pre>object(<br>    {<br>      consent_required = bool<br>      enabled          = bool<br>      text             = string<br>    }<br>  )</pre> | `null` | no |
 | <a name="input_sku_name"></a> [sku\_name](#input\_sku\_name) | n/a | `string` | `"A string consisting of two parts separated by an underscore(_). The first part is the name, valid values include: Consumption, Developer, Basic, Standard and Premium. The second part is the capacity (e.g. the number of deployed units of the sku), which must be a positive integer (e.g. Developer_1)."` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The id of the subnet that will be used for the API Management. | `string` | `null` | no |
 | <a name="input_virtual_network_type"></a> [virtual\_network\_type](#input\_virtual\_network\_type) | The type of virtual network you want to use, valid values include. | `string` | `null` | no |

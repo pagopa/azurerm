@@ -27,6 +27,18 @@ resource "azurerm_api_management" "this" {
     }
   }
 
+  dynamic "sign_up" {
+    for_each = var.sign_up_enabled == true ? ["dummy"] : []
+    content {
+      enabled = var.sign_up_enabled
+      terms_of_service {
+        enabled          = var.sign_up_terms_of_service.enabled
+        consent_required = var.sign_up_terms_of_service.consent_required
+        text             = var.sign_up_terms_of_service.text
+      }
+    }
+  }
+
   tags = var.tags
 }
 
