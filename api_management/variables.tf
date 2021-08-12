@@ -50,8 +50,15 @@ variable "virtual_network_type" {
 }
 
 variable "policy_path" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "(Deprecated). Path of the policy file."
+}
+
+variable "xml_content" {
+  type        = string
+  default     = null
+  description = "Xml content for all api policy"
 }
 
 variable "diagnostic_sampling_percentage" {

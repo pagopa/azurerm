@@ -14,6 +14,13 @@ resource "azurerm_api_management" "this" {
     }
   }
 
+  dynamic "policy" {
+    for_each = var.xml_content != null ? ["dummy"] : []
+    content {
+      xml_content = file(var.xml_content)
+    }
+  }
+
   identity {
     type = "SystemAssigned"
   }
