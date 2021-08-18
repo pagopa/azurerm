@@ -211,6 +211,12 @@ variable "redis_connection_string" {
   default     = null
 }
 
+variable "alerts_enabled" {
+  type        = bool
+  default     = true
+  description = "Should Metrics Alert be enabled?"
+}
+
 variable "key_vault_id" {
   type        = string
   default     = null

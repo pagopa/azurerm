@@ -47,6 +47,7 @@ No modules.
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | n/a | yes |
 | <a name="input_virtual_network_id"></a> [virtual\_network\_id](#input\_virtual\_network\_id) | The ID of the Virtual Network that should be linked to the DNS Zone. | `string` | n/a | yes |
 | <a name="input_action"></a> [action](#input\_action) | The ID of the Action Group and optional map of custom string properties to include with the post webhook operation. | <pre>set(object(<br>    {<br>      action_group_id    = string<br>      webhook_properties = map(string)<br>    }<br>  ))</pre> | `[]` | no |
+| <a name="input_alerts_enabled"></a> [alerts\_enabled](#input\_alerts\_enabled) | Should Metric Alerts be enabled? | `bool` | `true` | no |
 | <a name="input_backup_retention_days"></a> [backup\_retention\_days](#input\_backup\_retention\_days) | Backup retention days for the server, supported values are between | `number` | `7` | no |
 | <a name="input_configuration"></a> [configuration](#input\_configuration) | Map with PostgreSQL configurations. | `map(string)` | `{}` | no |
 | <a name="input_configuration_replica"></a> [configuration\_replica](#input\_configuration\_replica) | Map with PostgreSQL configurations. | `map(string)` | `{}` | no |

@@ -136,6 +136,12 @@ variable "private_dns_zone_name" {
   default = "privatelink.postgres.database.azure.com"
 }
 
+variable "alerts_enabled" {
+  type        = bool
+  default     = true
+  description = "Should Metric Alerts be enabled?"
+}
+
 variable "action" {
   description = "The ID of the Action Group and optional map of custom string properties to include with the post webhook operation."
   type = set(object(

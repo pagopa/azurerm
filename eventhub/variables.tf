@@ -126,6 +126,12 @@ variable "action" {
   default = []
 }
 
+variable "alerts_enabled" {
+  type        = bool
+  default     = true
+  description = "Should Metrics Alert be enabled?"
+}
+
 variable "tags" {
   type = map(any)
 }
