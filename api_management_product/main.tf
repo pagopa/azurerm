@@ -5,6 +5,7 @@ resource "azurerm_api_management_product" "this" {
   display_name          = var.display_name
   description           = var.description
   subscription_required = var.subscription_required
+  subscriptions_limit   = var.subscriptions_limit
   approval_required     = var.approval_required
   published             = var.published
 }

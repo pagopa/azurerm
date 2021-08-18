@@ -50,8 +50,15 @@ variable "virtual_network_type" {
 }
 
 variable "policy_path" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "(Deprecated). Path of the policy file."
+}
+
+variable "xml_content" {
+  type        = string
+  default     = null
+  description = "Xml content for all api policy"
 }
 
 variable "diagnostic_sampling_percentage" {
@@ -208,6 +215,36 @@ variable "alerts_enabled" {
   type        = bool
   default     = true
   description = "Should Metrics Alert be enabled?"
+}
+
+variable "key_vault_id" {
+  type        = string
+  default     = null
+  description = "Key vault id."
+}
+
+variable "certificate_names" {
+  type        = list(string)
+  default     = []
+  description = "List of key vault certificate name"
+}
+
+variable "sign_up_enabled" {
+  type        = bool
+  default     = false
+  description = "Can users sign up on the development portal?"
+}
+
+variable "sign_up_terms_of_service" {
+  type = object(
+    {
+      consent_required = bool
+      enabled          = bool
+      text             = string
+    }
+  )
+  default     = null
+  description = "the development portal terms_of_service"
 }
 
 variable "tags" {
