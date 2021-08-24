@@ -239,6 +239,12 @@ variable "replica_network_rules" {
   }
 }
 
+variable "lock_enable" {
+  type        = bool
+  default     = false
+  description = "Apply lock to block accedentaly deletions."
+}
+
 
 variable "tags" {
   type = map(any)

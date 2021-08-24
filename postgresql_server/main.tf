@@ -307,3 +307,12 @@ resource "azurerm_postgresql_firewall_rule" "azure_replica" {
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "0.0.0.0"
 }
+
+
+resource "azurerm_management_lock" "this" {
+  count      = var.lock_enable ? 1 : 0
+  name       = format("%-lock", azurerm_postgresql_server.this.name)
+  scope      = azurerm_postgresql_server.this.id
+  lock_level = "CanNotDelete"
+  notes      = "This items can't be deleted in this subscription!"
+}
