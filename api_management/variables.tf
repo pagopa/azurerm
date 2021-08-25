@@ -247,6 +247,12 @@ variable "sign_up_terms_of_service" {
   description = "the development portal terms_of_service"
 }
 
+variable "lock_enable" {
+  type        = bool
+  default     = false
+  description = "Apply lock to block accedentaly deletions."
+}
+
 variable "tags" {
   type = map(any)
 }

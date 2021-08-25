@@ -26,6 +26,12 @@ variable "terraform_cloud_object_id" {
   description = "Terraform cloud object id to create its access policy."
 }
 
+variable "lock_enable" {
+  type        = bool
+  default     = false
+  description = "Apply lock to block accedentaly deletions."
+}
+
 variable "tags" {
   type = map(any)
 }

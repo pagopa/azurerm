@@ -211,3 +211,11 @@ resource "azurerm_api_management_certificate" "this" {
 
   key_vault_secret_id = trimsuffix(data.azurerm_key_vault_certificate.key_vault_certificate[count.index].secret_id, data.azurerm_key_vault_certificate.key_vault_certificate[count.index].version)
 }
+
+resource "azurerm_management_lock" "this" {
+  count      = var.lock_enable ? 1 : 0
+  name       = format("%-lock", azurerm_api_management.this.name)
+  scope      = azurerm_api_management.this.id
+  lock_level = "CanNotDelete"
+  notes      = "This items can't be deleted in this subscription!"
+}
