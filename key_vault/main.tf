@@ -46,7 +46,7 @@ resource "azurerm_key_vault_access_policy" "terraform_cloud_policy" {
 
 resource "azurerm_management_lock" "this" {
   count      = var.lock_enable ? 1 : 0
-  name       = format("%-lock", azurerm_key_vault.this.name)
+  name       = format("%s-lock", azurerm_key_vault.this.name)
   scope      = azurerm_key_vault.this.id
   lock_level = "CanNotDelete"
   notes      = "this items can't be deleted in this subscription!"
