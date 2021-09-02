@@ -10,6 +10,10 @@ output "private_ip_addresses" {
   value = azurerm_api_management.this.private_ip_addresses
 }
 
+output "public_ip_addresses" {
+  value = azurerm_api_management.this.public_ip_addresses
+}
+
 output "gateway_url" {
   value = azurerm_api_management.this.gateway_url
 }
