@@ -195,6 +195,7 @@ resource "azurerm_api_management_redis_cache" "this" {
   name              = format("%s-redis", var.name)
   api_management_id = azurerm_api_management.this.id
   connection_string = var.redis_connection_string
+  redis_cache_id    = var.redis_cache_id
 }
 
 data "azurerm_key_vault_certificate" "key_vault_certificate" {
