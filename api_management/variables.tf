@@ -211,6 +211,11 @@ variable "redis_connection_string" {
   default     = null
 }
 
+variable "redis_cache_id" {
+  type        = string
+  description = "The resource ID of the Cache for Redis."
+}
+
 variable "alerts_enabled" {
   type        = bool
   default     = true
