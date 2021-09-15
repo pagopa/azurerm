@@ -133,6 +133,4 @@ resource "azurerm_monitor_metric_alert" "this" {
       }
     }
   }
-
-  tags = var.tags
 }

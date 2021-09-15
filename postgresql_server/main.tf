@@ -232,8 +232,6 @@ resource "azurerm_monitor_metric_alert" "this" {
       }
     }
   }
-
-  tags = var.tags
 }
 
 
@@ -273,8 +271,6 @@ resource "azurerm_monitor_metric_alert" "replica" {
       }
     }
   }
-
-  tags = var.tags
 }
 
 
