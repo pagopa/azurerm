@@ -199,4 +199,24 @@ resource "azurerm_monitor_diagnostic_setting" "app_gw" {
       days    = 365
     }
   }
+
+  log {
+    category = "ApplicationGatewayPerformanceLog"
+    enabled  = false
+
+    retention_policy {
+      days    = 0
+      enabled = false
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = false
+
+    retention_policy {
+      days    = 0
+      enabled = false
+    }
+  }
 }
