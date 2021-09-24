@@ -23,7 +23,7 @@ release () {
     git add CHANGELOG.md
 
     # Commit changelog
-    git commit -m "Release: $1"
+    git commit -m "Release: $1" --no-verify
 
     # push the changelog file.
     git push origin main
