@@ -131,6 +131,12 @@ variable "max_count" {
   default     = null
 }
 
+variable "upgrade_settings_max_surge" {
+  type        = string
+  description = "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade."
+  default     = "33%"
+}
+
 # Logs 
 variable "log_analytics_workspace_id" {
   type        = string

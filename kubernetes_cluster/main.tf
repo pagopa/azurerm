@@ -18,6 +18,10 @@ resource "azurerm_kubernetes_cluster" "this" {
     min_count           = var.min_count
     max_count           = var.max_count
 
+    upgrade_settings {
+      max_surge = var.upgrade_settings_max_surge
+    }
+
     tags = var.tags
   }
 
