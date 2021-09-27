@@ -37,14 +37,14 @@ resource "null_resource" "this" {
         --platform-fault-domain-count 1 \
         --load-balancer "" \
         --subnet ${var.subnet_id} && \
-      cat './script-config.json' && \
-      az vmss extension set \
-        --vmss-name ${var.name} \
-        --resource-group ${var.resource_group_name} \
-        --name CustomScript \
-        --version 2.0 \
-        --publisher Microsoft.Azure.Extensions \
-        --protected-settings './script-config.json'
+      cat "${path.module}/script-config.json"
+      # az vmss extension set \
+      #   --vmss-name ${var.name} \
+      #   --resource-group ${var.resource_group_name} \
+      #   --name CustomScript \
+      #   --version 2.0 \
+      #   --publisher Microsoft.Azure.Extensions \
+      #   --protected-settings './script-config.json'
     EOT
   }
 
