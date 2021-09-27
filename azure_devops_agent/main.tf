@@ -44,7 +44,7 @@ resource "null_resource" "this" {
         --version 1.0 \
         --publisher Microsoft.Azure.Extensions \
         --extension-instance-name install_requirements \
-        --protected-settings "${path.module}/script-config.json"
+        --settings "${path.module}/script-config.json"
     EOT
   }
 
