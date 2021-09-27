@@ -22,6 +22,7 @@ resource "null_resource" "this" {
       # az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID && \
       az account set -s ${var.subscription} && \
       az vmss create \
+        --admin-username azureuser \
         --name ${var.name} \
         --resource-group ${var.resource_group_name} \
         --image ${var.image} \
