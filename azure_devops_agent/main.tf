@@ -43,7 +43,7 @@ resource "null_resource" "this" {
         --name CustomScript \
         --version 2.0 \
         --publisher Microsoft.Azure.Extensions \
-        --protected-settings ./script-config.json
+        --protected-settings "./script-config.json"
     EOT
   }
 
