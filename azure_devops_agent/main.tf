@@ -41,8 +41,9 @@ resource "null_resource" "this" {
         --vmss-name ${var.name} \
         --resource-group ${var.resource_group_name} \
         --name CustomScript \
-        --version 2.0 \
+        --version 1.0 \
         --publisher Microsoft.Azure.Extensions \
+        --extension-instance-name install_requirements \
         --protected-settings "${path.module}/script-config.json"
     EOT
   }
