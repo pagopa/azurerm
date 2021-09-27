@@ -36,7 +36,15 @@ resource "null_resource" "this" {
         --single-placement-group false \
         --platform-fault-domain-count 1 \
         --load-balancer "" \
-        --subnet ${var.subnet_id}
+        --subnet ${var.subnet_id} && \
+      az vmss extension set \
+        --vmss-name ${var.name} \
+        --resource-group ${var.resource_group_name} \
+        --name CustomScript \
+        --version 2.0 \
+        --publisher Microsoft.Azure.Extensions \
+        --extension-instance-name install_requirements \
+        --settings "${path.module}/script-config.json"
     EOT
   }
 
