@@ -41,7 +41,7 @@ resource "null_resource" "this" {
         --vmss-name ${var.name} \
         --resource-group ${var.resource_group_name} \
         --name CustomScript \
-        --version 1.0 \
+        --version 2.0 \
         --publisher Microsoft.Azure.Extensions \
         --extension-instance-name install_requirements \
         --settings "${path.module}/script-config.json"
