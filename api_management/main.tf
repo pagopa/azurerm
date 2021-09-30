@@ -218,3 +218,41 @@ resource "azurerm_management_lock" "this" {
   lock_level = "CanNotDelete"
   notes      = "This items can't be deleted in this subscription!"
 }
+
+resource "azurerm_monitor_diagnostic_setting" "apim" {
+  count                      = var.sec_log_analytics_workspace_id != null ? 1 : 0
+  name                       = "LogSecurity"
+  target_resource_id         = azurerm_api_management.this.id
+  log_analytics_workspace_id = var.sec_log_analytics_workspace_id
+  storage_account_id         = var.sec_storage_id
+
+  log {
+    category = "GatewayLogs"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "WebSocketConnectionLogs"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = false
+
+    retention_policy {
+      days    = 0
+      enabled = false
+    }
+  }
+}
