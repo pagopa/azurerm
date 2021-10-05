@@ -227,6 +227,59 @@ resource "azurerm_monitor_diagnostic_setting" "gw_logs" {
   }
 }
 
+resource "azurerm_monitor_diagnostic_setting" "sec_gw_logs" {
+  count                      = var.sec_log_analytics_workspace_id != null ? 1 : 0
+  name                       = "LogSecurity"
+  target_resource_id         = azurerm_api_management.this.id
+  log_analytics_workspace_id = var.sec_log_analytics_workspace_id
+  storage_account_id         = var.sec_storage_id
+
+  log {
+    category = "GatewayDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "TunnelDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "RouteDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "IKEDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "P2SDiagnosticLog"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+}
+
 resource "azurerm_local_network_gateway" "local" {
   count               = length(var.local_networks)
   name                = "${var.local_networks[count.index].name}-lng"
