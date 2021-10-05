@@ -131,6 +131,12 @@ variable "max_count" {
   default     = null
 }
 
+variable "max_pods" {
+  type        = number
+  description = "The maximum number of pods that can run on each agent. Changing this forces a new resource to be created."
+  default     = 30
+}
+
 variable "upgrade_settings_max_surge" {
   type        = string
   description = "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade."

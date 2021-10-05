@@ -17,6 +17,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     node_count          = var.node_count
     min_count           = var.min_count
     max_count           = var.max_count
+    max_pods            = var.max_pods
 
     upgrade_settings {
       max_surge = var.upgrade_settings_max_surge
