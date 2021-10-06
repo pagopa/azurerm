@@ -233,28 +233,6 @@ data "azurerm_function_app_host_keys" "app_host_keys" {
   depends_on          = [azurerm_function_app.function_app]
 }
 
-module "subnet" {
-  count  = var.avoid_old_subnet_delete == false && (var.subnet_id != null || var.virtual_network_info == null) ? 0 : 1
-  source = "git::git@github.com:pagopa/azurerm.git//azurerm_subnet?ref=v1.0.5"
-
-  name                 = format("f%s", var.name)
-  resource_group_name  = var.virtual_network_info != null ? var.virtual_network_info.resource_group_name : "none"
-  location             = var.location
-  virtual_network_name = var.virtual_network_info != null ? var.virtual_network_info.name : "none"
-  address_prefix       = var.virtual_network_info != null ? var.virtual_network_info.subnet_address_prefix : "none"
-
-  delegation = {
-    name = "default"
-    service_delegation = {
-      name    = "Microsoft.Web/serverFarms"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-    }
-  }
-
-  service_endpoints = [
-    "Microsoft.Web"
-  ]
-}
 
 resource "azurerm_app_service_virtual_network_swift_connection" "app_service_virtual_network_swift_connection" {
   count = var.subnet_id == null && var.virtual_network_info == null ? 0 : 1
