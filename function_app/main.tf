@@ -211,7 +211,6 @@ resource "azurerm_function_app" "function_app" {
       WEBSITE_CONTENTSHARE = "${local.resource_name}-content"
     },
     var.app_settings,
-    module.secrets_from_keyvault.secrets_with_value,
     var.durable_function.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {}
   )
 
