@@ -37,7 +37,7 @@ module "storage_account_durable_function" {
       "AzureServices",
     ]
     virtual_network_subnet_ids = [
-      local.subnet_id
+      var.subnet_id
     ]
   }
 }
@@ -147,13 +147,10 @@ resource "azurerm_app_service_plan" "app_service_plan" {
   tags = var.tags
 }
 
-
-
 locals {
   allowed_ips                                = [for ip in var.allowed_ips : { ip_address = ip, virtual_network_subnet_id = null }]
   allowed_subnets                            = [for s in var.allowed_subnets : { ip_address = null, virtual_network_subnet_id = s }]
   ip_restrictions                            = concat(local.allowed_subnets, local.allowed_ips)
-  subnet_id                                  = var.subnet_id != null ? var.subnet_id : module.subnet[0].id
   durable_function_storage_connection_string = var.durable_function.enable ? module.storage_account_durable_function[0].primary_connection_string : "dummy"
 }
 
@@ -233,8 +230,8 @@ data "azurerm_function_app_host_keys" "app_host_keys" {
 
 
 resource "azurerm_app_service_virtual_network_swift_connection" "app_service_virtual_network_swift_connection" {
-  count = var.subnet_id == null && var.virtual_network_info == null ? 0 : 1
+  count = var.virtual_network_info == null ? 0 : 1
 
   app_service_id = azurerm_function_app.function_app.id
-  subnet_id      = local.subnet_id
+  subnet_id      = var.subnet_id
 }

@@ -118,8 +118,6 @@ variable "allowed_subnets" {
 
 variable "subnet_id" {
   type = string
-
-  default = null
 }
 
 variable "virtual_network_info" {
