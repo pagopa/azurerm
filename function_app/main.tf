@@ -1,9 +1,3 @@
-data "azurerm_key_vault_secret" "allowed_ips_secret" {
-  count = var.allowed_ips_secret == null ? 0 : 1
-
-  name         = var.allowed_ips_secret.key_vault_secret
-  key_vault_id = var.allowed_ips_secret.key_vault_id
-}
 
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
