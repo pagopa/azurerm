@@ -14,7 +14,8 @@ module "storage_account" {
 }
 
 module "storage_account_durable_function" {
-  count  = var.durable_function.enable ? 1 : 0
+  count = var.durable_function.enable ? 1 : 0
+
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
   name                       = format("%s%sst%sd%s", var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
@@ -25,8 +26,6 @@ module "storage_account_durable_function" {
   resource_group_name        = var.resource_group_name
   location                   = var.location
   advanced_threat_protection = false
-
-  tags = var.tags
 
   network_rules = {
     default_action = "Deny"
@@ -40,9 +39,11 @@ module "storage_account_durable_function" {
       var.subnet_id
     ]
   }
+
+  tags = var.tags
 }
 
-resource "azurerm_private_endpoint" "private_endpoint_blob" {
+resource "azurerm_private_endpoint" "blob" {
   count = var.durable_function.enable ? 1 : 0
 
   name                = format("%s-blob-endpoint", module.storage_account_durable_function[0].resource_name)
@@ -69,9 +70,11 @@ resource "azurerm_private_endpoint" "private_endpoint_blob" {
       private_dns_zone_ids = var.durable_function.private_dns_zone_blob_ids
     }
   }
+
+  tags = var.tags
 }
 
-resource "azurerm_private_endpoint" "private_endpoint_queue" {
+resource "azurerm_private_endpoint" "queue" {
   count = var.durable_function.enable ? 1 : 0
 
   name                = format("%s-queue-endpoint", module.storage_account_durable_function[0].resource_name)
@@ -98,9 +101,11 @@ resource "azurerm_private_endpoint" "private_endpoint_queue" {
       private_dns_zone_ids = var.durable_function.private_dns_zone_queue_ids
     }
   }
+
+  tags = var.tags
 }
 
-resource "azurerm_private_endpoint" "private_endpoint_table" {
+resource "azurerm_private_endpoint" "table" {
   count = var.durable_function.enable ? 1 : 0
 
   name                = format("%s-table-endpoint", module.storage_account_durable_function[0].resource_name)
@@ -127,16 +132,17 @@ resource "azurerm_private_endpoint" "private_endpoint_table" {
       private_dns_zone_ids = var.durable_function.private_dns_zone_table_ids
     }
   }
+
+  tags = var.tags
 }
 
-resource "azurerm_app_service_plan" "app_service_plan" {
+resource "azurerm_app_service_plan" "this" {
   count = var.app_service_plan_id == null ? 1 : 0
 
   name                = format("%s-%s-plan-%s%s", var.global_prefix, var.environment_short, var.resources_prefix.app_service_plan, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
-
-  kind = var.app_service_plan_info.kind
+  kind                = var.app_service_plan_info.kind
 
   sku {
     tier = var.app_service_plan_info.sku_tier
@@ -154,12 +160,12 @@ locals {
   durable_function_storage_connection_string = var.durable_function.enable ? module.storage_account_durable_function[0].primary_connection_string : "dummy"
 }
 
-resource "azurerm_function_app" "function_app" {
+resource "azurerm_function_app" "this" {
   name                       = local.resource_name
   resource_group_name        = var.resource_group_name
   location                   = var.location
   version                    = var.runtime_version
-  app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : module.app_service_plan[0].id
+  app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this.id
   storage_account_name       = module.storage_account.resource_name
   storage_account_access_key = module.storage_account.primary_access_key
 
@@ -221,17 +227,18 @@ resource "azurerm_function_app" "function_app" {
 }
 
 # this datasource has been introduced within version 2.27.0
-data "azurerm_function_app_host_keys" "app_host_keys" {
-  count               = var.export_keys ? 1 : 0
+data "azurerm_function_app_host_keys" "this" {
+  count = var.export_keys ? 1 : 0
+
   name                = local.resource_name
   resource_group_name = var.resource_group_name
-  depends_on          = [azurerm_function_app.function_app]
+  depends_on          = [azurerm_function_app.this]
 }
 
 
-resource "azurerm_app_service_virtual_network_swift_connection" "app_service_virtual_network_swift_connection" {
+resource "azurerm_app_service_virtual_network_swift_connection" "this" {
   count = var.virtual_network_info == null ? 0 : 1
 
-  app_service_id = azurerm_function_app.function_app.id
+  app_service_id = azurerm_function_app.this.id
   subnet_id      = var.subnet_id
 }
