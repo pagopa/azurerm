@@ -163,6 +163,17 @@ resource "azurerm_application_gateway" "this" {
     request_body_check       = true
     file_upload_limit_mb     = 100
     max_request_body_size_kb = 128
+
+    dynamic "disabled_rule_group" {
+      for_each = var.waf_disabled_rule_group
+      iterator = disabled_rule_group
+
+      content {
+        rule_group_name = disabled_rule_group.value.rule_group_name
+        rules           = disabled_rule_group.value.rules
+      }
+    }
+
   }
 
   autoscale_configuration {

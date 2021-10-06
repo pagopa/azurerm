@@ -96,6 +96,15 @@ variable "identity_ids" {
   type = list(string)
 }
 
+# WAF
+variable "waf_disabled_rule_group" {
+  type = list(object({
+    rule_group_name = string
+    rules           = list(string)
+  }))
+  default = []
+}
+
 # Scaling
 
 variable "app_gateway_max_capacity" {
