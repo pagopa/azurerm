@@ -1,15 +1,14 @@
-
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name  = format("%s%sst%s%s",var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
-  account_kind                  = "StorageV2"
-  account_tier                  = var.storage_account_info.account_tier
-  account_replication_type      = var.storage_account_info.account_replication_type
-  access_tier                   = var.storage_account_info.access_tier
-  resource_group_name           = var.resource_group_name
-  location                      = var.location
-  advanced_threat_protection    = var.storage_account_info.advanced_threat_protection_enable
+  name                       = format("%s%sst%s%s", var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
+  account_kind               = "StorageV2"
+  account_tier               = var.storage_account_info.account_tier
+  account_replication_type   = var.storage_account_info.account_replication_type
+  access_tier                = var.storage_account_info.access_tier
+  resource_group_name        = var.resource_group_name
+  location                   = var.location
+  advanced_threat_protection = var.storage_account_info.advanced_threat_protection_enable
 
   tags = var.tags
 }
@@ -18,14 +17,14 @@ module "storage_account_durable_function" {
   count  = var.durable_function.enable ? 1 : 0
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name  = format("%s%sst%sd%s",var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
-  account_kind                  = "StorageV2"
-  account_tier                  = var.storage_account_info.account_tier
-  account_replication_type      = var.storage_account_info.account_replication_type
-  access_tier                   = var.storage_account_info.access_tier
-  resource_group_name           = var.resource_group_name
-  location                      = var.location
-  advanced_threat_protection    = false
+  name                       = format("%s%sst%sd%s", var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
+  account_kind               = "StorageV2"
+  account_tier               = var.storage_account_info.account_tier
+  account_replication_type   = var.storage_account_info.account_replication_type
+  access_tier                = var.storage_account_info.access_tier
+  resource_group_name        = var.resource_group_name
+  location                   = var.location
+  advanced_threat_protection = false
 
   tags = var.tags
 
@@ -44,7 +43,7 @@ module "storage_account_durable_function" {
 }
 
 resource "azurerm_private_endpoint" "private_endpoint_blob" {
-  count  = var.durable_function.enable ? 1 : 0
+  count = var.durable_function.enable ? 1 : 0
 
   name                = format("%s-blob-endpoint", module.storage_account_durable_function[0].resource_name)
   location            = var.location
@@ -73,7 +72,7 @@ resource "azurerm_private_endpoint" "private_endpoint_blob" {
 }
 
 resource "azurerm_private_endpoint" "private_endpoint_queue" {
-  count  = var.durable_function.enable ? 1 : 0
+  count = var.durable_function.enable ? 1 : 0
 
   name                = format("%s-queue-endpoint", module.storage_account_durable_function[0].resource_name)
   location            = var.location
@@ -102,7 +101,7 @@ resource "azurerm_private_endpoint" "private_endpoint_queue" {
 }
 
 resource "azurerm_private_endpoint" "private_endpoint_table" {
-  count  = var.durable_function.enable ? 1 : 0
+  count = var.durable_function.enable ? 1 : 0
 
   name                = format("%s-table-endpoint", module.storage_account_durable_function[0].resource_name)
   location            = var.location
@@ -131,17 +130,17 @@ resource "azurerm_private_endpoint" "private_endpoint_table" {
 }
 
 resource "azurerm_app_service_plan" "app_service_plan" {
-  count  = var.app_service_plan_id == null ? 1 : 0
-  
+  count = var.app_service_plan_id == null ? 1 : 0
+
   name                = format("%s-%s-plan-%s%s", var.global_prefix, var.environment_short, var.resources_prefix.app_service_plan, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  kind  = var.app_service_plan_info.kind
+  kind = var.app_service_plan_info.kind
 
   sku {
-    tier     = var.app_service_plan_info.sku_tier
-    size     = var.app_service_plan_info.sku_size
+    tier = var.app_service_plan_info.sku_tier
+    size = var.app_service_plan_info.sku_size
     # capacity = var.plan_sku_capacity
   }
 
@@ -153,8 +152,7 @@ resource "azurerm_app_service_plan" "app_service_plan" {
 locals {
   allowed_ips                                = [for ip in var.allowed_ips : { ip_address = ip, virtual_network_subnet_id = null }]
   allowed_subnets                            = [for s in var.allowed_subnets : { ip_address = null, virtual_network_subnet_id = s }]
-  allowed_ips_secret                         = [for ip in var.allowed_ips_secret == null ? [] : split(";", data.azurerm_key_vault_secret.allowed_ips_secret[0].value) : { ip_address = ip, virtual_network_subnet_id = null }]
-  ip_restrictions                            = concat(local.allowed_subnets, local.allowed_ips_secret, local.allowed_ips)
+  ip_restrictions                            = concat(local.allowed_subnets, local.allowed_ips)
   subnet_id                                  = var.subnet_id != null ? var.subnet_id : module.subnet[0].id
   durable_function_storage_connection_string = var.durable_function.enable ? module.storage_account_durable_function[0].primary_connection_string : "dummy"
 }

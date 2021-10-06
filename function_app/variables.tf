@@ -91,9 +91,9 @@ variable "app_settings" {
 
 variable "app_settings_secrets" {
   type = object({
-    name             = string
-    resource_group   = string
-    secrets          = list(string)
+    name           = string
+    resource_group = string
+    secrets        = list(string)
   })
 }
 
@@ -101,16 +101,6 @@ variable "allowed_ips" {
   // List of ip
   type    = list(string)
   default = []
-}
-
-variable "allowed_ips_secret" {
-  // List of ip from a keyvault secret
-  type = object({
-    key_vault_id     = string
-    key_vault_secret = string
-  })
-
-  default = null
 }
 
 variable "cors" {
