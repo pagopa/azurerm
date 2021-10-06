@@ -148,13 +148,6 @@ resource "azurerm_app_service_plan" "app_service_plan" {
   tags = var.tags
 }
 
-module "secrets_from_keyvault" {
-  source = "git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query?ref=v1.0.58"
-
-  key_vault_name    = var.app_settings_secrets.name
-  resource_group    = var.app_settings_secrets.resource_group
-  secrets           = var.app_settings_secrets.secrets
-}
 
 
 locals {
