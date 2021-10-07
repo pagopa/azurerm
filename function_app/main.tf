@@ -1,3 +1,4 @@
+#tfsec:ignore:azure-storage-default-action-deny
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
@@ -168,10 +169,16 @@ resource "azurerm_function_app" "this" {
   app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this.id
   storage_account_name       = module.storage_account.resource_name
   storage_account_access_key = module.storage_account.primary_access_key
+  https_only                 = true
+
+  auth_settings {
+    enabled = true
+  }
 
   site_config {
     min_tls_version           = "1.2"
     ftps_state                = "Disabled"
+    http2_enabled             = true
     pre_warmed_instance_count = var.pre_warmed_instance_count
 
     dynamic "ip_restriction" {
@@ -237,7 +244,7 @@ data "azurerm_function_app_host_keys" "this" {
 
 
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {
-  count = var.virtual_network_info == null ? 0 : 1
+  count = var.subnet_id == null ? 0 : 1
 
   app_service_id = azurerm_function_app.this.id
   subnet_id      = var.subnet_id
