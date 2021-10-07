@@ -2,7 +2,7 @@
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = format("%s%sst%s%s", var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
+  name                       = format("%s%sst%s%s", var.prefix, var.env_short, var.resources_prefix.storage_account, var.name)
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
@@ -19,7 +19,7 @@ module "storage_account_durable_function" {
 
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = format("%s%sst%sd%s", var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
+  name                       = format("%s%sst%sd%s", var.prefix, var.env_short, var.resources_prefix.storage_account, var.name)
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
@@ -140,7 +140,7 @@ resource "azurerm_private_endpoint" "table" {
 resource "azurerm_app_service_plan" "this" {
   count = var.app_service_plan_id == null ? 1 : 0
 
-  name                = format("%s-%s-plan-%s%s", var.global_prefix, var.environment_short, var.resources_prefix.app_service_plan, var.name)
+  name                = format("%s-%s-plan-%s%s", var.prefix, var.env_short, var.resources_prefix.app_service_plan, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   kind                = var.app_service_plan_info.kind

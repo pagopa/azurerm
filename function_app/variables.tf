@@ -1,8 +1,8 @@
-variable "global_prefix" {
+variable "prefix" {
   type = string
 }
 
-variable "environment_short" {
+variable "env_short" {
   type = string
 }
 
@@ -142,5 +142,5 @@ variable "tags" {
 }
 
 locals {
-  resource_name = format("%s-%s-%s-%s", var.global_prefix, var.environment_short, var.resources_prefix.function_app, var.name)
+  resource_name = format("%s-%s-%s-%s", var.prefix, var.env_short, var.resources_prefix.function_app, var.name)
 }
