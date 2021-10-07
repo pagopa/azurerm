@@ -37,7 +37,7 @@ module "storage_account_durable_function" {
       "AzureServices",
     ]
     virtual_network_subnet_ids = [
-      var.subnet_id
+      var.subnet_out_id
     ]
   }
 
@@ -47,18 +47,13 @@ module "storage_account_durable_function" {
 resource "azurerm_private_endpoint" "blob" {
   count = var.durable_function.enable ? 1 : 0
 
-  name                = format("%s-blob-endpoint", module.storage_account_durable_function[0].resource_name)
+  name                = format("%s-blob-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.durable_function.private_endpoint_subnet_id
 
-  private_dns_zone_group {
-    name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
-  }
-
   private_service_connection {
-    name                           = format("%s-blob", module.storage_account_durable_function[0].resource_name)
+    name                           = format("%s-blob", module.storage_account_durable_function[0].name)
     private_connection_resource_id = module.storage_account_durable_function[0].id
     is_manual_connection           = false
     subresource_names              = ["blob"]
@@ -78,18 +73,13 @@ resource "azurerm_private_endpoint" "blob" {
 resource "azurerm_private_endpoint" "queue" {
   count = var.durable_function.enable ? 1 : 0
 
-  name                = format("%s-queue-endpoint", module.storage_account_durable_function[0].resource_name)
+  name                = format("%s-queue-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.durable_function.private_endpoint_subnet_id
 
-  private_dns_zone_group {
-    name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
-  }
-
   private_service_connection {
-    name                           = format("%s-queue", module.storage_account_durable_function[0].resource_name)
+    name                           = format("%s-queue", module.storage_account_durable_function[0].name)
     private_connection_resource_id = module.storage_account_durable_function[0].id
     is_manual_connection           = false
     subresource_names              = ["queue"]
@@ -109,18 +99,13 @@ resource "azurerm_private_endpoint" "queue" {
 resource "azurerm_private_endpoint" "table" {
   count = var.durable_function.enable ? 1 : 0
 
-  name                = format("%s-table-endpoint", module.storage_account_durable_function[0].resource_name)
+  name                = format("%s-table-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.durable_function.private_endpoint_subnet_id
 
-  private_dns_zone_group {
-    name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
-  }
-
   private_service_connection {
-    name                           = format("%s-table", module.storage_account_durable_function[0].resource_name)
+    name                           = format("%s-table", module.storage_account_durable_function[0].name)
     private_connection_resource_id = module.storage_account_durable_function[0].id
     is_manual_connection           = false
     subresource_names              = ["table"]
@@ -166,8 +151,8 @@ resource "azurerm_function_app" "this" {
   resource_group_name        = var.resource_group_name
   location                   = var.location
   version                    = var.runtime_version
-  app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this.id
-  storage_account_name       = module.storage_account.resource_name
+  app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this[0].id
+  storage_account_name       = module.storage_account.name
   storage_account_access_key = module.storage_account.primary_access_key
   https_only                 = true
 
@@ -244,8 +229,6 @@ data "azurerm_function_app_host_keys" "this" {
 }
 
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {
-  count = var.subnet_id == null ? 0 : 1
-
   app_service_id = azurerm_function_app.this.id
-  subnet_id      = var.subnet_id
+  subnet_id      = var.subnet_out_id
 }

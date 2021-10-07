@@ -106,7 +106,7 @@ variable "allowed_subnets" {
   default = []
 }
 
-variable "subnet_id" {
+variable "subnet_out_id" {
   type = string
 }
 
