@@ -128,12 +128,6 @@ variable "durable_function" {
   }
 }
 
-variable "avoid_old_subnet_delete" {
-  type = bool
-
-  default = false
-}
-
 variable "health_check_path" {
   type    = string
   default = null
