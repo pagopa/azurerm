@@ -242,7 +242,6 @@ data "azurerm_function_app_host_keys" "this" {
   depends_on          = [azurerm_function_app.this]
 }
 
-
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {
   count = var.subnet_id == null ? 0 : 1
 

@@ -137,6 +137,11 @@ variable "health_check_maxpingfailures" {
   default = 10
 }
 
+variable "export_keys" {
+  type    = bool
+  default = false
+}
+
 variable "tags" {
   type = map(any)
 }
