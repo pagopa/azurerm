@@ -216,7 +216,8 @@ resource "azurerm_function_app" "this" {
       WEBSITE_DNS_SERVER       = "168.63.129.16"
       # this app settings is required to solve the issue:
       # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10499
-      WEBSITE_CONTENTSHARE = "${local.resource_name}-content"
+      WEBSITE_CONTENTSHARE            = "${local.resource_name}-content"
+      APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
     var.app_settings,
     var.durable_function.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {}
