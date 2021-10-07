@@ -1,8 +1,8 @@
-variable "global_prefix" {
+variable "prefix" {
   type = string
 }
 
-variable "environment_short" {
+variable "env_short" {
   type = string
 }
 
@@ -22,9 +22,9 @@ variable "resources_prefix" {
   })
 
   default = {
-    function_app     = "func"
-    app_service_plan = "f"
-    storage_account  = "f"
+    function_app     = "fn"
+    app_service_plan = "fn"
+    storage_account  = "fn"
   }
 }
 
@@ -34,7 +34,7 @@ variable "resource_group_name" {
 
 variable "runtime_version" {
   type    = string
-  default = "~2"
+  default = "~3"
 }
 
 variable "storage_account_info" {
@@ -49,7 +49,7 @@ variable "storage_account_info" {
     account_tier                      = "Standard"
     account_replication_type          = "LRS"
     access_tier                       = "Hot"
-    advanced_threat_protection_enable = false
+    advanced_threat_protection_enable = true
   }
 }
 
@@ -74,8 +74,7 @@ variable "app_service_plan_info" {
 }
 
 variable "pre_warmed_instance_count" {
-  type = number
-
+  type    = number
   default = 1
 }
 
@@ -84,17 +83,8 @@ variable "application_insights_instrumentation_key" {
 }
 
 variable "app_settings" {
-  type = map(any)
-
+  type    = map(any)
   default = {}
-}
-
-variable "app_settings_secrets" {
-  type = object({
-    name           = string
-    resource_group = string
-    secrets        = list(string)
-  })
 }
 
 variable "allowed_ips" {
@@ -116,18 +106,8 @@ variable "allowed_subnets" {
   default = []
 }
 
-variable "subnet_id" {
+variable "subnet_out_id" {
   type = string
-}
-
-variable "virtual_network_info" {
-  type = object({
-    name                  = string
-    resource_group_name   = string
-    subnet_address_prefix = string
-  })
-
-  default = null
 }
 
 variable "durable_function" {
@@ -148,20 +128,8 @@ variable "durable_function" {
   }
 }
 
-variable "avoid_old_subnet_delete" {
-  type = bool
-
-  default = false
-}
-
-# variable "export_keys" {
-#   type    = bool
-#   default = false
-# }
-
 variable "health_check_path" {
-  type    = string
-  default = null
+  type = string
 }
 
 variable "health_check_maxpingfailures" {
@@ -169,18 +137,9 @@ variable "health_check_maxpingfailures" {
   default = 10
 }
 
-# variable "web_test" {
-#   type = object({
-#     application_insights_id = string
-#     enabled                 = bool
-#   })
-#   default = null
-# }
-
-variable "advanced_threat_protection_enable" {
-  type        = bool
-  default     = false
-  description = "Enable advanced threat protection on the storage accounts"
+variable "export_keys" {
+  type    = bool
+  default = false
 }
 
 variable "tags" {
@@ -188,5 +147,5 @@ variable "tags" {
 }
 
 locals {
-  resource_name = format("%s-%s-%s-%s", var.global_prefix, var.environment_short, var.resources_prefix.function_app, var.name)
+  resource_name = format("%s-%s-%s-%s", var.prefix, var.env_short, var.resources_prefix.function_app, var.name)
 }

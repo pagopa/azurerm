@@ -229,7 +229,7 @@ resource "azurerm_monitor_diagnostic_setting" "gw_logs" {
 resource "azurerm_monitor_diagnostic_setting" "sec_gw_logs" {
   count                      = var.sec_log_analytics_workspace_id != null ? 1 : 0
   name                       = "LogSecurity"
-  target_resource_id         = azurerm_virtual_network_gateway.gw.id 
+  target_resource_id         = azurerm_virtual_network_gateway.gw.id
   log_analytics_workspace_id = var.sec_log_analytics_workspace_id
   storage_account_id         = var.sec_storage_id
 
@@ -277,7 +277,7 @@ resource "azurerm_monitor_diagnostic_setting" "sec_gw_logs" {
       days    = 365
     }
   }
-  
+
   metric {
     category = "AllMetrics"
     enabled  = false

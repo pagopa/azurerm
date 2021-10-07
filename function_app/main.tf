@@ -1,7 +1,8 @@
+#tfsec:ignore:azure-storage-default-action-deny
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = format("%s%sst%s%s", var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
+  name                       = format("%s%sst%s%s", var.prefix, var.env_short, var.resources_prefix.storage_account, var.name)
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
@@ -18,7 +19,7 @@ module "storage_account_durable_function" {
 
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = format("%s%sst%sd%s", var.global_prefix, var.environment_short, var.resources_prefix.storage_account, var.name)
+  name                       = format("%s%sst%sd%s", var.prefix, var.env_short, var.resources_prefix.storage_account, var.name)
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
@@ -36,7 +37,7 @@ module "storage_account_durable_function" {
       "AzureServices",
     ]
     virtual_network_subnet_ids = [
-      var.subnet_id
+      var.subnet_out_id
     ]
   }
 
@@ -46,18 +47,13 @@ module "storage_account_durable_function" {
 resource "azurerm_private_endpoint" "blob" {
   count = var.durable_function.enable ? 1 : 0
 
-  name                = format("%s-blob-endpoint", module.storage_account_durable_function[0].resource_name)
+  name                = format("%s-blob-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.durable_function.private_endpoint_subnet_id
 
-  private_dns_zone_group {
-    name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
-  }
-
   private_service_connection {
-    name                           = format("%s-blob", module.storage_account_durable_function[0].resource_name)
+    name                           = format("%s-blob", module.storage_account_durable_function[0].name)
     private_connection_resource_id = module.storage_account_durable_function[0].id
     is_manual_connection           = false
     subresource_names              = ["blob"]
@@ -77,18 +73,13 @@ resource "azurerm_private_endpoint" "blob" {
 resource "azurerm_private_endpoint" "queue" {
   count = var.durable_function.enable ? 1 : 0
 
-  name                = format("%s-queue-endpoint", module.storage_account_durable_function[0].resource_name)
+  name                = format("%s-queue-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.durable_function.private_endpoint_subnet_id
 
-  private_dns_zone_group {
-    name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
-  }
-
   private_service_connection {
-    name                           = format("%s-queue", module.storage_account_durable_function[0].resource_name)
+    name                           = format("%s-queue", module.storage_account_durable_function[0].name)
     private_connection_resource_id = module.storage_account_durable_function[0].id
     is_manual_connection           = false
     subresource_names              = ["queue"]
@@ -108,18 +99,13 @@ resource "azurerm_private_endpoint" "queue" {
 resource "azurerm_private_endpoint" "table" {
   count = var.durable_function.enable ? 1 : 0
 
-  name                = format("%s-table-endpoint", module.storage_account_durable_function[0].resource_name)
+  name                = format("%s-table-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.durable_function.private_endpoint_subnet_id
 
-  private_dns_zone_group {
-    name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
-  }
-
   private_service_connection {
-    name                           = format("%s-table", module.storage_account_durable_function[0].resource_name)
+    name                           = format("%s-table", module.storage_account_durable_function[0].name)
     private_connection_resource_id = module.storage_account_durable_function[0].id
     is_manual_connection           = false
     subresource_names              = ["table"]
@@ -139,7 +125,7 @@ resource "azurerm_private_endpoint" "table" {
 resource "azurerm_app_service_plan" "this" {
   count = var.app_service_plan_id == null ? 1 : 0
 
-  name                = format("%s-%s-plan-%s%s", var.global_prefix, var.environment_short, var.resources_prefix.app_service_plan, var.name)
+  name                = format("%s-%s-plan-%s%s", var.prefix, var.env_short, var.resources_prefix.app_service_plan, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   kind                = var.app_service_plan_info.kind
@@ -165,13 +151,19 @@ resource "azurerm_function_app" "this" {
   resource_group_name        = var.resource_group_name
   location                   = var.location
   version                    = var.runtime_version
-  app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this.id
-  storage_account_name       = module.storage_account.resource_name
+  app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this[0].id
+  storage_account_name       = module.storage_account.name
   storage_account_access_key = module.storage_account.primary_access_key
+  https_only                 = true
+
+  auth_settings {
+    enabled = true
+  }
 
   site_config {
     min_tls_version           = "1.2"
     ftps_state                = "Disabled"
+    http2_enabled             = true
     pre_warmed_instance_count = var.pre_warmed_instance_count
 
     dynamic "ip_restriction" {
@@ -209,7 +201,8 @@ resource "azurerm_function_app" "this" {
       WEBSITE_DNS_SERVER       = "168.63.129.16"
       # this app settings is required to solve the issue:
       # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10499
-      WEBSITE_CONTENTSHARE = "${local.resource_name}-content"
+      WEBSITE_CONTENTSHARE            = "${local.resource_name}-content"
+      APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
     var.app_settings,
     var.durable_function.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {}
@@ -235,10 +228,7 @@ data "azurerm_function_app_host_keys" "this" {
   depends_on          = [azurerm_function_app.this]
 }
 
-
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {
-  count = var.virtual_network_info == null ? 0 : 1
-
   app_service_id = azurerm_function_app.this.id
-  subnet_id      = var.subnet_id
+  subnet_id      = var.subnet_out_id
 }
