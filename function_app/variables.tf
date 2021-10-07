@@ -23,8 +23,8 @@ variable "resources_prefix" {
 
   default = {
     function_app     = "fn"
-    app_service_plan = "f"
-    storage_account  = "f"
+    app_service_plan = "fn"
+    storage_account  = "fn"
   }
 }
 
@@ -129,8 +129,7 @@ variable "durable_function" {
 }
 
 variable "health_check_path" {
-  type    = string
-  default = null
+  type = string
 }
 
 variable "health_check_maxpingfailures" {
