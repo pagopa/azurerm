@@ -166,7 +166,6 @@ resource "azurerm_monitor_diagnostic_setting" "gw" {
   }
 }
 
-
 resource "azurerm_monitor_diagnostic_setting" "gw_logs" {
   count              = var.log_storage_account_id != null ? 1 : 0
   name               = "gw-logs"
@@ -276,6 +275,15 @@ resource "azurerm_monitor_diagnostic_setting" "sec_gw_logs" {
     retention_policy {
       enabled = true
       days    = 365
+    }
+  }
+  
+  metric {
+    category = "AllMetrics"
+    enabled  = false
+    retention_policy {
+      days    = 0
+      enabled = false
     }
   }
 }
