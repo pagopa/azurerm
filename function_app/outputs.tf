@@ -26,7 +26,7 @@ output "master_key" {
 }
 
 output "app_service_plan_id" {
-  value = azurerm_function_app.this.id
+  value = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this[0].id
 }
 
 output "storage_account" {
