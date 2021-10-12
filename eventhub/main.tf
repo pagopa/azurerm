@@ -86,15 +86,16 @@ resource "azurerm_eventhub_authorization_rule" "events" {
   depends_on = [azurerm_eventhub.events]
 }
 
+# Create a Private DNS zone only if one isn't provided as input
 resource "azurerm_private_dns_zone" "eventhub" {
-  count = var.sku != "Basic" ? 1 : 0
+  count = (var.sku != "Basic" && length(var.private_dns_zones.id) == 0) ? 1 : 0
 
   name                = "privatelink.servicebus.windows.net"
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "eventhub" {
-  count = var.sku != "Basic" ? length(var.virtual_network_ids) : 0
+  count = (var.sku != "Basic" && length(var.private_dns_zones.id) == 0) ? length(var.virtual_network_ids) : 0
 
   name                  = format("%s-private-dns-zone-link-%02d", var.name, count.index + 1)
   resource_group_name   = var.resource_group_name
@@ -114,7 +115,8 @@ resource "azurerm_private_endpoint" "eventhub" {
 
   private_dns_zone_group {
     name                 = format("%s-private-dns-zone-group", var.name)
-    private_dns_zone_ids = [azurerm_private_dns_zone.eventhub[0].id]
+    # One of the concatenated arrays is empty
+    private_dns_zone_ids = concat(var.private_dns_zones.id, azurerm_private_dns_zone.eventhub.*.id)
   }
 
   private_service_connection {
@@ -128,8 +130,8 @@ resource "azurerm_private_endpoint" "eventhub" {
 resource "azurerm_private_dns_a_record" "private_dns_a_record_eventhub" {
   count = var.sku != "Basic" ? 1 : 0
 
-  name                = "eventhub"
-  zone_name           = azurerm_private_dns_zone.eventhub[0].name
+  name                = var.private_dns_zone_record_A_name
+  zone_name           = length(var.private_dns_zones.id) > 0 ?   var.private_dns_zones.name[0]: azurerm_private_dns_zone.eventhub[0].name
   resource_group_name = var.resource_group_name
   ttl                 = 300
   records             = azurerm_private_endpoint.eventhub[0].private_service_connection.*.private_ip_address

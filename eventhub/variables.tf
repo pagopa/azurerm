@@ -132,6 +132,26 @@ variable "alerts_enabled" {
   description = "Should Metrics Alert be enabled?"
 }
 
+# If this variable contains empty arrays as in the default value a new private DNS Zone will be created
+variable "private_dns_zones" {
+  description = "Private DNS Zones where the private endpoint will be created"
+  type = object({
+    id = list(string)
+    name = list(string)
+  })
+  default = {
+    id = []
+    name = []
+  }
+}
+
+variable private_dns_zone_record_A_name {
+  description = "Name of the A record in the private dns zone"
+  type = string
+  default = "eventhub"
+
+}
+
 variable "tags" {
   type = map(any)
 }
