@@ -221,11 +221,10 @@ resource "null_resource" "custom_domain" {
         --profile-name ${self.triggers.profile_name} \
         --name ${replace(self.triggers.name, ".", "-")} \
         --min-tls-version "1.2" \
-        --user-cert-protocol-type "sni" \
+        --user-cert-protocol-type sni \
         --user-cert-group-name ${self.triggers.keyvault_resource_group_name} \
         --user-cert-vault-name ${self.triggers.keyvault_vault_name} \
         --user-cert-secret-name ${replace(self.triggers.name, ".", "-")} \
-        --user-cert-secret-version "Latest" \
         --user-cert-subscription-id  ${self.triggers.keyvault_subscription_id}
     EOT
   }
