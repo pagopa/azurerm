@@ -147,18 +147,15 @@ variable "error_404_document" {
 
 variable "keyvault_resource_group_name" {
   type        = string
-  default     = null
   description = "Key vault resource group name"
 }
 
 variable "keyvault_subscription_id" {
   type        = string
-  default     = null
   description = "Key vault subscription id"
 }
 
 variable "keyvault_vault_name" {
   type        = string
-  default     = null
   description = "Key vault name"
 }
