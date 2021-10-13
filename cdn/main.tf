@@ -3,7 +3,7 @@
  **/
 module "cdn_storage_account" {
 
-  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.7"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.68"
 
   name            = replace(format("%s-%s-sa", var.prefix, var.name), "-", "")
   versioning_name = format("%s-%s-sa-versioning", var.prefix, var.name)
@@ -17,6 +17,9 @@ module "cdn_storage_account" {
   location                 = var.location
   allow_blob_public_access = true
 
+  index_document     = var.index_document
+  error_404_document = var.error_404_document
+ 
   lock_enabled = var.lock_enabled
   lock_name    = format("%s-%s-sa-lock", var.prefix, var.name)
   lock_level   = "CanNotDelete"
@@ -187,8 +190,6 @@ resource "azurerm_cdn_endpoint" "this" {
 */
 resource "null_resource" "custom_domain" {
   depends_on = [
-    azurerm_dns_a_record.hostname,
-    azurerm_dns_cname_record.cdnverify,
     azurerm_cdn_endpoint.this,
   ]
   # needs az cli > 2.0.81
@@ -199,6 +200,10 @@ resource "null_resource" "custom_domain" {
     profile_name        = azurerm_cdn_profile.this.name
     name                = var.hostname
     hostname            = var.hostname
+
+    keyvault_resource_group_name = var.keyvault_resource_group_name
+    keyvault_subscription_id     = var.keyvault_subscription_id
+    keyvault_vault_name          = var.keyvault_vault_name
   }
 
   # https://docs.microsoft.com/it-it/cli/azure/cdn/custom-domain?view=azure-cli-latest
@@ -214,7 +219,13 @@ resource "null_resource" "custom_domain" {
         --resource-group ${self.triggers.resource_group_name} \
         --endpoint-name ${self.triggers.endpoint_name} \
         --profile-name ${self.triggers.profile_name} \
-        --name ${replace(self.triggers.name, ".", "-")}
+        --name ${replace(self.triggers.name, ".", "-")} \
+        --min-tls-version "1.2" \
+        --user-cert-group-name ${self.triggers.keyvault_resource_group_name} \
+        --user-cert-vault-name ${self.triggers.keyvault_vault_name} \
+        --user-cert-secret-name ${replace(self.triggers.name, ".", "-")} \
+        --user-cert-secret-version "Latest" \
+        --user-cert-subscription-id  ${self.triggers.keyvault_subscription_id}
     EOT
   }
   # https://docs.microsoft.com/it-it/cli/azure/cdn/custom-domain?view=azure-cli-latest
@@ -235,22 +246,3 @@ resource "null_resource" "custom_domain" {
   }
 }
 
-resource "azurerm_dns_a_record" "hostname" {
-  name                = "@"
-  zone_name           = var.dns_zone_name
-  resource_group_name = var.dns_zone_resource_group_name
-  ttl                 = 3600
-  target_resource_id  = azurerm_cdn_endpoint.this.id
-
-  tags = var.tags
-}
-
-resource "azurerm_dns_cname_record" "cdnverify" {
-  name                = "cdnverify"
-  zone_name           = var.dns_zone_name
-  resource_group_name = var.dns_zone_resource_group_name
-  ttl                 = 3600
-  record              = "cdnverify.${azurerm_cdn_endpoint.this.host_name}"
-
-  tags = var.tags
-}
