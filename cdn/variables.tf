@@ -138,11 +138,11 @@ variable "lock_enabled" {
 }
 
 variable "index_document" {
-  type    = string
+  type = string
 }
 
 variable "error_404_document" {
-  type    = string
+  type = string
 }
 
 variable "keyvault_resource_group_name" {
