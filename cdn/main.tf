@@ -3,7 +3,7 @@
  **/
 module "cdn_storage_account" {
 
-  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.68"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.71"
 
   name            = replace(format("%s-%s-sa", var.prefix, var.name), "-", "")
   versioning_name = format("%s-%s-sa-versioning", var.prefix, var.name)
@@ -254,16 +254,6 @@ resource "azurerm_dns_a_record" "hostname" {
   resource_group_name = var.dns_zone_resource_group_name
   ttl                 = 3600
   target_resource_id  = azurerm_cdn_endpoint.this.id
-
-  tags = var.tags
-}
-
-resource "azurerm_dns_cname_record" "cdnverify" {
-  name                = "cdnverify"
-  zone_name           = var.dns_zone_name
-  resource_group_name = var.dns_zone_resource_group_name
-  ttl                 = 3600
-  record              = "cdnverify.${azurerm_cdn_endpoint.this.host_name}"
 
   tags = var.tags
 }
