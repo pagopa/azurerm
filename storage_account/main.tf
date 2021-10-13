@@ -31,7 +31,7 @@ resource "azurerm_storage_account" "this" {
   }
 
   dynamic "static_website" {
-    for_each = var.index_document != null && var.error_404_document != null ? [] : ["dummy"]
+    for_each = var.index_document != null && var.error_404_document != null ? ["dummy"] : []
 
     content {
       index_document     = var.index_document

@@ -3,7 +3,7 @@
  **/
 module "cdn_storage_account" {
 
-  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.68"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.71"
 
   name            = replace(format("%s-%s-sa", var.prefix, var.name), "-", "")
   versioning_name = format("%s-%s-sa-versioning", var.prefix, var.name)
@@ -190,6 +190,8 @@ resource "azurerm_cdn_endpoint" "this" {
 */
 resource "null_resource" "custom_domain" {
   depends_on = [
+    azurerm_dns_a_record.hostname,
+    azurerm_dns_cname_record.cdnverify,
     azurerm_cdn_endpoint.this,
   ]
   # needs az cli > 2.0.81
@@ -221,10 +223,10 @@ resource "null_resource" "custom_domain" {
         --profile-name ${self.triggers.profile_name} \
         --name ${replace(self.triggers.name, ".", "-")} \
         --min-tls-version "1.2" \
+        --user-cert-protocol-type sni \
         --user-cert-group-name ${self.triggers.keyvault_resource_group_name} \
         --user-cert-vault-name ${self.triggers.keyvault_vault_name} \
         --user-cert-secret-name ${replace(self.triggers.name, ".", "-")} \
-        --user-cert-secret-version "Latest" \
         --user-cert-subscription-id  ${self.triggers.keyvault_subscription_id}
     EOT
   }
@@ -246,3 +248,12 @@ resource "null_resource" "custom_domain" {
   }
 }
 
+resource "azurerm_dns_a_record" "hostname" {
+  name                = "@"
+  zone_name           = var.dns_zone_name
+  resource_group_name = var.dns_zone_resource_group_name
+  ttl                 = 3600
+  target_resource_id  = azurerm_cdn_endpoint.this.id
+
+  tags = var.tags
+}
