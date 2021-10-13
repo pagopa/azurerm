@@ -159,3 +159,11 @@ variable "keyvault_vault_name" {
   type        = string
   description = "Key vault name"
 }
+
+variable "dns_zone_name" {
+  type = string
+}
+
+variable "dns_zone_resource_group_name" {
+  type = string
+}

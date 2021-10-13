@@ -190,6 +190,8 @@ resource "azurerm_cdn_endpoint" "this" {
 */
 resource "null_resource" "custom_domain" {
   depends_on = [
+    azurerm_dns_a_record.hostname,
+    azurerm_dns_cname_record.cdnverify,
     azurerm_cdn_endpoint.this,
   ]
   # needs az cli > 2.0.81
@@ -246,3 +248,22 @@ resource "null_resource" "custom_domain" {
   }
 }
 
+resource "azurerm_dns_a_record" "hostname" {
+  name                = "@"
+  zone_name           = var.dns_zone_name
+  resource_group_name = var.dns_zone_resource_group_name
+  ttl                 = 3600
+  target_resource_id  = azurerm_cdn_endpoint.this.id
+
+  tags = var.tags
+}
+
+resource "azurerm_dns_cname_record" "cdnverify" {
+  name                = "cdnverify"
+  zone_name           = var.dns_zone_name
+  resource_group_name = var.dns_zone_resource_group_name
+  ttl                 = 3600
+  record              = "cdnverify.${azurerm_cdn_endpoint.this.host_name}"
+
+  tags = var.tags
+}
