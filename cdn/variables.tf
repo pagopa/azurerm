@@ -152,3 +152,21 @@ variable "index_document" {
 variable "error_404_document" {
   type    = string
 }
+
+variable "keyvault_group_name" {
+  type        = string
+  default     = null
+  description = "Key vault resource group name"
+}
+
+variable "keyvault_subscription_id" {
+  type        = string
+  default     = null
+  description = "Key vault subscription id"
+}
+
+variable "keyvault_cert_name" {
+  type        = string
+  default     = null
+  description = "Key vault cert name"
+}

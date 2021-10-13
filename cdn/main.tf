@@ -202,6 +202,10 @@ resource "null_resource" "custom_domain" {
     profile_name        = azurerm_cdn_profile.this.name
     name                = var.hostname
     hostname            = var.hostname
+
+    keyvault_group_name      = var.keyvault_group_name
+    keyvault_subscription_id = var.keyvault_subscription_id
+    keyvault_cert_name       = var.keyvault_cert_name
   }
 
   # https://docs.microsoft.com/it-it/cli/azure/cdn/custom-domain?view=azure-cli-latest
@@ -212,7 +216,11 @@ resource "null_resource" "custom_domain" {
         --endpoint-name ${self.triggers.endpoint_name} \
         --profile-name ${self.triggers.profile_name} \
         --name ${replace(self.triggers.name, ".", "-")} \
-        --hostname ${self.triggers.hostname} && \
+        --hostname ${self.triggers.hostname} \
+        --user-cert-group-name ${self.triggers.keyvault_group_name} \
+        --user-cert-vault-name ${self.triggers.keyvault_cert_name} \
+        --user-cert-secret-version Latest
+        --user-cert-subscription-id  ${self.triggers.keyvault_subscription_id} && \
       az cdn custom-domain enable-https \
         --resource-group ${self.triggers.resource_group_name} \
         --endpoint-name ${self.triggers.endpoint_name} \
