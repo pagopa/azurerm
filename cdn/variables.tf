@@ -137,14 +137,6 @@ variable "lock_enabled" {
   type = bool
 }
 
-variable "dns_zone_name" {
-  type = string
-}
-
-variable "dns_zone_resource_group_name" {
-  type = string
-}
-
 variable "index_document" {
   type    = string
 }
@@ -153,7 +145,7 @@ variable "error_404_document" {
   type    = string
 }
 
-variable "keyvault_group_name" {
+variable "keyvault_resource_group_name" {
   type        = string
   default     = null
   description = "Key vault resource group name"
@@ -165,8 +157,8 @@ variable "keyvault_subscription_id" {
   description = "Key vault subscription id"
 }
 
-variable "keyvault_cert_name" {
+variable "keyvault_vault_name" {
   type        = string
   default     = null
-  description = "Key vault cert name"
+  description = "Key vault name"
 }
