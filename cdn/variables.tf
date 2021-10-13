@@ -138,27 +138,24 @@ variable "lock_enabled" {
 }
 
 variable "index_document" {
-  type    = string
+  type = string
 }
 
 variable "error_404_document" {
-  type    = string
+  type = string
 }
 
 variable "keyvault_resource_group_name" {
   type        = string
-  default     = null
   description = "Key vault resource group name"
 }
 
 variable "keyvault_subscription_id" {
   type        = string
-  default     = null
   description = "Key vault subscription id"
 }
 
 variable "keyvault_vault_name" {
   type        = string
-  default     = null
   description = "Key vault name"
 }
