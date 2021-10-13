@@ -144,3 +144,11 @@ variable "dns_zone_name" {
 variable "dns_zone_resource_group_name" {
   type = string
 }
+
+variable "index_document" {
+  type    = string
+}
+
+variable "error_404_document" {
+  type    = string
+}

@@ -17,6 +17,9 @@ module "cdn_storage_account" {
   location                 = var.location
   allow_blob_public_access = true
 
+  index_document     = var.index_document
+  error_404_document = var.error_404_document
+ 
   lock_enabled = var.lock_enabled
   lock_name    = format("%s-%s-sa-lock", var.prefix, var.name)
   lock_level   = "CanNotDelete"

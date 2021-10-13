@@ -107,3 +107,13 @@ variable "advanced_threat_protection" {
 variable "tags" {
   type = map(any)
 }
+
+variable "index_document" {
+  type    = string
+  default = null
+}
+
+variable "error_404_document" {
+  type    = string
+  default = null
+}
