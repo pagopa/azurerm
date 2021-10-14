@@ -63,7 +63,7 @@ variable "storage_mb" {
 variable "public_network_access_enabled" {
   type        = bool
   description = "Whether or not public network access is allowed for this server."
-  default     = true
+  default     = false 
 }
 
 variable "ssl_enforcement_enabled" {
