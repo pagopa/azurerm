@@ -46,6 +46,45 @@ resource "azurerm_api_management" "this" {
     }
   }
 
+  dynamic "hostname_configuration" {
+    for_each = var.hostname_configuration != null ? ["dummy"] : []
+    content {
+      dynamic "proxy" {
+        for_each = var.hostname_configuration.proxy
+        iterator = domain
+        content {
+          default_ssl_binding = domain.value.default_ssl_binding
+          host_name           = domain.value.host_name
+          key_vault_id        = domain.value.key_vault_id
+        }
+      }
+      dynamic "management" {
+        for_each = var.hostname_configuration.management != null ? ["dummy"] : []
+        iterator = domain
+        content {
+          host_name    = var.hostname_configuration.management.host_name
+          key_vault_id = var.hostname_configuration.management.key_vault_id
+        }
+      }
+      dynamic "portal" {
+        for_each = var.hostname_configuration.portal != null ? ["dummy"] : []
+        iterator = domain
+        content {
+          host_name    = var.hostname_configuration.portal.host_name
+          key_vault_id = var.hostname_configuration.portal.key_vault_id
+        }
+      }
+      dynamic "developer_portal" {
+        for_each = var.hostname_configuration.developer_portal != null ? ["dummy"] : []
+        iterator = domain
+        content {
+          host_name    = var.hostname_configuration.developer_portal.host_name
+          key_vault_id = var.hostname_configuration.developer_portal.key_vault_id
+        }
+      }
+    }
+  }
+
   tags = var.tags
 }
 

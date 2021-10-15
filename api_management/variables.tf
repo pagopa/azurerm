@@ -61,6 +61,36 @@ variable "xml_content" {
   description = "Xml content for all api policy"
 }
 
+variable "hostname_configuration" {
+  type = object({
+
+    proxy = list(object(
+      {
+        default_ssl_binding = bool
+        host_name           = string
+        key_vault_id        = string
+    }))
+
+    management = object({
+      host_name    = string
+      key_vault_id = string
+    })
+
+    portal = object({
+      host_name    = string
+      key_vault_id = string
+    })
+
+    developer_portal = object({
+      host_name    = string
+      key_vault_id = string
+    })
+
+  })
+  default     = null
+  description = "Custom domains"
+}
+
 variable "diagnostic_sampling_percentage" {
   type        = number
   default     = 5.0
