@@ -56,8 +56,8 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault" {
   count                      = var.sec_log_analytics_workspace_id != null ? 1 : 0
   name                       = "SecurityLogs"
   target_resource_id         = azurerm_key_vault.this.id
-  log_analytics_workspace_id = data.azurerm_key_vault_secret.sec_workspace_id[0].value
-  storage_account_id         = data.azurerm_key_vault_secret.sec_storage_id[0].value
+  log_analytics_workspace_id = var.sec_log_analytics_workspace_id
+  storage_account_id         = var.sec_storage_id
 
   log {
 
