@@ -100,6 +100,14 @@ resource "azurerm_role_assignment" "vnet_role" {
   principal_id         = azurerm_kubernetes_cluster.this.identity[0].principal_id
 }
 
+resource "azurerm_role_assignment" "vnet_outbound_role" {
+  for_each  = toset(var.outbound_ip_address_ids)
+
+  scope                = each.key
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.this.identity[0].principal_id
+}
+
 resource "azurerm_monitor_metric_alert" "this" {
   for_each = var.metric_alerts
 
