@@ -6,6 +6,10 @@ output "name" {
   value = azurerm_api_management.this.name
 }
 
+output "resource_group_name" {
+  value = var.resource_group_name
+}
+
 output "private_ip_addresses" {
   value = azurerm_api_management.this.private_ip_addresses
 }
