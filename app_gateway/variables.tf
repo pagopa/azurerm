@@ -85,9 +85,38 @@ variable "trusted_client_certificates" {
 
 variable "routes" {
   type = map(object({
-    listener = string
-    backend  = string
+    listener              = string
+    backend               = string
+    rewrite_rule_set_name = string
   }))
+}
+
+variable "rewrite_rule_sets" {
+  type = list(object({
+    name = string
+    rewrite_rules = list(object({
+      name          = string
+      rule_sequence = number
+      condition = object({
+        variable    = string
+        pattern     = string
+        ignore_case = bool
+        negate      = bool
+      })
+
+      request_header_configurations = list(object({
+        header_name  = string
+        header_value = string
+      }))
+
+      response_header_configurations = list(object({
+        header_name  = string
+        header_value = string
+      }))
+
+    }))
+  }))
+  default = []
 }
 
 # TLS

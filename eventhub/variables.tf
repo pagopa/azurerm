@@ -136,19 +136,19 @@ variable "alerts_enabled" {
 variable "private_dns_zones" {
   description = "Private DNS Zones where the private endpoint will be created"
   type = object({
-    id = list(string)
+    id   = list(string)
     name = list(string)
   })
   default = {
-    id = []
+    id   = []
     name = []
   }
 }
 
-variable private_dns_zone_record_A_name {
+variable "private_dns_zone_record_A_name" {
   description = "Name of the A record in the private dns zone"
-  type = string
-  default = "eventhub"
+  type        = string
+  default     = "eventhub"
 
 }
 

@@ -114,7 +114,7 @@ resource "azurerm_private_endpoint" "eventhub" {
   subnet_id           = var.subnet_id
 
   private_dns_zone_group {
-    name                 = format("%s-private-dns-zone-group", var.name)
+    name = format("%s-private-dns-zone-group", var.name)
     # One of the concatenated arrays is empty
     private_dns_zone_ids = concat(var.private_dns_zones.id, azurerm_private_dns_zone.eventhub.*.id)
   }
@@ -131,7 +131,7 @@ resource "azurerm_private_dns_a_record" "private_dns_a_record_eventhub" {
   count = var.sku != "Basic" ? 1 : 0
 
   name                = var.private_dns_zone_record_A_name
-  zone_name           = length(var.private_dns_zones.id) > 0 ?   var.private_dns_zones.name[0]: azurerm_private_dns_zone.eventhub[0].name
+  zone_name           = length(var.private_dns_zones.id) > 0 ? var.private_dns_zones.name[0] : azurerm_private_dns_zone.eventhub[0].name
   resource_group_name = var.resource_group_name
   ttl                 = 300
   records             = azurerm_private_endpoint.eventhub[0].private_service_connection.*.private_ip_address
