@@ -39,6 +39,8 @@ No modules.
 | <a name="input_blob_properties_delete_retention_policy_days"></a> [blob\_properties\_delete\_retention\_policy\_days](#input\_blob\_properties\_delete\_retention\_policy\_days) | Enable soft delete policy and specify the number of days that the blob should be retained | `number` | `null` | no |
 | <a name="input_enable_https_traffic_only"></a> [enable\_https\_traffic\_only](#input\_enable\_https\_traffic\_only) | n/a | `bool` | `true` | no |
 | <a name="input_enable_versioning"></a> [enable\_versioning](#input\_enable\_versioning) | Enable versioning in the blob storage account. | `bool` | `false` | no |
+| <a name="input_error_404_document"></a> [error\_404\_document](#input\_error\_404\_document) | n/a | `string` | `null` | no |
+| <a name="input_index_document"></a> [index\_document](#input\_index\_document) | n/a | `string` | `null` | no |
 | <a name="input_lock_enabled"></a> [lock\_enabled](#input\_lock\_enabled) | n/a | `bool` | `false` | no |
 | <a name="input_lock_level"></a> [lock\_level](#input\_lock\_level) | n/a | `string` | `null` | no |
 | <a name="input_lock_name"></a> [lock\_name](#input\_lock\_name) | n/a | `string` | `null` | no |

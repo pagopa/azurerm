@@ -142,6 +142,52 @@ resource "azurerm_application_gateway" "this" {
       http_listener_name         = format("%s-listener", route.value.listener)
       backend_address_pool_name  = format("%s-address-pool", route.value.backend)
       backend_http_settings_name = format("%s-http-settings", route.value.backend)
+      rewrite_rule_set_name      = route.value.rewrite_rule_set_name
+    }
+  }
+
+  dynamic "rewrite_rule_set" {
+    for_each = var.rewrite_rule_sets
+    iterator = rule_set
+    content {
+      name = rule_set.value.name
+
+      dynamic "rewrite_rule" {
+        for_each = rule_set.value.rewrite_rules
+        content {
+          name          = rewrite_rule.value.name
+          rule_sequence = rewrite_rule.value.rule_sequence
+
+          dynamic "condition" {
+            for_each = rewrite_rule.value.condition == null ? [] : ["dummy"]
+            content {
+              variable    = condition.value.variable
+              pattern     = condition.value.pattern
+              ignore_case = condition.value.ignore_case
+              negate      = condition.value.negate
+            }
+          }
+
+          dynamic "request_header_configuration" {
+            for_each = rewrite_rule.value.request_header_configurations
+            iterator = req_header
+            content {
+              header_name  = req_header.value.header_name
+              header_value = req_header.value.header_value
+            }
+          }
+
+          dynamic "response_header_configuration" {
+            for_each = rewrite_rule.value.response_header_configurations
+            iterator = res_header
+            content {
+              header_name  = res_header.value.header_name
+              header_value = res_header.value.header_value
+            }
+          }
+        }
+      }
+
     }
   }
 
@@ -151,8 +197,14 @@ resource "azurerm_application_gateway" "this" {
   }
 
   ssl_policy {
-    policy_type = "Predefined"
-    policy_name = "AppGwSslPolicy20170401S"
+    policy_type = "Custom"
+    cipher_suites = [
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA"
+    ]
+    min_protocol_version = "TLSv1_2"
   }
 
   waf_configuration {
