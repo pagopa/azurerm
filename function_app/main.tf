@@ -157,7 +157,7 @@ resource "azurerm_function_app" "this" {
   https_only                 = true
 
   auth_settings {
-    enabled = true
+    enabled = false
   }
 
   site_config {
