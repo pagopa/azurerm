@@ -30,9 +30,10 @@ No modules.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | n/a | yes |
 | <a name="input_idle_timeout_in_minutes"></a> [idle\_timeout\_in\_minutes](#input\_idle\_timeout\_in\_minutes) | The idle timeout which should be used in minutes. | `number` | `4` | no |
+| <a name="input_public_ips_count"></a> [public\_ips\_count](#input\_public\_ips\_count) | Number of public ips associated to the nat gateway | `number` | `1` | no |
 | <a name="input_sku_name"></a> [sku\_name](#input\_sku\_name) | The SKU which should be used. At this time the only supported value is Standard. | `string` | `"Standard"` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnets id to which associate the nat gateway | `list(string)` | `[]` | no |
-| <a name="input_zones"></a> [zones](#input\_zones) | A list of availability zones where the NAT Gateway should be provisioned. | `list(string)` | <pre>[<br>  "1"<br>]</pre> | no |
+| <a name="input_zone"></a> [zone](#input\_zone) | Availability zone where the NAT Gateway should be provisioned. | `string` | `"1"` | no |
 
 ## Outputs
 
