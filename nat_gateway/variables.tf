@@ -10,10 +10,10 @@ variable "location" {
   type = string
 }
 
-variable "zones" {
-  type        = list(string)
-  default     = ["1"]
-  description = "A list of availability zones where the NAT Gateway should be provisioned."
+variable "zone" {
+  type        = string
+  default     = "1"
+  description = "Availability zone where the NAT Gateway should be provisioned."
 }
 
 variable "idle_timeout_in_minutes" {
