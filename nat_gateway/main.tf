@@ -5,7 +5,7 @@ resource "azurerm_public_ip" "this" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
-  zones               = var.zones
+  availability_zone   = var.zones
 }
 
 resource "azurerm_nat_gateway" "this" {
