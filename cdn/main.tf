@@ -182,6 +182,39 @@ resource "azurerm_cdn_endpoint" "this" {
     }
   }
 
+  dynamic "delivery_rule" {
+    for_each = { for d in var.delivery_rule_rewrite : d.order => d }
+    content {
+      name  = delivery_rule.value.name
+      order = delivery_rule.value.order
+
+      dynamic "request_uri_condition" {
+        for_each = delivery_rule.value.condition_type=="request_uri_condition"?[""]:[]
+
+        content {
+         operator = delivery_rule.value.operator
+         match_values = delivery_rule.value.match_values
+        }
+      }
+
+      dynamic "url_file_extension_condition" {
+        for_each = delivery_rule.value.condition_type=="url_file_extension_condition"?[""]:[]
+
+        content {
+          operator = delivery_rule.value.operator
+          match_values = delivery_rule.value.match_values
+        }
+      }
+
+      url_rewrite_action {
+        source_pattern          = delivery_rule.value.url_rewrite_action.source_pattern
+        destination             = delivery_rule.value.url_rewrite_action.destination
+        preserve_unmatched_path = delivery_rule.value.url_rewrite_action.preserve_unmatched_path
+      }
+
+    }
+  }
+
   tags = var.tags
 }
 

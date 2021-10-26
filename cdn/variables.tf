@@ -124,6 +124,22 @@ variable "delivery_rule_redirect" {
   default = []
 }
 
+variable "delivery_rule_rewrite" {
+  type = list(object({
+    name             = string
+    condition_type   = string
+    order            = number
+    operator         = string
+    match_values     = list(string)
+    url_rewrite_action = object({
+      source_pattern          = string
+      destination             = string
+      preserve_unmatched_path = string
+    })
+  }))
+  default = []
+}
+
 variable "https_rewrite_enabled" {
   type    = bool
   default = true
