@@ -151,6 +151,8 @@ resource "azurerm_private_endpoint" "replica" {
 }
 
 resource "azurerm_postgresql_virtual_network_rule" "network_rule" {
+  count = var.public_network_access_enabled? 1 : 0
+
   name                                 = format("%s-vnet-rule", var.name)
   resource_group_name                  = var.resource_group_name
   server_name                          = azurerm_postgresql_server.this.name
@@ -159,7 +161,7 @@ resource "azurerm_postgresql_virtual_network_rule" "network_rule" {
 }
 
 resource "azurerm_postgresql_firewall_rule" "this" {
-  count = length(local.firewall_rules)
+  count = var.public_network_access_enabled? length(local.firewall_rules) : 0
 
   name                = format("%s-fw-rule-%d", var.name, count.index)
   resource_group_name = var.resource_group_name
@@ -169,7 +171,7 @@ resource "azurerm_postgresql_firewall_rule" "this" {
 }
 
 resource "azurerm_postgresql_firewall_rule" "azure" {
-  count = var.network_rules.allow_access_to_azure_services ? 1 : 0
+  count = var.network_rules.allow_access_to_azure_services && var.public_network_access_enabled ? 1 : 0
 
   name                = format("%s-allow-azure-access", var.name)
   resource_group_name = var.resource_group_name
@@ -275,7 +277,7 @@ resource "azurerm_monitor_metric_alert" "replica" {
 
 
 resource "azurerm_postgresql_virtual_network_rule" "replica" {
-  count = var.enable_replica ? 1 : 0
+  count = var.enable_replica && var.public_network_access_enabled ? 1 : 0
 
   name                                 = format("%s-rep-vnet-rule", var.name)
   resource_group_name                  = var.resource_group_name
