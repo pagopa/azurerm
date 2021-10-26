@@ -51,3 +51,31 @@ resource "azurerm_management_lock" "this" {
   lock_level = "CanNotDelete"
   notes      = "this items can't be deleted in this subscription!"
 }
+
+resource "azurerm_monitor_diagnostic_setting" "key_vault" {
+  count                      = var.sec_log_analytics_workspace_id != null ? 1 : 0
+  name                       = "SecurityLogs"
+  target_resource_id         = azurerm_key_vault.this.id
+  log_analytics_workspace_id = var.sec_log_analytics_workspace_id
+  storage_account_id         = var.sec_storage_id
+
+  log {
+
+    category = "AuditEvent"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+
+    category = "AzurePolicyEvaluationDetails"
+    enabled  = true
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+}
