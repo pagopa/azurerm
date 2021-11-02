@@ -129,6 +129,7 @@ resource "azurerm_application_gateway" "this" {
       require_sni                    = true
       host_name                      = listener.value.host
       ssl_profile_name               = listener.value.ssl_profile_name
+      firewall_policy_id             = listener.value.firewall_policy_id
     }
   }
 

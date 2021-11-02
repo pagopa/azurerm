@@ -46,10 +46,11 @@ variable "backends" {
 
 variable "listeners" {
   type = map(object({
-    protocol         = string
-    host             = string
-    port             = number
-    ssl_profile_name = string
+    protocol           = string
+    host               = string
+    port               = number
+    ssl_profile_name   = string
+    firewall_policy_id = string
     certificate = object({
       name = string
       id   = string
