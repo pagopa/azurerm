@@ -29,7 +29,7 @@ resource "azurerm_application_gateway" "this" {
     iterator = backend
     content {
       name         = format("%s-address-pool", backend.key)
-      fqdns        = backend.value.ip_addresses == null ? [backend.value.host] : null
+      fqdns        = backend.value.ip_addresses == null ? backend.value.fqdns : null
       ip_addresses = backend.value.ip_addresses
     }
   }
@@ -39,14 +39,15 @@ resource "azurerm_application_gateway" "this" {
     iterator = backend
 
     content {
-      name                  = format("%s-http-settings", backend.key)
-      host_name             = backend.value.host
-      cookie_based_affinity = "Disabled"
-      path                  = ""
-      port                  = backend.value.port
-      protocol              = backend.value.protocol
-      request_timeout       = 60
-      probe_name            = backend.value.probe_name
+      name                                = format("%s-http-settings", backend.key)
+      host_name                           = backend.value.host
+      cookie_based_affinity               = "Disabled"
+      path                                = ""
+      port                                = backend.value.port
+      protocol                            = backend.value.protocol
+      request_timeout                     = backend.value.request_timeout
+      probe_name                          = backend.value.probe_name
+      pick_host_name_from_backend_address = backend.value.pick_host_name_from_backend
     }
   }
 
@@ -59,7 +60,7 @@ resource "azurerm_application_gateway" "this" {
       minimum_servers                           = 0
       name                                      = format("probe-%s", backend.key)
       path                                      = backend.value.probe
-      pick_host_name_from_backend_http_settings = false
+      pick_host_name_from_backend_http_settings = backend.value.pick_host_name_from_backend
       protocol                                  = backend.value.protocol
       timeout                                   = 30
       interval                                  = 30

@@ -26,7 +26,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_gateway_max_capacity"></a> [app\_gateway\_max\_capacity](#input\_app\_gateway\_max\_capacity) | n/a | `string` | n/a | yes |
 | <a name="input_app_gateway_min_capacity"></a> [app\_gateway\_min\_capacity](#input\_app\_gateway\_min\_capacity) | n/a | `string` | n/a | yes |
-| <a name="input_backends"></a> [backends](#input\_backends) | n/a | <pre>map(object({<br>    protocol     = string<br>    host         = string<br>    port         = number<br>    ip_addresses = list(string)<br>    probe        = string<br>    probe_name   = string<br>  }))</pre> | n/a | yes |
+| <a name="input_backends"></a> [backends](#input\_backends) | n/a | <pre>map(object({<br>    protocol                    = string<br>    host                        = string<br>    port                        = number<br>    ip_addresses                = list(string)<br>    fqdns                       = list(string)<br>    probe                       = string<br>    probe_name                  = string<br>    request_timeout             = number<br>    pick_host_name_from_backend = bool<br>  }))</pre> | n/a | yes |
 | <a name="input_identity_ids"></a> [identity\_ids](#input\_identity\_ids) | n/a | `list(string)` | n/a | yes |
 | <a name="input_listeners"></a> [listeners](#input\_listeners) | n/a | <pre>map(object({<br>    protocol           = string<br>    host               = string<br>    port               = number<br>    ssl_profile_name   = string<br>    firewall_policy_id = string<br>    certificate = object({<br>      name = string<br>      id   = string<br>    })<br>  }))</pre> | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
