@@ -35,21 +35,25 @@ variable "public_ip_id" {
 
 variable "backends" {
   type = map(object({
-    protocol     = string
-    host         = string
-    port         = number
-    ip_addresses = list(string)
-    probe        = string
-    probe_name   = string
+    protocol                    = string
+    host                        = string
+    port                        = number
+    ip_addresses                = list(string)
+    fqdns                       = list(string)
+    probe                       = string
+    probe_name                  = string
+    request_timeout             = number
+    pick_host_name_from_backend = bool
   }))
 }
 
 variable "listeners" {
   type = map(object({
-    protocol         = string
-    host             = string
-    port             = number
-    ssl_profile_name = string
+    protocol           = string
+    host               = string
+    port               = number
+    ssl_profile_name   = string
+    firewall_policy_id = string
     certificate = object({
       name = string
       id   = string
