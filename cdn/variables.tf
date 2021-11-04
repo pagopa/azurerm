@@ -126,11 +126,15 @@ variable "delivery_rule_redirect" {
 
 variable "delivery_rule_rewrite" {
   type = list(object({
-    name             = string
-    condition_type   = string
-    order            = number
-    operator         = string
-    match_values     = list(string)
+    name               = string
+    order              = number
+    conditions         = list(object({
+      condition_type   = string
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
     url_rewrite_action = object({
       source_pattern          = string
       destination             = string

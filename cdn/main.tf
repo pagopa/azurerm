@@ -189,20 +189,38 @@ resource "azurerm_cdn_endpoint" "this" {
       order = delivery_rule.value.order
 
       dynamic "request_uri_condition" {
-        for_each = delivery_rule.value.condition_type=="request_uri_condition"?[""]:[]
+        for_each = [ for c in delivery_rule.value.conditions : c if c.condition_type=="request_uri_condition"]
+        iterator = c
 
         content {
-         operator = delivery_rule.value.operator
-         match_values = delivery_rule.value.match_values
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
+        }
+      }
+
+      dynamic "url_path_condition" {
+        for_each = [ for c in delivery_rule.value.conditions : c if c.condition_type=="url_path_condition"]
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
         }
       }
 
       dynamic "url_file_extension_condition" {
-        for_each = delivery_rule.value.condition_type=="url_file_extension_condition"?[""]:[]
+        for_each = [ for c in delivery_rule.value.conditions : c if c.condition_type=="url_file_extension_condition"]
+        iterator = c
 
         content {
-          operator = delivery_rule.value.operator
-          match_values = delivery_rule.value.match_values
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
         }
       }
 
