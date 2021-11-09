@@ -61,21 +61,29 @@ variable "app_service_plan_id" {
 
 variable "app_service_plan_info" {
   type = object({
-    kind     = string
-    sku_tier = string
-    sku_size = string
+    kind                         = string
+    sku_tier                     = string
+    sku_size                     = string
+    maximum_elastic_worker_count = number
   })
 
   default = {
-    kind     = "elastic"
-    sku_tier = "ElasticPremium"
-    sku_size = "EP1"
+    kind                         = "elastic"
+    sku_tier                     = "ElasticPremium"
+    sku_size                     = "EP1"
+    maximum_elastic_worker_count = 1
   }
 }
 
 variable "pre_warmed_instance_count" {
   type    = number
   default = 1
+}
+
+variable "always_on" {
+  type        = bool
+  description = "(Optional) Should the app be loaded at all times? Defaults to false."
+  default     = false
 }
 
 variable "application_insights_instrumentation_key" {

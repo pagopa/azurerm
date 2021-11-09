@@ -133,8 +133,12 @@ resource "azurerm_app_service_plan" "this" {
   sku {
     tier = var.app_service_plan_info.sku_tier
     size = var.app_service_plan_info.sku_size
-    # capacity = var.plan_sku_capacity
+    # capacity is only for isolated envs
   }
+
+  maximum_elastic_worker_count = var.app_service_plan_info.kind == "elastic" ? var.app_service_plan_info.maximum_elastic_worker_count : null
+  reserved                     = var.app_service_plan_info.kind == "Linux" ? true : null
+  per_site_scaling             = false
 
   tags = var.tags
 }
@@ -155,6 +159,7 @@ resource "azurerm_function_app" "this" {
   storage_account_name       = module.storage_account.name
   storage_account_access_key = module.storage_account.primary_access_key
   https_only                 = true
+  os_type                    = var.app_service_plan_info.kind == "Linux" ? "linux" : null
 
   auth_settings {
     enabled = false
@@ -164,6 +169,7 @@ resource "azurerm_function_app" "this" {
     min_tls_version           = "1.2"
     ftps_state                = "Disabled"
     http2_enabled             = true
+    always_on                 = var.app_service_plan_info.sku_tier != "ElasticPremium" ? var.always_on : null
     pre_warmed_instance_count = var.pre_warmed_instance_count
 
     dynamic "ip_restriction" {
@@ -195,28 +201,29 @@ resource "azurerm_function_app" "this" {
       # default value for health_check_path, override it in var.app_settings if needed
       WEBSITE_HEALTHCHECK_MAXPINGFAILURES = var.health_check_path != null ? var.health_check_maxpingfailures : null
       # https://docs.microsoft.com/en-us/samples/azure-samples/azure-functions-private-endpoints/connect-to-private-endpoints-with-azure-functions/
-      SLOT_TASK_HUBNAME        = "ProductionTaskHub"
-      WEBSITE_RUN_FROM_PACKAGE = 1
-      WEBSITE_VNET_ROUTE_ALL   = 1
-      WEBSITE_DNS_SERVER       = "168.63.129.16"
-      # this app settings is required to solve the issue:
-      # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10499
-      WEBSITE_CONTENTSHARE            = "${local.resource_name}-content"
+      SLOT_TASK_HUBNAME               = "ProductionTaskHub"
+      WEBSITE_RUN_FROM_PACKAGE        = 1
+      WEBSITE_VNET_ROUTE_ALL          = 1
+      WEBSITE_DNS_SERVER              = "168.63.129.16"
       APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
+    # this app settings is required to solve the issue:
+    # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10499
+    # WEBSITE_CONTENTSHARE and WEBSITE_CONTENTAZUREFILECONNECTIONSTRING required only for ElasticPremium plan
+    var.app_service_plan_info.sku_tier == "ElasticPremium" ? { WEBSITE_CONTENTSHARE = "${local.resource_name}-content" } : {},
+    var.durable_function.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {},
     var.app_settings,
-    var.durable_function.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {}
   )
 
   enable_builtin_logging = false
-
-  tags = var.tags
 
   lifecycle {
     ignore_changes = [
       app_settings["WEBSITE_CONTENTSHARE"],
     ]
   }
+
+  tags = var.tags
 }
 
 # this datasource has been introduced within version 2.27.0
