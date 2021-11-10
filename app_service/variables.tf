@@ -91,6 +91,12 @@ variable "app_command_line" {
   default     = null
 }
 
+variable "ftps_state" {
+  type        = string
+  description = "(Optional) Enable FTPS connection ( Default: Disabled )"
+  default     = "Disabled"
+}
+
 variable "health_check_path" {
   type        = string
   description = "(Optional) The health check path to be pinged by App Service."
