@@ -242,7 +242,7 @@ resource "azurerm_cdn_endpoint" "this" {
 resource "null_resource" "custom_domain" {
   depends_on = [
     azurerm_dns_a_record.hostname[0],
-    azurerm_dns_cname_record.cdnverify[0],
+    azurerm_dns_cname_record.cdnverify,
     azurerm_cdn_endpoint.this,
   ]
   # needs az cli > 2.0.81
