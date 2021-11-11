@@ -329,7 +329,7 @@ resource "azurerm_dns_cname_record" "custom_subdomain" {
   zone_name           = var.dns_zone_name
   resource_group_name = var.dns_zone_resource_group_name
   ttl                 = 3600
-  record              = "cdnverify.${azurerm_cdn_endpoint.this.host_name}"
+  record              = azurerm_cdn_endpoint.this.host_name
 
   tags = var.tags
 }
