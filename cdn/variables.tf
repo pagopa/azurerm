@@ -187,3 +187,7 @@ variable "dns_zone_name" {
 variable "dns_zone_resource_group_name" {
   type = string
 }
+
+variable "cname_name" {
+  type = string
+}
