@@ -301,7 +301,7 @@ resource "null_resource" "custom_domain" {
 
 # record APEX https://docs.microsoft.com/it-it/azure/dns/dns-zones-records#record-names
 resource "azurerm_dns_a_record" "hostname" {
-  # create this iif DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
+  # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
   count               = var.dns_zone_name == var.hostname ? 1 : 0
 
   name                = "@"
