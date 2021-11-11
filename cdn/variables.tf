@@ -188,6 +188,6 @@ variable "dns_zone_resource_group_name" {
   type = string
 }
 
-variable "cname_name" {
+variable "cname_record_name" {
   type = string
 }
