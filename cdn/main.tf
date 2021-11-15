@@ -242,7 +242,8 @@ resource "azurerm_cdn_endpoint" "this" {
 resource "null_resource" "custom_domain" {
   depends_on = [
     azurerm_dns_a_record.hostname[0],
-    azurerm_dns_cname_record.cdnverify,
+    azurerm_dns_cname_record.cdnverify[0],
+    azurerm_dns_cname_record.custom_subdomain[0],
     azurerm_cdn_endpoint.this,
   ]
   # needs az cli > 2.0.81
@@ -315,6 +316,8 @@ resource "azurerm_dns_a_record" "hostname" {
 
 # https://docs.microsoft.com/en-us/azure/dns/dns-custom-domain#azure-cdn
 resource "azurerm_dns_cname_record" "cdnverify" {
+  count                = var.dns_zone_name == var.hostname ? 1 : 0
+
   name                = "cdnverify"
   zone_name           = var.dns_zone_name
   resource_group_name = var.dns_zone_resource_group_name
@@ -325,6 +328,8 @@ resource "azurerm_dns_cname_record" "cdnverify" {
 }
 
 resource "azurerm_dns_cname_record" "custom_subdomain" {
+  count                = var.dns_zone_name != var.hostname ? 1 : 0
+
   name                = var.cname_record_name
   zone_name           = var.dns_zone_name
   resource_group_name = var.dns_zone_resource_group_name
