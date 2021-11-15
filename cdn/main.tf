@@ -330,7 +330,8 @@ resource "azurerm_dns_cname_record" "cdnverify" {
 resource "azurerm_dns_cname_record" "custom_subdomain" {
   count                = var.dns_zone_name != var.hostname ? 1 : 0
 
-  name                = var.cname_record_name
+  # name                = var.cname_record_name
+  name                = replace(var.hostname, var.dns_zone_name, "")
   zone_name           = var.dns_zone_name
   resource_group_name = var.dns_zone_resource_group_name
   ttl                 = 3600
