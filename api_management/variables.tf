@@ -1,13 +1,16 @@
 variable "name" {
   type = string
+  description = "Apim resource name"
 }
 
 variable "location" {
-  type = string
+  type        = string
+  description = "Azure Region"
 }
 
 variable "resource_group_name" {
-  type = string
+  type        = string
+  description = "Resource group that contains APIM"
 }
 
 variable "publisher_name" {
@@ -237,13 +240,14 @@ variable "action" {
 
 variable "redis_connection_string" {
   type        = string
-  description = "Connection string for redis external cache"
+  description = "(Optional) Connection string for redis external cache"
   default     = null
 }
 
 variable "redis_cache_id" {
   type        = string
-  description = "The resource ID of the Cache for Redis."
+  description = "(Optional) The resource ID of the Cache for Redis."
+  default     = null
 }
 
 variable "alerts_enabled" {
