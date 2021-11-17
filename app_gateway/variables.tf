@@ -130,6 +130,12 @@ variable "identity_ids" {
 }
 
 # WAF
+variable "waf_enabled" {
+  type        = bool
+  description = "Enable WAF"
+  default     = true
+}
+
 variable "waf_disabled_rule_group" {
   type = list(object({
     rule_group_name = string
