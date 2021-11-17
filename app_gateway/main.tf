@@ -209,26 +209,49 @@ resource "azurerm_application_gateway" "this" {
     min_protocol_version = "TLSv1_2"
   }
 
-  waf_configuration {
-    enabled                  = var.waf_enabled
-    firewall_mode            = "Detection"
-    rule_set_type            = "OWASP"
-    rule_set_version         = "3.1"
-    request_body_check       = true
-    file_upload_limit_mb     = 100
-    max_request_body_size_kb = 128
+  dynamic "waf_configuration" {
+    for_each = var.waf_enabled ? ["dummy"] : []
+    content {
+      enabled                  = true
+      firewall_mode            = "Detection"
+      rule_set_type            = "OWASP"
+      rule_set_version         = "3.1"
+      request_body_check       = true
+      file_upload_limit_mb     = 100
+      max_request_body_size_kb = 128
 
-    dynamic "disabled_rule_group" {
-      for_each = var.waf_disabled_rule_group
-      iterator = disabled_rule_group
+      dynamic "disabled_rule_group" {
+        for_each = var.waf_disabled_rule_group
+        iterator = disabled_rule_group
 
-      content {
-        rule_group_name = disabled_rule_group.value.rule_group_name
-        rules           = disabled_rule_group.value.rules
+        content {
+          rule_group_name = disabled_rule_group.value.rule_group_name
+          rules           = disabled_rule_group.value.rules
+        }
       }
     }
-
   }
+
+  # waf_configuration {
+  #   enabled                  = var.waf_enabled
+  #   firewall_mode            = "Detection"
+  #   rule_set_type            = "OWASP"
+  #   rule_set_version         = "3.1"
+  #   request_body_check       = true
+  #   file_upload_limit_mb     = 100
+  #   max_request_body_size_kb = 128
+
+  #   dynamic "disabled_rule_group" {
+  #     for_each = var.waf_disabled_rule_group
+  #     iterator = disabled_rule_group
+
+  #     content {
+  #       rule_group_name = disabled_rule_group.value.rule_group_name
+  #       rules           = disabled_rule_group.value.rules
+  #     }
+  #   }
+
+  # }
 
   autoscale_configuration {
     min_capacity = var.app_gateway_min_capacity
