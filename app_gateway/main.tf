@@ -295,6 +295,7 @@ resource "azurerm_monitor_metric_alert" "this" {
   for_each = local.monitor_metric_alert_criteria
 
   name                = format("%s-%s", azurerm_application_gateway.this.name, upper(each.key))
+  description         = each.value.description
   resource_group_name = var.resource_group_name
   scopes              = [azurerm_application_gateway.this.id]
   frequency           = each.value.frequency
