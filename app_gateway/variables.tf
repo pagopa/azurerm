@@ -160,6 +160,91 @@ variable "sec_storage_id" {
   description = "Storage Account security (it should be in a different subscription)."
 }
 
+# Monitoring
+
+variable "alerts_enabled" {
+  type        = bool
+  default     = true
+  description = "Should Metric Alerts be enabled?"
+}
+
+variable "action" {
+  description = "The ID of the Action Group and optional map of custom string properties to include with the post webhook operation."
+  type = set(object(
+    {
+      action_group_id    = string
+      webhook_properties = map(string)
+    }
+  ))
+  default = []
+}
+
+variable "monitor_metric_alert_criteria" {
+  default = {}
+
+  description = <<EOD
+Map of name = criteria objects, see these docs for options
+https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/metrics-supported#microsoftnetworkapplicationgateways
+EOD
+
+  type = map(object({
+
+    description = string
+    # Possible values are PT1M, PT5M, PT15M, PT30M and PT1H
+    frequency = string
+    # Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D.
+    window_size = string
+    # Possible values are 0, 1, 2, 3.
+    severity = number
+    # Possible values are true, false
+    auto_mitigate = bool
+
+    # static
+    criteria = list(object(
+      {
+        # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]
+        aggregation = string
+        metric_name = string
+        # criteria.0.operator to be one of [Equals NotEquals GreaterThan GreaterThanOrEqual LessThan LessThanOrEqual]
+        operator  = string
+        threshold = number
+
+        dimension = list(object(
+          {
+            name     = string
+            operator = string
+            values   = list(string)
+          }
+        ))
+      }
+    ))
+
+    # dynamic
+    dynamic_criteria = list(object(
+      {
+        # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]
+        aggregation = string
+        metric_name = string
+        # criteria.0.operator to be one of [Equals NotEquals GreaterThan GreaterThanOrEqual LessThan LessThanOrEqual]
+        operator = string
+        # Possible values are Low, Medium, High
+        alert_sensitivity = string
+
+        evaluation_total_count   = number
+        evaluation_failure_count = number
+
+        dimension = list(object(
+          {
+            name     = string
+            operator = string
+            values   = list(string)
+          }
+        ))
+      }
+    ))
+  }))
+}
+
 variable "tags" {
   type = map(any)
 }
