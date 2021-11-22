@@ -4,7 +4,6 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
-        args: ['--args=--sort-by required']
-      - id: terraform_tflint
-        args: ['--args=--config=__GIT_WORKING_DIR__/.tflint.hcl']
+        args:
+          - tfvars hcl --output-file terraform.tfvars.model .
       - id: terraform_tfsec

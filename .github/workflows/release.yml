@@ -1,0 +1,79 @@
+name: Release
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'CODEOWNERS'
+      - '.md'
+      - '.**'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: 'main'
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get next version
+        id: next_version
+        run: |
+          VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
+          NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
+          echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+
+      - name: Changelog
+        id: changelog
+        env:
+          NEXTVERSION: ${{ steps.next_version.outputs.NEXTVERSION }}
+        run: |
+          git config --global user.name ${GITHUB_ACTOR}
+          git config --global user.email ${GITHUB_ACTOR}
+
+          # Tag the current branch
+          echo "Create first tag"
+          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
+
+          # Create changlog
+          npx auto-changelog --commit-limit false --unreleased
+
+          # Add the change log file:
+          git add CHANGELOG.md
+
+          # Commit changelog
+          git commit -m "Release: $NEXTVERSION" --no-verify
+
+          # Push the changelog file.
+          git push origin main
+
+          # Delete tag
+          git tag -d $NEXTVERSION
+
+          # Recreate tag
+          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
+
+          # Push the tag
+          git push origin $NEXTVERSION
+
+          # Push to branch the CHANGELOG.md
+          git push origin main
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.next_version.outputs.NEXTVERSION }}
+          release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
+          draft: false
+          prerelease: false
