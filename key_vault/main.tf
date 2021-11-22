@@ -60,7 +60,6 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault" {
   storage_account_id         = var.sec_storage_id
 
   log {
-
     category = "AuditEvent"
     enabled  = true
     retention_policy {
@@ -70,12 +69,19 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault" {
   }
 
   log {
-
     category = "AzurePolicyEvaluationDetails"
     enabled  = true
     retention_policy {
       enabled = true
       days    = 365
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = false
+    retention_policy {
+      enabled = false
     }
   }
 }
