@@ -238,6 +238,12 @@ variable "action" {
   default = []
 }
 
+variable "redis_enabled" {
+  type        = bool
+  description = "Enable or disable redis cache setup"
+  default     = true
+}
+
 variable "redis_connection_string" {
   type        = string
   description = "(Optional) Connection string for redis external cache"
@@ -306,4 +312,11 @@ variable "sec_storage_id" {
 
 variable "tags" {
   type = map(any)
+}
+
+locals {
+  redis_setup_it = (
+    var.redis_connection_string != null && 
+    var.redis_enabled == true
+  )
 }

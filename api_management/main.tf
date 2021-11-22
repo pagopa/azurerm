@@ -156,8 +156,6 @@ resource "azurerm_api_management_diagnostic" "this" {
   }
 }
 
-
-
 resource "azurerm_monitor_metric_alert" "this" {
   for_each = var.metric_alerts
 
@@ -225,9 +223,11 @@ resource "azurerm_monitor_metric_alert" "this" {
   }
 }
 
-
+#
+# 🗄 Redis
+#
 resource "azurerm_api_management_redis_cache" "this" {
-  count = var.redis_connection_string != null ? 1 : 0
+  count = (var.redis_connection_string != null && var.redis_enabled == true) ? 1 : 0
 
   name              = format("%s-redis", var.name)
   api_management_id = azurerm_api_management.this.id
