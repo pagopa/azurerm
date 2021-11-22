@@ -8,7 +8,7 @@ on:
       - main
     paths-ignore:
       - 'CODEOWNERS'
-      - '.md'
+      - '**.md'
       - '.**'
 
 jobs:
@@ -22,7 +22,6 @@ jobs:
         with:
           ref: 'main'
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get next version
         id: next_version
@@ -36,36 +35,7 @@ jobs:
         env:
           NEXTVERSION: ${{ steps.next_version.outputs.NEXTVERSION }}
         run: |
-          git config --global user.name ${GITHUB_ACTOR}
-          git config --global user.email ${GITHUB_ACTOR}
-
-          # Tag the current branch
-          echo "Create first tag"
-          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
-
-          # Create changlog
-          npx auto-changelog --commit-limit false --unreleased
-
-          # Add the change log file:
-          git add CHANGELOG.md
-
-          # Commit changelog
-          git commit -m "Release: $NEXTVERSION" --no-verify
-
-          # Push the changelog file.
-          git push origin main
-
-          # Delete tag
-          git tag -d $NEXTVERSION
-
-          # Recreate tag
-          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
-
-          # Push the tag
-          git push origin $NEXTVERSION
-
-          # Push to branch the CHANGELOG.md
-          git push origin main
+          npx auto-changelog --unreleased-only --latest-version $NEXTVERSION
 
       - name: Create Release
         id: create_release
@@ -77,3 +47,4 @@ jobs:
           release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
           draft: false
           prerelease: false
+          body_path: 'CHANGELOG.md'
