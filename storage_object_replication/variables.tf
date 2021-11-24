@@ -14,7 +14,6 @@ variable "rules" {
       source_container_name        = string
       destination_container_name   = string
       copy_blobs_created_after     = string
-      filter_out_blobs_with_prefix = string
     })
   )
 
