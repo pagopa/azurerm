@@ -85,6 +85,12 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      default_node_pool.node_count,
+    ]
+  }
+
   tags = var.tags
 }
 
