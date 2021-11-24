@@ -21,5 +21,5 @@ echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO 
 apt-get -y update
 apt-get -y install azure-cli
 
+# install python package index (pip)
 apt-get -y install python-pip
-pip install authlib
