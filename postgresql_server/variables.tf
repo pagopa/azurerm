@@ -10,15 +10,14 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "virtual_network_id" {
-  type        = string
-  description = "The ID of the Virtual Network that should be linked to the DNS Zone."
-}
-
-variable "subnet_id" {
-  type        = string
-  default     = null
-  description = "The id of the subnet that will be used to deploy the database."
+variable "private_endpoint" {
+  type = object({
+    enabled              = bool
+    virtual_network_id   = string
+    subnet_id            = string
+    private_dns_zone_ids = list(string)
+  })
+  description = "(Required) Enable vnet private endpoint with required params"
 }
 
 variable "network_rules" {
@@ -31,6 +30,24 @@ variable "network_rules" {
     ip_rules                       = []
     allow_access_to_azure_services = false
   }
+}
+
+variable "public_network_access_enabled" {
+  type        = bool
+  description = "Whether or not public network access is allowed for this server."
+  default     = false
+}
+
+variable "allowed_subnets" {
+  type        = list(string)
+  description = "(Optional) Allowed subnets ids"
+  default     = []
+}
+
+variable "replica_allowed_subnets" {
+  type        = list(string)
+  description = "(Optional) Allowed subnets ids"
+  default     = []
 }
 
 variable "administrator_login" {
@@ -57,13 +74,7 @@ variable "db_version" {
 variable "storage_mb" {
   type        = number
   description = "Max storage allowed for a server. Possible values are between 5120 MB(5GB) and 1048576 MB(1TB) for the Basic SKU and between 5120 MB(5GB) and 16777216 MB(16TB) for General Purpose/Memory Optimized SKUs. "
-  default     = 5120
-}
-
-variable "public_network_access_enabled" {
-  type        = bool
-  description = "Whether or not public network access is allowed for this server."
-  default     = false 
+  default     = null
 }
 
 variable "ssl_enforcement_enabled" {
@@ -75,7 +86,7 @@ variable "ssl_enforcement_enabled" {
 variable "ssl_minimal_tls_version_enforced" {
   type        = string
   description = "The mimimun TLS version to support on the sever"
-  default     = "TLSEnforcementDisabled"
+  default     = "TLS1_2"
 }
 
 variable "backup_retention_days" {
@@ -126,16 +137,6 @@ variable "configuration_replica" {
   default     = {}
 }
 
-variable "private_dns_zone_id" {
-  type    = string
-  default = null
-}
-
-variable "private_dns_zone_name" {
-  type    = string
-  default = "privatelink.postgres.database.azure.com"
-}
-
 variable "alerts_enabled" {
   type        = bool
   default     = true
@@ -152,7 +153,6 @@ variable "action" {
   ))
   default = []
 }
-
 
 variable "monitor_metric_alert_criteria" {
   default = {}
@@ -244,7 +244,6 @@ variable "lock_enable" {
   default     = false
   description = "Apply lock to block accedentaly deletions."
 }
-
 
 variable "tags" {
   type = map(any)
