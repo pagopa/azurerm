@@ -30,19 +30,18 @@ variable "node_pool_name" {
 
 variable "vm_size" {
   type        = string
-  default     = "Standard_DS2_v2"
-  description = "The size of the Virtual Machine"
+  description = "(Required) The size of the Virtual Machine, such as Standard_B4ms or Standard_D4s_v3"
 }
 
 variable "sku_tier" {
   type        = string
-  description = "The SKU Tier that should be used for this Kubernetes Cluster."
+  description = "(Optional) The SKU Tier that should be used for this Kubernetes Cluster. Possible values are Free and Paid (which includes the Uptime SLA)"
   default     = "Free"
 }
 
 variable "kubernetes_version" {
   type        = string
-  description = "Version of Kubernetes specified when creating the AKS managed cluster."
+  description = "(Optional) Version of Kubernetes specified when creating the AKS managed cluster."
   default     = null
 }
 
