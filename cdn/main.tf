@@ -189,7 +189,7 @@ resource "azurerm_cdn_endpoint" "this" {
       order = delivery_rule.value.order
 
       dynamic "request_uri_condition" {
-        for_each = [ for c in delivery_rule.value.conditions : c if c.condition_type=="request_uri_condition"]
+        for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "request_uri_condition"]
         iterator = c
 
         content {
@@ -201,7 +201,7 @@ resource "azurerm_cdn_endpoint" "this" {
       }
 
       dynamic "url_path_condition" {
-        for_each = [ for c in delivery_rule.value.conditions : c if c.condition_type=="url_path_condition"]
+        for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "url_path_condition"]
         iterator = c
 
         content {
@@ -213,7 +213,7 @@ resource "azurerm_cdn_endpoint" "this" {
       }
 
       dynamic "url_file_extension_condition" {
-        for_each = [ for c in delivery_rule.value.conditions : c if c.condition_type=="url_file_extension_condition"]
+        for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "url_file_extension_condition"]
         iterator = c
 
         content {
@@ -303,7 +303,7 @@ resource "null_resource" "custom_domain" {
 # record APEX https://docs.microsoft.com/it-it/azure/dns/dns-zones-records#record-names
 resource "azurerm_dns_a_record" "hostname" {
   # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
-  count               = var.dns_zone_name == var.hostname ? 1 : 0
+  count = var.dns_zone_name == var.hostname ? 1 : 0
 
   name                = "@"
   zone_name           = var.dns_zone_name
@@ -316,7 +316,7 @@ resource "azurerm_dns_a_record" "hostname" {
 
 # https://docs.microsoft.com/en-us/azure/dns/dns-custom-domain#azure-cdn
 resource "azurerm_dns_cname_record" "cdnverify" {
-  count                = var.dns_zone_name == var.hostname ? 1 : 0
+  count = var.dns_zone_name == var.hostname ? 1 : 0
 
   name                = "cdnverify"
   zone_name           = var.dns_zone_name
@@ -328,10 +328,10 @@ resource "azurerm_dns_cname_record" "cdnverify" {
 }
 
 resource "azurerm_dns_cname_record" "custom_subdomain" {
-  count                = var.dns_zone_name != var.hostname ? 1 : 0
+  count = var.dns_zone_name != var.hostname ? 1 : 0
 
   # name                = var.cname_record_name
-  name                = trimsuffix(replace(var.hostname,var.dns_zone_name, ""),".")
+  name                = trimsuffix(replace(var.hostname, var.dns_zone_name, ""), ".")
   zone_name           = var.dns_zone_name
   resource_group_name = var.dns_zone_resource_group_name
   ttl                 = 3600

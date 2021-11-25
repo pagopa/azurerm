@@ -107,7 +107,7 @@ resource "azurerm_role_assignment" "vnet_role" {
 }
 
 resource "azurerm_role_assignment" "vnet_outbound_role" {
-  for_each  = toset(var.outbound_ip_address_ids)
+  for_each = toset(var.outbound_ip_address_ids)
 
   scope                = each.key
   role_definition_name = "Network Contributor"

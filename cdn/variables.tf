@@ -126,9 +126,9 @@ variable "delivery_rule_redirect" {
 
 variable "delivery_rule_rewrite" {
   type = list(object({
-    name               = string
-    order              = number
-    conditions         = list(object({
+    name  = string
+    order = number
+    conditions = list(object({
       condition_type   = string
       operator         = string
       match_values     = list(string)
