@@ -84,6 +84,7 @@ No modules.
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
+| <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id) | n/a |
 | <a name="output_replica_fqdn"></a> [replica\_fqdn](#output\_replica\_fqdn) | n/a |
-| <a name="output_replica_id"></a> [replica\_id](#output\_replica\_id) | n/a |
 | <a name="output_replica_name"></a> [replica\_name](#output\_replica\_name) | n/a |
+| <a name="output_replica_principal_id"></a> [replica\_principal\_id](#output\_replica\_principal\_id) | n/a |
