@@ -42,6 +42,10 @@ resource "azurerm_postgresql_server" "this" {
   creation_source_server_id = var.creation_source_server_id
   restore_point_in_time     = var.restore_point_in_time
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   lifecycle {
     ignore_changes = [
       # Autogrow is enabled
@@ -77,6 +81,10 @@ resource "azurerm_postgresql_server" "replica" {
 
   create_mode               = "Replica"
   creation_source_server_id = azurerm_postgresql_server.this.id
+
+  identity {
+    type = "SystemAssigned"
+  }
 
   lifecycle {
     ignore_changes = [
