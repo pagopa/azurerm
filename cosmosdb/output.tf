@@ -48,7 +48,7 @@ output "connection_strings" {
   sensitive = true
 }
 
-output "replica_principal_id" {
+output "principal_id" {
   value = azurerm_cosmosdb_account.this.identity.0.principal_id
 }
 
