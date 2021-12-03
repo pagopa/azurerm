@@ -9,6 +9,7 @@ resource "random_string" "dns" {
 }
 
 resource "azurerm_public_ip" "gw" {
+  count               = var.pip_id == null ? 1 : 0
   name                = "${var.name}-gw-pip"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -21,9 +22,9 @@ resource "azurerm_public_ip" "gw" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "gw_pip" {
-  count                      = var.log_analytics_workspace_id != null ? 1 : 0
+  count                      = var.log_analytics_workspace_id != null && var.pip_id == null ? 1 : 0
   name                       = "gw-pip-log-analytics"
-  target_resource_id         = azurerm_public_ip.gw.id
+  target_resource_id         = azurerm_public_ip.gw[0].id
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
   log {
@@ -74,7 +75,7 @@ resource "azurerm_virtual_network_gateway" "gw" {
 
   ip_configuration {
     name                          = "${var.name}-gw-config"
-    public_ip_address_id          = azurerm_public_ip.gw.id
+    public_ip_address_id          = var.pip_id == null ? azurerm_public_ip.gw[0].id : var.pip_id
     private_ip_address_allocation = "Dynamic"
     subnet_id                     = var.subnet_id
   }
@@ -109,121 +110,6 @@ resource "azurerm_virtual_network_gateway" "gw" {
   }
 
   tags = var.tags
-}
-
-resource "azurerm_monitor_diagnostic_setting" "gw" {
-  count                      = var.log_analytics_workspace_id != null ? 1 : 0
-  name                       = "gw-analytics"
-  target_resource_id         = azurerm_virtual_network_gateway.gw.id
-  log_analytics_workspace_id = var.log_analytics_workspace_id
-
-  log {
-    category = "GatewayDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = false
-    }
-  }
-
-  log {
-    category = "TunnelDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = false
-    }
-  }
-
-  log {
-    category = "RouteDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = false
-    }
-  }
-
-  log {
-    category = "IKEDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = false
-    }
-  }
-
-  log {
-    category = "P2SDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = false
-    }
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-    retention_policy {
-      enabled = false
-    }
-  }
-}
-
-resource "azurerm_monitor_diagnostic_setting" "gw_logs" {
-  count              = var.log_storage_account_id != null ? 1 : 0
-  name               = "gw-logs"
-  target_resource_id = azurerm_virtual_network_gateway.gw.id
-  storage_account_id = var.log_storage_account_id
-
-  log {
-    category = "GatewayDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
-  }
-
-  log {
-    category = "TunnelDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
-  }
-
-  log {
-    category = "RouteDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
-  }
-
-  log {
-    category = "IKEDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
-  }
-
-  log {
-    category = "P2SDiagnosticLog"
-    enabled  = true
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = false
-    retention_policy {
-      enabled = false
-    }
-  }
 }
 
 resource "azurerm_monitor_diagnostic_setting" "sec_gw_logs" {
@@ -327,4 +213,3 @@ resource "azurerm_virtual_network_gateway_connection" "local" {
 
   tags = var.tags
 }
-
