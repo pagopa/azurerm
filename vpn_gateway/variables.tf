@@ -47,6 +47,12 @@ variable "pip_allocation_method" {
   default     = "Dynamic"
 }
 
+variable "pip_id" {
+  type        = string
+  description = "External public ip"
+  default     = null
+}
+
 variable "vpn_client_configuration" {
   description = "If set it will activate point-to-site configuration."
   type = list(object(
