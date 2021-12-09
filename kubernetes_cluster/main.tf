@@ -151,3 +151,41 @@ resource "azurerm_monitor_metric_alert" "this" {
     }
   }
 }
+
+resource "azurerm_monitor_diagnostic_setting" "aks" {
+  count                      = var.sec_log_analytics_workspace_id != null ? 1 : 0
+  name                       = "LogSecurity"
+  target_resource_id         = azurerm_kubernetes_cluster.this.id
+  log_analytics_workspace_id = var.sec_log_analytics_workspace_id
+  storage_account_id         = var.sec_storage_id
+
+  log {
+    category = "kube-audit"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "kube-audit-admin"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = false
+
+    retention_policy {
+      days    = 0
+      enabled = false
+    }
+  }
+}
