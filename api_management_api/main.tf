@@ -6,6 +6,7 @@ resource "azurerm_api_management_api" "this" {
   revision              = var.revision
   display_name          = var.display_name
   description           = var.description
+  oauth2_authorization  = var.oauth2_authorization
   path                  = var.path
   protocols             = var.protocols
   service_url           = var.service_url

@@ -27,6 +27,10 @@ variable "revision" {
   default = "1"
 }
 
+variable "oauth2_authorization" {
+  type = string
+}
+
 variable "path" {
   type = string
 }
