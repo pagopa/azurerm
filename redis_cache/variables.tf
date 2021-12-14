@@ -32,14 +32,30 @@ variable "enable_non_ssl_port" {
 
 variable "subnet_id" {
   type        = string
-  description = "The Subnet within which the Redis Cache should be deployed."
+  description = "The Subnet within which the Redis Cache should be deployed (Deprecated, use private_endpoint)"
   default     = null
+}
+
+variable "private_endpoint" {
+  type = object({
+    enabled              = bool
+    virtual_network_id   = string
+    subnet_id            = string
+    private_dns_zone_ids = list(string)
+  })
+  description = "(Required) Enable private endpoint with required params"
 }
 
 variable "private_static_ip_address" {
   type        = string
   description = "The Static IP Address to assign to the Redis Cache when hosted inside the Virtual Network"
   default     = null
+}
+
+variable "public_network_access_enabled" {
+  type        = string
+  description = "Whether or not public network access is allowed for this Redis Cache. true means this resource could be accessed by both public and private endpoint. false means only private endpoint access is allowed. Defaults to false."
+  default     = false
 }
 
 variable "family" {
