@@ -7,6 +7,11 @@ resource "azurerm_api_management_api" "this" {
   display_name          = var.display_name
   description           = var.description
   oauth2_authorization  = var.oauth2_authorization
+
+  oauth2_authorization {
+    authorization_server_name   = var.oauth2_authorization.authorization_server_name != null ? var.oauth2_authorization.authorization_server_name : null
+  }
+
   path                  = var.path
   protocols             = var.protocols
   service_url           = var.service_url
