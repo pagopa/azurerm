@@ -28,7 +28,7 @@ variable "revision" {
 }
 
 variable "oauth2_authorization" {
-  type = string
+  type = object
 }
 
 variable "path" {
