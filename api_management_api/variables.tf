@@ -28,7 +28,10 @@ variable "revision" {
 }
 
 variable "oauth2_authorization" {
-  type = object
+  type = object({
+    authorization_server_name  = string
+    }
+  )
 }
 
 variable "path" {
