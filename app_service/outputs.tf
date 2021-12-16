@@ -6,8 +6,12 @@ output "name" {
   value = azurerm_app_service.this.name
 }
 
+output "plan_id" {
+  value = var.plan_type == "internal" ? azurerm_app_service_plan.this[0].id : var.plan_id
+}
+
 output "plan_name" {
-  value = azurerm_app_service_plan.this.name
+  value = var.plan_type == "internal" ? azurerm_app_service_plan.this[0].name : null
 }
 
 output "default_site_hostname" {

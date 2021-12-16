@@ -1,4 +1,5 @@
 resource "azurerm_app_service_plan" "this" {
+  count               = var.plan_type == "internal" ? 1 : 0
   name                = var.plan_name
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -23,7 +24,7 @@ resource "azurerm_app_service" "this" {
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  app_service_plan_id = azurerm_app_service_plan.this.id
+  app_service_plan_id = var.plan_type == "internal" ? azurerm_app_service_plan.this[0].id : var.plan_id
   https_only          = true
   client_cert_enabled = var.client_cert_enabled
 
@@ -75,7 +76,7 @@ resource "azurerm_app_service" "this" {
 }
 
 resource "azurerm_app_service_virtual_network_swift_connection" "app_service_virtual_network_swift_connection" {
-  count = var.subnet_name != null ? 1 : 0
+  count = var.subnet_id != null ? 1 : 0
 
   app_service_id = azurerm_app_service.this.id
   subnet_id      = var.subnet_id
