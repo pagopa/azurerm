@@ -27,6 +27,16 @@ variable "revision" {
   default = "1"
 }
 
+variable "oauth2_authorization" {
+  type = object({
+    authorization_server_name  = string
+    }
+  )
+  default = {
+    authorization_server_name = null
+  }
+}
+
 variable "path" {
   type = string
 }
