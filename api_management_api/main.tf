@@ -6,8 +6,11 @@ resource "azurerm_api_management_api" "this" {
   revision              = var.revision
   display_name          = var.display_name
   description           = var.description
-  oauth2_authorization {
-    authorization_server_name   = var.oauth2_authorization.authorization_server_name != null ? var.oauth2_authorization.authorization_server_name : null
+  dynamic "oauth2_authorization" {
+    for_each = var.oauth2_authorization.authorization_server_name != null ? ["dummy"] : []
+    content {
+      authorization_server_name = var.oauth2_authorization.authorization_server_name
+    }
   }
 
   path                  = var.path
