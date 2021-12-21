@@ -31,6 +31,7 @@ resource "azurerm_template_deployment" "this" {
 resource "azurerm_monitor_metric_alert" "this" {
   name                = format("%s-%s", var.name, var.application_insight_name)
   resource_group_name = var.resource_group
+  severity            = var.severity
   scopes = [
     data.azurerm_application_insights.this.id,
     format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webtests/%s-%s",

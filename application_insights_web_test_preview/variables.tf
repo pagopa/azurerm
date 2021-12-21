@@ -71,3 +71,9 @@ variable "actions" {
     action_group_id = string
   }))
 }
+
+variable "severity" {
+  type        = number
+  description = "The severity of this Metric Alert."
+  default     = 1
+}
