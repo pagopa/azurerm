@@ -59,4 +59,8 @@ resource "azurerm_monitor_metric_alert" "this" {
       action_group_id = action.value["action_group_id"]
     }
   }
+
+  depends_on = [
+    azurerm_template_deployment.this,
+  ]
 }
