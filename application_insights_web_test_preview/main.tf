@@ -29,7 +29,7 @@ resource "azurerm_template_deployment" "this" {
 }
 
 resource "azurerm_monitor_metric_alert" "this" {
-  name                = fomat("%s-%s", var.name, var.application_insight_name)
+  name                = format("%s-%s", var.name, var.application_insight_name)
   resource_group_name = var.resource_group
   scopes = [
     data.azurerm_application_insights.this.id,
