@@ -13,6 +13,11 @@ variable "resource_group" {
   description = "Resource group name"
 }
 
+variable "location" {
+  type        = string
+  description = "Application insight location."
+}
+
 variable "application_insight_name" {
   type        = string
   description = "Application insight instance name."

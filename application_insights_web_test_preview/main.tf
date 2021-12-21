@@ -10,6 +10,7 @@ locals {
     expected_http_status              = var.expected_http_status
     ignore_http_status                = var.ignore_http_status
     ssl_cert_remaining_lifetime_check = var.ssl_cert_remaining_lifetime_check
+    location                          = var.location
   })
 }
 
