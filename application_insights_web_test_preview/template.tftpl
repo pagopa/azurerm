@@ -1,0 +1,47 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {},
+	"variables": {},
+	"resources": [{
+		"id": "/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/microsoft.insights/webtests/${web_test_name}-${application_insight_name}",
+		"name": "${web_test_name}-${application_insight_name}",
+		"type": "microsoft.insights/webtests",
+        "apiVersion": "2018-05-01-preview",
+		"location": "${location}",
+		"tags": {
+			"hidden-link:/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/microsoft.insights/components/${application_insight_name}": "Resource"
+		},
+		"kind": null,
+		"properties": {
+			"SyntheticMonitorId": "${web_test_name}-${application_insight_name}",
+			"Name": "${web_test_name}",
+			"Description": null,
+			"Enabled": true,
+			"Frequency": ${frequency},
+			"Timeout": ${timeout},
+			"Kind": "standard",
+			"RetryEnabled": true,
+			"Locations": [{
+				"Id": "emea-nl-ams-azr"
+			}],
+			"Configuration": null,
+			"Request": {
+				"RequestUrl": "${request_url}",
+				"Headers": null,
+				"HttpVerb": "GET",
+				"RequestBody": null,
+				"ParseDependentRequests": false,
+				"FollowRedirects": null
+			},
+			"ValidationRules": {
+				"ExpectedHttpStatusCode": ${expected_http_status},
+				"IgnoreHttpStatusCode": ${ignore_http_status},
+				"ContentValidation": null,
+				"SSLCheck": true,
+				"SSLCertRemainingLifetimeCheck": ${ssl_cert_remaining_lifetime_check}
+			},
+			"provisioningState": ""
+		}
+	}]
+}
