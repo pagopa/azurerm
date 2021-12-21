@@ -59,3 +59,15 @@ variable "ssl_cert_remaining_lifetime_check" {
   description = "Days before the ssl certificate will expire. An expiry certificate will cause the test failing."
   default     = 7
 }
+
+variable "failed_location_count" {
+  type        = number
+  description = "The number of failed locations."
+  default     = 1
+}
+
+variable "actions" {
+  type = list(object({
+    action_group_id = string
+  }))
+}

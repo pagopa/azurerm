@@ -14,6 +14,10 @@ locals {
   })
 }
 
+data "azurerm_application_insights" "this" {
+  name                = var.application_insight_name
+  resource_group_name = var.resource_group
+}
 
 resource "azurerm_template_deployment" "this" {
   name                = var.name
@@ -22,4 +26,35 @@ resource "azurerm_template_deployment" "this" {
   template_body = local.template_body
 
   deployment_mode = "Incremental"
+}
+
+resource "azurerm_monitor_metric_alert" "this" {
+  name                = fomat("%s-%s", var.name, var.application_insight_name)
+  resource_group_name = var.resource_group
+  scopes = [
+    data.azurerm_application_insights.this.id,
+    format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webtests/%s",
+      var.subscription_id,
+      var.resource_group,
+      var.name
+    )
+  ]
+  description = "Web availability check alert triggered when it fails."
+
+  application_insights_web_test_location_availability_criteria {
+    web_test_id = format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webtests/%s",
+      var.subscription_id,
+      var.resource_group,
+      var.name
+    )
+    component_id          = data.azurerm_application_insights.this.id
+    failed_location_count = var.failed_location_count
+  }
+
+  dynamic "action" {
+    for_each = var.actions
+    content {
+      action_group_id = action.value["action_group_id"]
+    }
+  }
 }
