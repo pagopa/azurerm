@@ -2,8 +2,16 @@ output "id" {
   value = azurerm_cdn_endpoint.this.id
 }
 
+locals {
+  hostname = join(".", [azurerm_cdn_endpoint.this.name, "azureedge.net"])
+}
+
 output "hostname" {
-  value = "${azurerm_cdn_endpoint.this.name}.azureedge.net"
+  value = local.hostname
+}
+
+output "fqdn" {
+  value = length(azurerm_dns_cname_record.custom_subdomain) > 0 ? trimsuffix(azurerm_dns_cname_record.custom_subdomain[0].fqdn, ".") : local.hostname
 }
 
 output "storage_primary_connection_string" {
