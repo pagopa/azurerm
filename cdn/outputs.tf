@@ -11,7 +11,7 @@ output "hostname" {
 }
 
 output "fqdn" {
-  value = length(azurerm_dns_cname_record.*.custom_subdomain) > 0 ? azurerm_dns_cname_record[0].custom_subdomain.fqdn : local.hostname
+  value = length(azurerm_dns_cname_record.custom_subdomain) > 0 ? azurerm_dns_cname_record.custom_subdomain[0].fqdn : local.hostname
 }
 
 output "storage_primary_connection_string" {
