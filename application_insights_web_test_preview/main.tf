@@ -34,16 +34,17 @@ resource "azurerm_monitor_metric_alert" "this" {
   severity            = var.severity
   scopes = [
     data.azurerm_application_insights.this.id,
-    format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webtests/%s-%s",
+    format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webTests/%s-%s",
       var.subscription_id,
       var.resource_group,
       var.name,
-    var.application_insight_name),
+      var.application_insight_name
+    ),
   ]
   description = "Web availability check alert triggered when it fails."
 
   application_insights_web_test_location_availability_criteria {
-    web_test_id = format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webtests/%s-%s",
+    web_test_id = format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webTests/%s-%s",
       var.subscription_id,
       var.resource_group,
       var.name,
