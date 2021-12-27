@@ -13,6 +13,7 @@ resource "azurerm_cosmosdb_account" "this" {
   geo_location {
     location          = var.main_geo_location_location
     failover_priority = 0
+    zone_redundant    = var.main_geo_location_zone_redundant
   }
 
   dynamic "geo_location" {
@@ -21,6 +22,7 @@ resource "azurerm_cosmosdb_account" "this" {
     content {
       location          = geo_location.value.location
       failover_priority = geo_location.value.failover_priority
+      zone_redundant    = geo_location.value.zone_redundant
     }
   }
 
