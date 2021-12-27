@@ -98,10 +98,16 @@ variable "main_geo_location_location" {
   type = string
 }
 
+variable "main_geo_location_zone_redundant" {
+  type        = bool
+  description = "Should zone redundancy be enabled for main region? Set true for prod environments"
+}
+
 variable "additional_geo_locations" {
   type = list(object({
     location          = string
     failover_priority = number
+    zone_redundant    = bool
   }))
   default = []
 }
