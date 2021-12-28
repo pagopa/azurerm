@@ -21,6 +21,7 @@ variable "plan_type" {
     )
     error_message = "Plan type can be only internal or external."
   }
+  default = "internal"
 }
 
 variable "plan_id" {
@@ -142,6 +143,13 @@ variable "subnet_id" {
   type        = string
   description = "(Optional) Subnet id wether you want to integrate the app service to a subnet."
   default     = null
+}
+
+
+variable "vnet_route_all_enabled" {
+  type        = bool
+  description = "Should all outbound traffic to have Virtual Network Security Groups and User Defined Routes applied?"
+  default     = true
 }
 
 variable "tags" {
