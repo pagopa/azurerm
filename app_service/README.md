@@ -38,6 +38,7 @@ No modules.
 | <a name="input_app_command_line"></a> [app\_command\_line](#input\_app\_command\_line) | (Optional) App command line to launch, e.g. /sbin/myserver -b 0.0.0.0. | `string` | `null` | no |
 | <a name="input_app_settings"></a> [app\_settings](#input\_app\_settings) | n/a | `map(string)` | `{}` | no |
 | <a name="input_client_cert_enabled"></a> [client\_cert\_enabled](#input\_client\_cert\_enabled) | (Optional) Does the App Service require client certificates for incoming requests? Defaults to false. | `bool` | `false` | no |
+| <a name="input_ftps_state"></a> [ftps\_state](#input\_ftps\_state) | (Optional) Enable FTPS connection ( Default: Disabled ) | `string` | `"Disabled"` | no |
 | <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | (Optional) The health check path to be pinged by App Service. | `string` | `null` | no |
 | <a name="input_linux_fx_version"></a> [linux\_fx\_version](#input\_linux\_fx\_version) | (Optional) Linux App Framework and version for the App Service. | `string` | `null` | no |
 | <a name="input_location"></a> [location](#input\_location) | (Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created. | `string` | `"westeurope"` | no |
@@ -46,12 +47,15 @@ No modules.
 | <a name="input_plan_sku_capacity"></a> [plan\_sku\_capacity](#input\_plan\_sku\_capacity) | (Optional) Specifies the number of workers associated with this App Service Plan. | `number` | `1` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | (Optional) Subnet id wether you want to integrate the app service to a subnet. | `string` | `null` | no |
 | <a name="input_subnet_name"></a> [subnet\_name](#input\_subnet\_name) | (Optional) Subnet name wether you want to integrate the app service to a subnet. | `string` | `null` | no |
+| <a name="input_vnet_route_all_enabled"></a> [vnet\_route\_all\_enabled](#input\_vnet\_route\_all\_enabled) | Should all outbound traffic to have Virtual Network Security Groups and User Defined Routes applied? | `bool` | `true` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_custom_domain_verification_id"></a> [custom\_domain\_verification\_id](#output\_custom\_domain\_verification\_id) | n/a |
 | <a name="output_default_site_hostname"></a> [default\_site\_hostname](#output\_default\_site\_hostname) | n/a |
+| <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_plan_name"></a> [plan\_name](#output\_plan\_name) | n/a |
 | <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id) | n/a |
