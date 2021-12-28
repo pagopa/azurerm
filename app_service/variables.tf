@@ -21,6 +21,7 @@ variable "plan_type" {
     )
     error_message = "Plan type can be only internal or external."
   }
+  default = "internal"
 }
 
 variable "plan_id" {
