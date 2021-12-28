@@ -48,6 +48,7 @@ No modules.
 | <a name="input_plan_sku_size"></a> [plan\_sku\_size](#input\_plan\_sku\_size) | (Optional) Specifies the plan's instance size. | `string` | `null` | no |
 | <a name="input_plan_sku_tier"></a> [plan\_sku\_tier](#input\_plan\_sku\_tier) | (Optional) Specifies the plan's pricing tier. | `string` | `null` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | (Optional) Subnet id wether you want to integrate the app service to a subnet. | `string` | `null` | no |
+| <a name="input_vnet_route_all_enabled"></a> [vnet\_route\_all\_enabled](#input\_vnet\_route\_all\_enabled) | Should all outbound traffic to have Virtual Network Security Groups and User Defined Routes applied? | `bool` | `true` | no |
 
 ## Outputs
 
