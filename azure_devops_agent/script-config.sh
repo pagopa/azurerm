@@ -22,4 +22,4 @@ apt-get -y update
 apt-get -y install azure-cli
 
 # install python package index (pip)
-# apt-get -y install python-pip
+apt-get -y install python-pip
