@@ -7,9 +7,8 @@ resource "azurerm_app_service_plan" "this" {
   kind = var.plan_kind
 
   sku {
-    tier     = var.plan_sku_tier
-    size     = var.plan_sku_size
-    capacity = var.plan_sku_capacity
+    tier = var.plan_sku_tier
+    size = var.plan_sku_size
   }
 
   maximum_elastic_worker_count = var.plan_maximum_elastic_worker_count
