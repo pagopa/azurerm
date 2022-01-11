@@ -17,12 +17,13 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_app_service_slot.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_slot) | resource |
-| [azurerm_app_service_virtual_network_swift_connection.app_service_virtual_network_swift_connection](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_virtual_network_swift_connection) | resource |
+| [azurerm_app_service_slot_virtual_network_swift_connection.app_service_virtual_network_swift_connection](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_slot_virtual_network_swift_connection) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_app_service_id"></a> [app\_service\_id](#input\_app\_service\_id) | (Required) The id of the App Service within which to create the App Service Slot. | `string` | n/a | yes |
 | <a name="input_app_service_name"></a> [app\_service\_name](#input\_app\_service\_name) | (Required) The name of the App Service within which to create the App Service Slot. Changing this forces a new resource to be created. | `string` | n/a | yes |
 | <a name="input_app_service_plan_id"></a> [app\_service\_plan\_id](#input\_app\_service\_plan\_id) | (Required) The ID of the App Service Plan within which to create this App Service Slot. Changing this forces a new resource to be created. | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | (Required) Specifies the name of the App Service. Changing this forces a new resource to be created. | `string` | n/a | yes |
