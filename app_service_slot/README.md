@@ -43,10 +43,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_custom_domain_verification_id"></a> [custom\_domain\_verification\_id](#output\_custom\_domain\_verification\_id) | n/a |
 | <a name="output_default_site_hostname"></a> [default\_site\_hostname](#output\_default\_site\_hostname) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
-| <a name="output_plan_id"></a> [plan\_id](#output\_plan\_id) | n/a |
-| <a name="output_plan_name"></a> [plan\_name](#output\_plan\_name) | n/a |
 | <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id) | n/a |
