@@ -54,12 +54,6 @@ variable "plan_sku_size" {
   default     = null
 }
 
-variable "plan_sku_capacity" {
-  type        = number
-  description = "(Optional) Specifies the number of workers associated with this App Service Plan."
-  default     = 1
-}
-
 variable "plan_maximum_elastic_worker_count" {
   type        = number
   description = "(Optional) The maximum number of total workers allowed for this ElasticScaleEnabled App Service Plan."
