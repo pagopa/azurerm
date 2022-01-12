@@ -48,7 +48,7 @@ resource "azurerm_function_app_slot" "this" {
       # default value for health_check_path, override it in var.app_settings if needed
       WEBSITE_HEALTHCHECK_MAXPINGFAILURES = var.health_check_path != null ? var.health_check_maxpingfailures : null
       # https://docs.microsoft.com/en-us/samples/azure-samples/azure-functions-private-endpoints/connect-to-private-endpoints-with-azure-functions/
-      SLOT_TASK_HUBNAME               = "ProductionTaskHub"
+      SLOT_TASK_HUBNAME               = format("%sTaskHub", title(var.name))
       WEBSITE_RUN_FROM_PACKAGE        = 1
       WEBSITE_VNET_ROUTE_ALL          = 1
       WEBSITE_DNS_SERVER              = "168.63.129.16"
