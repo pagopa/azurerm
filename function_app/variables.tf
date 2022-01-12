@@ -1,7 +1,3 @@
-variable "env_short" {
-  type = string
-}
-
 variable "location" {
   type = string
 }
