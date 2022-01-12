@@ -130,7 +130,10 @@ variable "durable_function" {
 }
 
 variable "health_check_path" {
-  type = string
+  type        = string
+  description = "Path which will be checked for this function app health."
+  default     = null
+
 }
 
 variable "health_check_maxpingfailures" {

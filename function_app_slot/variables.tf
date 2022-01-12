@@ -95,8 +95,9 @@ variable "auto_swap_slot_name" {
 }
 
 variable "health_check_path" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "Path which will be checked for this function app health."
 }
 
 variable "health_check_maxpingfailures" {
