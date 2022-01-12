@@ -60,9 +60,9 @@ variable "allowed_subnets" {
   description = "List of subnet ids which are allowed to call the function. An empty list means from each subnet."
 }
 
-variable "subnet_out_id" {
+variable "subnet_id" {
   type        = string
-  description = "Id subent outbound traffic."
+  description = "The ID of the subnet the app service will be associated to (the subnet must have a service_delegation configured for Microsoft.Web/serverFarms)"
 }
 
 
