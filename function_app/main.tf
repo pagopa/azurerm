@@ -125,7 +125,7 @@ resource "azurerm_private_endpoint" "table" {
 resource "azurerm_app_service_plan" "this" {
   count = var.app_service_plan_id == null ? 1 : 0
 
-  name                = format("%s-%s-plan", var.name)
+  name                = format("%s-plan", var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   kind                = var.app_service_plan_info.kind
