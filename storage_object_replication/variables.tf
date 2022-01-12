@@ -11,9 +11,9 @@ variable "destination_storage_account_id" {
 variable "rules" {
   type = list(
     object({
-      source_container_name        = string
-      destination_container_name   = string
-      copy_blobs_created_after     = string
+      source_container_name      = string
+      destination_container_name = string
+      copy_blobs_created_after   = string
     })
   )
 
