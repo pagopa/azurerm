@@ -60,6 +60,7 @@ No requirements.
 | Name | Description |
 |------|-------------|
 | <a name="output_app_service_plan_id"></a> [app\_service\_plan\_id](#output\_app\_service\_plan\_id) | n/a |
+| <a name="output_app_service_plan_name"></a> [app\_service\_plan\_name](#output\_app\_service\_plan\_name) | n/a |
 | <a name="output_default_hostname"></a> [default\_hostname](#output\_default\_hostname) | n/a |
 | <a name="output_default_key"></a> [default\_key](#output\_default\_key) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |

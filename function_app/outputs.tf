@@ -29,6 +29,10 @@ output "app_service_plan_id" {
   value = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this[0].id
 }
 
+output "app_service_plan_name" {
+  value = var.app_service_plan_name != null ? var.app_service_plan_name : azurerm_app_service_plan.this[0].name
+}
+
 output "storage_account" {
   value = {
     name                      = module.storage_account.name
