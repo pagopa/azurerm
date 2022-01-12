@@ -46,7 +46,3 @@ output "storage_account_durable_function" {
   } : null
   sensitive = true
 }
-
-output "resource_name" {
-  value = local.resource_name
-}

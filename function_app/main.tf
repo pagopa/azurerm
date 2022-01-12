@@ -2,7 +2,7 @@
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = format("%s%sst%s%s", var.prefix, var.env_short, var.resources_prefix.storage_account, var.name)
+  name                       = format("%sst", var.name)
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
@@ -19,7 +19,7 @@ module "storage_account_durable_function" {
 
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = format("%s%sst%sd%s", var.prefix, var.env_short, var.resources_prefix.storage_account, var.name)
+  name                       = format("%sst%sd", var.name)
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
@@ -125,7 +125,7 @@ resource "azurerm_private_endpoint" "table" {
 resource "azurerm_app_service_plan" "this" {
   count = var.app_service_plan_id == null ? 1 : 0
 
-  name                = format("%s-%s-plan-%s%s", var.prefix, var.env_short, var.resources_prefix.app_service_plan, var.name)
+  name                = format("%s-%s-plan", var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   kind                = var.app_service_plan_info.kind
@@ -151,7 +151,7 @@ locals {
 }
 
 resource "azurerm_function_app" "this" {
-  name                       = local.resource_name
+  name                       = var.name
   resource_group_name        = var.resource_group_name
   location                   = var.location
   version                    = var.runtime_version
@@ -189,7 +189,7 @@ resource "azurerm_function_app" "this" {
       }
     }
 
-    health_check_path = var.health_check_path != null ? var.health_check_path : null
+    health_check_path = var.health_check_path
 
   }
 
@@ -210,18 +210,12 @@ resource "azurerm_function_app" "this" {
     # this app settings is required to solve the issue:
     # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10499
     # WEBSITE_CONTENTSHARE and WEBSITE_CONTENTAZUREFILECONNECTIONSTRING required only for ElasticPremium plan
-    var.app_service_plan_info.sku_tier == "ElasticPremium" ? { WEBSITE_CONTENTSHARE = "${local.resource_name}-content" } : {},
+    var.app_service_plan_info.sku_tier == "ElasticPremium" ? { WEBSITE_CONTENTSHARE = "${var.name}-content" } : {},
     var.durable_function.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {},
     var.app_settings,
   )
 
   enable_builtin_logging = false
-
-  lifecycle {
-    ignore_changes = [
-      app_settings["WEBSITE_CONTENTSHARE"],
-    ]
-  }
 
   tags = var.tags
 }
@@ -230,7 +224,7 @@ resource "azurerm_function_app" "this" {
 data "azurerm_function_app_host_keys" "this" {
   count = var.export_keys ? 1 : 0
 
-  name                = local.resource_name
+  name                = var.name
   resource_group_name = var.resource_group_name
   depends_on          = [azurerm_function_app.this]
 }

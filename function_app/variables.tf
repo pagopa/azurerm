@@ -1,7 +1,3 @@
-variable "prefix" {
-  type = string
-}
-
 variable "env_short" {
   type = string
 }
@@ -152,8 +148,4 @@ variable "export_keys" {
 
 variable "tags" {
   type = map(any)
-}
-
-locals {
-  resource_name = format("%s-%s-%s-%s", var.prefix, var.env_short, var.resources_prefix.function_app, var.name)
 }
