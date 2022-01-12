@@ -2,7 +2,7 @@
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = format("%sst", replace(var.name, "-", ""))
+  name                       = var.storage_account_name != null ? var.storage_account_name : format("%sst", replace(var.name, "-", ""))
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
@@ -125,7 +125,7 @@ resource "azurerm_private_endpoint" "table" {
 resource "azurerm_app_service_plan" "this" {
   count = var.app_service_plan_id == null ? 1 : 0
 
-  name                = format("%s-plan", var.name)
+  name                = var.app_service_plan_name != null ? var.app_service_plan_name : format("%s-plan", var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   kind                = var.app_service_plan_info.kind

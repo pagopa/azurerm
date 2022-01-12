@@ -6,18 +6,22 @@ variable "name" {
   type = string
 }
 
-variable "resources_prefix" {
-  type = object({
-    function_app     = string
-    app_service_plan = string
-    storage_account  = string
-  })
+variable "storage_account_name" {
+  type        = string
+  description = "Storage account name. If null it will be 'computed'"
+  default     = null
+}
 
-  default = {
-    function_app     = "fn"
-    app_service_plan = "fn"
-    storage_account  = "fn"
-  }
+variable "storage_account_durable_name" {
+  type        = string
+  description = "Storage account name only used by the durable function. If null it will be 'computed'"
+  default     = null
+}
+
+variable "app_service_plan_name" {
+  type        = string
+  description = "Name of the app service plan. If null it will be 'computed'"
+  default     = null
 }
 
 variable "resource_group_name" {
