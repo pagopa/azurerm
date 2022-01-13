@@ -33,6 +33,10 @@ output "app_service_plan_name" {
   value = var.app_service_plan_name != null ? var.app_service_plan_name : azurerm_app_service_plan.this[0].name
 }
 
+output "storage_account_name" {
+  value = module.storage_account.name
+}
+
 output "storage_account" {
   value = {
     name                      = module.storage_account.name
@@ -42,11 +46,17 @@ output "storage_account" {
   sensitive = true
 }
 
-output "storage_account_durable_function" {
+output "storage_account_internal_function_name" {
+  value       = var.durable_function.enable ? module.storage_account_durable_function[0].name : null
+  description = "Storage account used by the function for internal operations."
+}
+
+output "storage_account_internal_function" {
   value = var.durable_function.enable ? {
     name                      = module.storage_account_durable_function[0].name
     primary_access_key        = module.storage_account_durable_function[0].primary_access_key
     primary_connection_string = module.storage_account_durable_function[0].primary_connection_string
   } : null
-  sensitive = true
+  sensitive   = true
+  description = "Storage account used by the function for internal operations."
 }

@@ -162,7 +162,7 @@ resource "azurerm_function_app" "this" {
   os_type                    = var.app_service_plan_info.kind == "Linux" ? "linux" : null
 
   auth_settings {
-    enabled = false
+    enabled = true
   }
 
   site_config {
