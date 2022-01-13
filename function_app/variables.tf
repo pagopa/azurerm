@@ -115,7 +115,7 @@ variable "subnet_id" {
   description = "The ID of the subnet the app service will be associated to (the subnet must have a service_delegation configured for Microsoft.Web/serverFarms)"
 }
 
-variable "durable_function" {
+variable "internal_storage" {
   type = object({
     enable                     = bool
     private_endpoint_subnet_id = string

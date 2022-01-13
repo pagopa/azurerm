@@ -18,6 +18,7 @@ resource "azurerm_function_app_slot" "this" {
     min_tls_version           = "1.2"
     ftps_state                = "Disabled"
     pre_warmed_instance_count = var.pre_warmed_instance_count
+    vnet_route_all_enabled    = var.subnet_id == null ? false : true
 
     dynamic "ip_restriction" {
       for_each = local.ip_restrictions
@@ -50,15 +51,11 @@ resource "azurerm_function_app_slot" "this" {
       # https://docs.microsoft.com/en-us/samples/azure-samples/azure-functions-private-endpoints/connect-to-private-endpoints-with-azure-functions/
       SLOT_TASK_HUBNAME               = format("%sTaskHub", title(var.name))
       WEBSITE_RUN_FROM_PACKAGE        = 1
-      WEBSITE_VNET_ROUTE_ALL          = 1
       WEBSITE_DNS_SERVER              = "168.63.129.16"
       APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
-    # this app settings is required to solve the issue:
-    # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10499
-    # WEBSITE_CONTENTSHARE and WEBSITE_CONTENTAZUREFILECONNECTIONSTRING required only for ElasticPremium plan
-    var.app_service_plan_sku == "ElasticPremium" ? { WEBSITE_CONTENTSHARE = "${var.name}-content" } : {},
     var.durable_function_storage_connection_string ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = var.durable_function_storage_connection_string } : {},
+    var.durable_function_storage_connection_string ? { INTERNAL_STORAGE_CONNECTION_STRING = var.durable_function_storage_connection_string } : {},
     var.app_settings,
   )
 

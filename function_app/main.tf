@@ -14,8 +14,9 @@ module "storage_account" {
   tags = var.tags
 }
 
+
 module "storage_account_durable_function" {
-  count = var.durable_function.enable ? 1 : 0
+  count = var.internal_storage.enable ? 1 : 0
 
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
@@ -44,13 +45,48 @@ module "storage_account_durable_function" {
   tags = var.tags
 }
 
+
+// TODO
+/*
+module "storage_account_durable_function_management_policy" {
+  count  = length(local.internal_containers) == 0 ? 0 : 1
+  source = "git::git@github.com:pagopa/io-infrastructure-modules-new.git//azurerm_storage_management_policy?ref=v4.0.0"
+
+  global_prefix     = var.global_prefix
+  environment       = var.environment
+  environment_short = var.environment_short
+  region            = var.region
+
+  storage_account_id = module.storage_account_durable_function[0].id
+
+  rules = [
+    {
+      name    = "deleteafterdays"
+      enabled = true
+      filters = {
+        prefix_match = local.internal_containers
+        blob_types   = ["blockBlob"]
+      }
+      actions = {
+        base_blob = {
+          tier_to_cool_after_days_since_modification_greater_than    = 0
+          tier_to_archive_after_days_since_modification_greater_than = 0
+          delete_after_days_since_modification_greater_than          = var.internal_storage.blobs_retention_days
+        }
+        snapshot = null
+      }
+    },
+  ]
+}
+*/
+
 resource "azurerm_private_endpoint" "blob" {
-  count = var.durable_function.enable ? 1 : 0
+  count = var.internal_storage.enable ? 1 : 0
 
   name                = format("%s-blob-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = var.durable_function.private_endpoint_subnet_id
+  subnet_id           = var.internal_storage.private_endpoint_subnet_id
 
   private_service_connection {
     name                           = format("%s-blob", module.storage_account_durable_function[0].name)
@@ -60,10 +96,10 @@ resource "azurerm_private_endpoint" "blob" {
   }
 
   dynamic "private_dns_zone_group" {
-    for_each = var.durable_function.private_dns_zone_blob_ids != null ? ["dummy"] : []
+    for_each = var.internal_storage.private_dns_zone_blob_ids != null ? ["dummy"] : []
     content {
       name                 = "private-dns-zone-group"
-      private_dns_zone_ids = var.durable_function.private_dns_zone_blob_ids
+      private_dns_zone_ids = var.internal_storage.private_dns_zone_blob_ids
     }
   }
 
@@ -71,12 +107,12 @@ resource "azurerm_private_endpoint" "blob" {
 }
 
 resource "azurerm_private_endpoint" "queue" {
-  count = var.durable_function.enable ? 1 : 0
+  count = var.internal_storage.enable ? 1 : 0
 
   name                = format("%s-queue-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = var.durable_function.private_endpoint_subnet_id
+  subnet_id           = var.internal_storage.private_endpoint_subnet_id
 
   private_service_connection {
     name                           = format("%s-queue", module.storage_account_durable_function[0].name)
@@ -86,10 +122,10 @@ resource "azurerm_private_endpoint" "queue" {
   }
 
   dynamic "private_dns_zone_group" {
-    for_each = var.durable_function.private_dns_zone_queue_ids != null ? ["dummy"] : []
+    for_each = var.internal_storage.private_dns_zone_queue_ids != null ? ["dummy"] : []
     content {
       name                 = "private-dns-zone-group"
-      private_dns_zone_ids = var.durable_function.private_dns_zone_queue_ids
+      private_dns_zone_ids = var.internal_storage.private_dns_zone_queue_ids
     }
   }
 
@@ -97,12 +133,12 @@ resource "azurerm_private_endpoint" "queue" {
 }
 
 resource "azurerm_private_endpoint" "table" {
-  count = var.durable_function.enable ? 1 : 0
+  count = var.internal_storage.enable ? 1 : 0
 
   name                = format("%s-table-endpoint", module.storage_account_durable_function[0].name)
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = var.durable_function.private_endpoint_subnet_id
+  subnet_id           = var.internal_storage.private_endpoint_subnet_id
 
   private_service_connection {
     name                           = format("%s-table", module.storage_account_durable_function[0].name)
@@ -112,10 +148,10 @@ resource "azurerm_private_endpoint" "table" {
   }
 
   dynamic "private_dns_zone_group" {
-    for_each = var.durable_function.private_dns_zone_table_ids != null ? ["dummy"] : []
+    for_each = var.internal_storage.private_dns_zone_table_ids != null ? ["dummy"] : []
     content {
       name                 = "private-dns-zone-group"
-      private_dns_zone_ids = var.durable_function.private_dns_zone_table_ids
+      private_dns_zone_ids = var.internal_storage.private_dns_zone_table_ids
     }
   }
 
@@ -147,7 +183,7 @@ locals {
   allowed_ips                                = [for ip in var.allowed_ips : { ip_address = ip, virtual_network_subnet_id = null }]
   allowed_subnets                            = [for s in var.allowed_subnets : { ip_address = null, virtual_network_subnet_id = s }]
   ip_restrictions                            = concat(local.allowed_subnets, local.allowed_ips)
-  durable_function_storage_connection_string = var.durable_function.enable ? module.storage_account_durable_function[0].primary_connection_string : "dummy"
+  durable_function_storage_connection_string = var.internal_storage.enable ? module.storage_account_durable_function[0].primary_connection_string : "dummy"
 }
 
 resource "azurerm_function_app" "this" {
@@ -171,6 +207,7 @@ resource "azurerm_function_app" "this" {
     http2_enabled             = true
     always_on                 = var.app_service_plan_info.sku_tier != "ElasticPremium" ? var.always_on : null
     pre_warmed_instance_count = var.pre_warmed_instance_count
+    vnet_route_all_enabled    = var.subnet_id == null ? false : true
 
     dynamic "ip_restriction" {
       for_each = local.ip_restrictions
@@ -203,15 +240,11 @@ resource "azurerm_function_app" "this" {
       # https://docs.microsoft.com/en-us/samples/azure-samples/azure-functions-private-endpoints/connect-to-private-endpoints-with-azure-functions/
       SLOT_TASK_HUBNAME               = "ProductionTaskHub"
       WEBSITE_RUN_FROM_PACKAGE        = 1
-      WEBSITE_VNET_ROUTE_ALL          = 1
       WEBSITE_DNS_SERVER              = "168.63.129.16"
       APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
-    # this app settings is required to solve the issue:
-    # https://github.com/terraform-providers/terraform-provider-azurerm/issues/10499
-    # WEBSITE_CONTENTSHARE and WEBSITE_CONTENTAZUREFILECONNECTIONSTRING required only for ElasticPremium plan
-    var.app_service_plan_info.sku_tier == "ElasticPremium" ? { WEBSITE_CONTENTSHARE = "${var.name}-content" } : {},
-    var.durable_function.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {},
+    var.internal_storage.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {},
+    var.internal_storage.enable ? { INTERNAL_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {},
     var.app_settings,
   )
 

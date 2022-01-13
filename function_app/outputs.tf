@@ -47,12 +47,12 @@ output "storage_account" {
 }
 
 output "storage_account_internal_function_name" {
-  value       = var.durable_function.enable ? module.storage_account_durable_function[0].name : null
+  value       = var.internal_storage.enable ? module.storage_account_durable_function[0].name : null
   description = "Storage account used by the function for internal operations."
 }
 
 output "storage_account_internal_function" {
-  value = var.durable_function.enable ? {
+  value = var.internal_storage.enable ? {
     name                      = module.storage_account_durable_function[0].name
     primary_access_key        = module.storage_account_durable_function[0].primary_access_key
     primary_connection_string = module.storage_account_durable_function[0].primary_connection_string
