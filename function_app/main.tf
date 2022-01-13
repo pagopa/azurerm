@@ -2,7 +2,7 @@
 module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
 
-  name                       = var.storage_account_name != null ? var.storage_account_name : format("%sst", replace(var.name, "-", ""))
+  name                       = coalesce(var.storage_account_name, format("%sst", replace(var.name, "-", "")))
   account_kind               = "StorageV2"
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
