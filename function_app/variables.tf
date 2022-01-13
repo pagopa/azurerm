@@ -1,11 +1,3 @@
-variable "prefix" {
-  type = string
-}
-
-variable "env_short" {
-  type = string
-}
-
 variable "location" {
   type = string
 }
@@ -14,18 +6,22 @@ variable "name" {
   type = string
 }
 
-variable "resources_prefix" {
-  type = object({
-    function_app     = string
-    app_service_plan = string
-    storage_account  = string
-  })
+variable "storage_account_name" {
+  type        = string
+  description = "Storage account name. If null it will be 'computed'"
+  default     = null
+}
 
-  default = {
-    function_app     = "fn"
-    app_service_plan = "fn"
-    storage_account  = "fn"
-  }
+variable "storage_account_durable_name" {
+  type        = string
+  description = "Storage account name only used by the durable function. If null it will be 'computed'"
+  default     = null
+}
+
+variable "app_service_plan_name" {
+  type        = string
+  description = "Name of the app service plan. If null it will be 'computed'"
+  default     = null
 }
 
 variable "resource_group_name" {
@@ -114,17 +110,21 @@ variable "allowed_subnets" {
   default = []
 }
 
-variable "subnet_out_id" {
-  type = string
+variable "subnet_id" {
+  type        = string
+  description = "The ID of the subnet the app service will be associated to (the subnet must have a service_delegation configured for Microsoft.Web/serverFarms)"
 }
 
-variable "durable_function" {
+variable "internal_storage" {
   type = object({
     enable                     = bool
     private_endpoint_subnet_id = string
     private_dns_zone_blob_ids  = list(string)
     private_dns_zone_queue_ids = list(string)
     private_dns_zone_table_ids = list(string)
+    queues                     = list(string)
+    containers                 = list(string)
+    blobs_retention_days       = number
   })
 
   default = {
@@ -133,11 +133,17 @@ variable "durable_function" {
     private_dns_zone_blob_ids  = []
     private_dns_zone_queue_ids = []
     private_dns_zone_table_ids = []
+    queues                     = []
+    containers                 = []
+    blobs_retention_days       = 1
   }
 }
 
 variable "health_check_path" {
-  type = string
+  type        = string
+  description = "Path which will be checked for this function app health."
+  default     = null
+
 }
 
 variable "health_check_maxpingfailures" {
@@ -152,8 +158,4 @@ variable "export_keys" {
 
 variable "tags" {
   type = map(any)
-}
-
-locals {
-  resource_name = format("%s-%s-%s-%s", var.prefix, var.env_short, var.resources_prefix.function_app, var.name)
 }

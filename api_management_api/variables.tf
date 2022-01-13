@@ -34,7 +34,7 @@ variable "revision_description" {
 
 variable "oauth2_authorization" {
   type = object({
-    authorization_server_name  = string
+    authorization_server_name = string
     }
   )
   default = {
