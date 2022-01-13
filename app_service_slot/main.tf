@@ -10,11 +10,12 @@ resource "azurerm_app_service_slot" "this" {
   app_settings = var.app_settings
 
   site_config {
-    always_on        = var.always_on
-    linux_fx_version = var.linux_fx_version
-    app_command_line = var.app_command_line
-    min_tls_version  = "1.2"
-    ftps_state       = var.ftps_state
+    always_on              = var.always_on
+    linux_fx_version       = var.linux_fx_version
+    app_command_line       = var.app_command_line
+    min_tls_version        = "1.2"
+    ftps_state             = var.ftps_state
+    vnet_route_all_enabled = var.subnet_id == null ? false : var.vnet_route_all_enabled
 
     health_check_path = var.health_check_path != null ? var.health_check_path : null
 
