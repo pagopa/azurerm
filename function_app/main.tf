@@ -46,16 +46,9 @@ module "storage_account_durable_function" {
 }
 
 
-// TODO
-/*
 module "storage_account_durable_function_management_policy" {
   count  = length(local.internal_containers) == 0 ? 0 : 1
-  source = "git::git@github.com:pagopa/io-infrastructure-modules-new.git//azurerm_storage_management_policy?ref=v4.0.0"
-
-  global_prefix     = var.global_prefix
-  environment       = var.environment
-  environment_short = var.environment_short
-  region            = var.region
+  source = "git::https://github.com/pagopa/azurerm.git//storage_management_policy?ref=function-app-slot"
 
   storage_account_id = module.storage_account_durable_function[0].id
 
@@ -78,7 +71,6 @@ module "storage_account_durable_function_management_policy" {
     },
   ]
 }
-*/
 
 resource "azurerm_private_endpoint" "blob" {
   count = var.internal_storage.enable ? 1 : 0
