@@ -45,6 +45,18 @@ module "storage_account_durable_function" {
   tags = var.tags
 }
 
+resource "azurerm_storage_queue" "internal_queue" {
+  for_each             = toset(local.internal_queues)
+  name                 = each.value
+  storage_account_name = module.storage_account_durable_function[0].resource_name
+}
+
+resource "azurerm_storage_container" "internal_container" {
+  for_each              = toset(local.internal_containers)
+  name                  = each.value
+  storage_account_name  = module.storage_account_durable_function[0].resource_name
+  container_access_type = "private"
+}
 
 module "storage_account_durable_function_management_policy" {
   count  = length(local.internal_containers) == 0 ? 0 : 1
@@ -176,6 +188,9 @@ locals {
   allowed_subnets                            = [for s in var.allowed_subnets : { ip_address = null, virtual_network_subnet_id = s }]
   ip_restrictions                            = concat(local.allowed_subnets, local.allowed_ips)
   durable_function_storage_connection_string = var.internal_storage.enable ? module.storage_account_durable_function[0].primary_connection_string : "dummy"
+
+  internal_queues     = var.internal_storage.enable ? var.internal_storage.queues : []
+  internal_containers = var.internal_storage.enable ? var.internal_storage.containers : []
 }
 
 resource "azurerm_function_app" "this" {

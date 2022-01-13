@@ -122,6 +122,9 @@ variable "internal_storage" {
     private_dns_zone_blob_ids  = list(string)
     private_dns_zone_queue_ids = list(string)
     private_dns_zone_table_ids = list(string)
+    queues                     = list(string)
+    containers                 = list(string)
+    blobs_retention_days       = number
   })
 
   default = {
@@ -130,6 +133,9 @@ variable "internal_storage" {
     private_dns_zone_blob_ids  = []
     private_dns_zone_queue_ids = []
     private_dns_zone_table_ids = []
+    queues                     = []
+    containers                 = []
+    blobs_retention_days       = 1
   }
 }
 
