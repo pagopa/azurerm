@@ -48,13 +48,13 @@ module "storage_account_durable_function" {
 resource "azurerm_storage_queue" "internal_queue" {
   for_each             = toset(local.internal_queues)
   name                 = each.value
-  storage_account_name = module.storage_account_durable_function[0].resource_name
+  storage_account_name = module.storage_account_durable_function[0].name
 }
 
 resource "azurerm_storage_container" "internal_container" {
   for_each              = toset(local.internal_containers)
   name                  = each.value
-  storage_account_name  = module.storage_account_durable_function[0].resource_name
+  storage_account_name  = module.storage_account_durable_function[0].name
   container_access_type = "private"
 }
 
