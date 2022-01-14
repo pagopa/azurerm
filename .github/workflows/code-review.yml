@@ -9,9 +9,6 @@ on:
       - 'CODEOWNERS'
       - '.**'
 
-  # Run tests for any PRs.
-  pull_request:
-
 jobs:
   docker_release:
     runs-on: ubuntu-latest
