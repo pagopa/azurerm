@@ -16,7 +16,7 @@ resource "azurerm_key_vault" "this" {
     default_action = "Allow" #tfsec:ignore:AZU020
   }
 
-  tags    = var.tags
+  tags = var.tags
 }
 
 

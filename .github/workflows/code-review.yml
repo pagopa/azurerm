@@ -10,7 +10,7 @@ on:
       - '.**'
 
 jobs:
-  docker_release:
+  pre_commit_checks:
     runs-on: ubuntu-latest
 
     steps:
