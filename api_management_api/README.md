@@ -34,11 +34,13 @@ No modules.
 | <a name="input_description"></a> [description](#input\_description) | n/a | `string` | n/a | yes |
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | n/a | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_oauth2_authorization"></a> [oauth2\_authorization](#input\_oauth2\_authorization) | n/a | <pre>object({<br>    authorization_server_name = string<br>    }<br>  )</pre> | <pre>{<br>  "authorization_server_name": null<br>}</pre> | no |
 | <a name="input_path"></a> [path](#input\_path) | n/a | `string` | n/a | yes |
 | <a name="input_product_ids"></a> [product\_ids](#input\_product\_ids) | n/a | `list(string)` | `[]` | no |
 | <a name="input_protocols"></a> [protocols](#input\_protocols) | n/a | `list(string)` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_revision"></a> [revision](#input\_revision) | n/a | `string` | `"1"` | no |
+| <a name="input_revision_description"></a> [revision\_description](#input\_revision\_description) | n/a | `string` | `null` | no |
 | <a name="input_service_url"></a> [service\_url](#input\_service\_url) | n/a | `string` | n/a | yes |
 | <a name="input_subscription_required"></a> [subscription\_required](#input\_subscription\_required) | Should this API require a subscription key? | `bool` | `false` | no |
 | <a name="input_version_set_id"></a> [version\_set\_id](#input\_version\_set\_id) | The ID of the Version Set which this API is associated with. | `string` | `null` | no |
