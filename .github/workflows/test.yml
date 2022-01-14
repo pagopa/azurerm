@@ -1,0 +1,26 @@
+name: Docker
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches-ignore:
+      - main
+    paths-ignore:
+      - 'CODEOWNERS'
+      - '.**'
+
+  # Run tests for any PRs.
+  pull_request:
+
+jobs:
+  docker_release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: test
+        run: |
+          TAG=latest
+          docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a
