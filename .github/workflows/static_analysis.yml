@@ -10,7 +10,7 @@ on:
       - '.**'
 
 jobs:
-  static analysis:
+  static_analysis:
     runs-on: ubuntu-latest
 
     steps:
