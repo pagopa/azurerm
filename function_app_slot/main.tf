@@ -73,6 +73,6 @@ data "azurerm_function_app_host_keys" "this" {
 }
 
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {
-  app_service_id = azurerm_function_app_slot.this
+  app_service_id = azurerm_function_app_slot.this.id
   subnet_id      = var.subnet_id
 }
