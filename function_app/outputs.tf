@@ -30,7 +30,7 @@ output "app_service_plan_id" {
 }
 
 output "app_service_plan_name" {
-  value = var.app_service_plan_name != null ? var.app_service_plan_name : azurerm_app_service_plan.this[0].name
+  value = var.app_service_plan_id != null ? var.app_service_plan_name : azurerm_app_service_plan.this[0].name
 }
 
 output "storage_account_name" {
