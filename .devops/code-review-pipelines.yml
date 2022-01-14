@@ -1,0 +1,45 @@
+trigger: none
+
+variables:
+  TIME_OUT: 5
+
+pool:
+  vmImage: 'ubuntu-20.04'
+
+resources:
+  repositories:
+    - repository: terraform
+      type: github
+      name: pagopa/azure-pipeline-templates
+      ref: refs/tags/v17
+      endpoint: 'io-azure-devops-github-ro'
+
+stages:
+  - stage: Check
+    pool:
+      name: io-prod-linux
+    jobs:
+      - job: terraform_install
+        steps:
+          # 1. Install terraform and terragrunt
+          - template: templates/terraform-setup/template.yaml@terraform
+      - job: terraform_plan
+        dependsOn: terraform_install
+        timeoutInMinutes: $[variables.TIME_OUT]
+        steps:
+          - checkout: self
+          # 2. Run terragrunt fmt and check no files will be edited (that is, every file is already well-formatted)
+          - script: |
+              bad_formatted_files=$(terraform fmt -recursive .) 
+              count=$(echo "$bad_formatted_files" | sed '/^\s*$/d' |  wc -l)
+              git checkout . # prevent command to edit codebase
+              if [ "${count}" -eq 0 ]; then
+                  echo "Every file is well formatted, well done fellow!"
+                  exit 0
+              else
+                  echo "The following files weren't well formatted:"
+                  echo "\n$bad_formatted_files\n"
+                  echo "Please run 'terraform fmt' before pushing your change"
+                  exit 1
+              fi
+            displayName: Check file formatting
