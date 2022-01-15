@@ -1,13 +1,9 @@
-name: Docker
+name: Static Analysis
 
 on:
   push:
-    # Publish `master` as Docker `latest` image.
     branches-ignore:
       - main
-    paths-ignore:
-      - 'CODEOWNERS'
-      - '.**'
 
 jobs:
   static_analysis:
@@ -16,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: test
+      - name: run_test
         run: |
           TAG=latest
           docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a
