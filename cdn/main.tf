@@ -183,9 +183,9 @@ resource "azurerm_cdn_endpoint" "this" {
   }
 
   dynamic "delivery_rule" {
-    for_each = {for d in var.delivery_rule_rewrite : d.order => d}
+    for_each = { for d in var.delivery_rule_rewrite : d.order => d }
     content {
-      name = delivery_rule.value.name
+      name  = delivery_rule.value.name
       order = delivery_rule.value.order
 
       dynamic "request_uri_condition" {
@@ -193,10 +193,10 @@ resource "azurerm_cdn_endpoint" "this" {
         iterator = c
 
         content {
-          operator = c.value.operator
-          match_values = c.value.match_values
+          operator         = c.value.operator
+          match_values     = c.value.match_values
           negate_condition = c.value.negate_condition
-          transforms = c.value.transforms
+          transforms       = c.value.transforms
         }
       }
 
@@ -205,10 +205,10 @@ resource "azurerm_cdn_endpoint" "this" {
         iterator = c
 
         content {
-          operator = c.value.operator
-          match_values = c.value.match_values
+          operator         = c.value.operator
+          match_values     = c.value.match_values
           negate_condition = c.value.negate_condition
-          transforms = c.value.transforms
+          transforms       = c.value.transforms
         }
       }
 
@@ -217,16 +217,16 @@ resource "azurerm_cdn_endpoint" "this" {
         iterator = c
 
         content {
-          operator = c.value.operator
-          match_values = c.value.match_values
+          operator         = c.value.operator
+          match_values     = c.value.match_values
           negate_condition = c.value.negate_condition
-          transforms = c.value.transforms
+          transforms       = c.value.transforms
         }
       }
 
       url_rewrite_action {
-        source_pattern = delivery_rule.value.url_rewrite_action.source_pattern
-        destination = delivery_rule.value.url_rewrite_action.destination
+        source_pattern          = delivery_rule.value.url_rewrite_action.source_pattern
+        destination             = delivery_rule.value.url_rewrite_action.destination
         preserve_unmatched_path = delivery_rule.value.url_rewrite_action.preserve_unmatched_path
       }
 
@@ -423,7 +423,7 @@ resource "azurerm_cdn_endpoint" "this" {
         iterator = c
 
         content {
-          behavior = c.value.behavior
+          behavior   = c.value.behavior
           parameters = c.value.parameters
         }
       }
