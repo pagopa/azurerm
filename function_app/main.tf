@@ -201,18 +201,14 @@ resource "azurerm_function_app" "this" {
   app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this[0].id
   storage_account_name       = module.storage_account.name
   storage_account_access_key = module.storage_account.primary_access_key
-  https_only                 = true
-  os_type                    = var.app_service_plan_info.kind == "Linux" ? "linux" : null
-
-  auth_settings {
-    enabled = true
-  }
+  https_only                 = var.https_only
+  os_type                    = var.os_type
 
   site_config {
     min_tls_version           = "1.2"
     ftps_state                = "Disabled"
     http2_enabled             = true
-    always_on                 = var.app_service_plan_info.sku_tier != "ElasticPremium" ? var.always_on : null
+    always_on                 = var.always_on
     pre_warmed_instance_count = var.pre_warmed_instance_count
     vnet_route_all_enabled    = var.subnet_id == null ? false : true
 
