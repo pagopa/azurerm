@@ -10,6 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: run_init
+        run: |
+          bash terraform_run_all.sh init
+
       - name: run_test
         run: |
           TAG=latest

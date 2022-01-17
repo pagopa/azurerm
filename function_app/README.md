@@ -12,9 +12,9 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_storage_account"></a> [storage\_account](#module\_storage\_account) | git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58 |  |
-| <a name="module_storage_account_durable_function"></a> [storage\_account\_durable\_function](#module\_storage\_account\_durable\_function) | git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58 |  |
-| <a name="module_storage_account_durable_function_management_policy"></a> [storage\_account\_durable\_function\_management\_policy](#module\_storage\_account\_durable\_function\_management\_policy) | git::https://github.com/pagopa/azurerm.git//storage_management_policy?ref=v2.1.0 |  |
+| <a name="module_storage_account"></a> [storage\_account](#module\_storage\_account) | git::https://github.com/pagopa/azurerm.git//storage_account | v1.0.58 |
+| <a name="module_storage_account_durable_function"></a> [storage\_account\_durable\_function](#module\_storage\_account\_durable\_function) | git::https://github.com/pagopa/azurerm.git//storage_account | v1.0.58 |
+| <a name="module_storage_account_durable_function_management_policy"></a> [storage\_account\_durable\_function\_management\_policy](#module\_storage\_account\_durable\_function\_management\_policy) | git::https://github.com/pagopa/azurerm.git//storage_management_policy | v2.1.0 |
 
 ## Resources
 
