@@ -12,14 +12,11 @@ jobs:
 
       - name: run_init
         run: |
-          TAG=latest
-          for f in *; do
-            if [ -d "$f" ]; then
-              cd "$f"
-              docker run -v $(pwd):/tmp -w /tmp hashicorp/terraform:$TAG init
-              cd ..
-            fi
-          done
+          bash terraform_run_all.sh init
+
+      - name: run_validate
+        run: |
+          bash terraform_run_all.sh validate
 
       - name: run_test
         run: |

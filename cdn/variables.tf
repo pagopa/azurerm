@@ -254,7 +254,7 @@ variable "delivery_rule" {
     }))
 
     cache_key_query_string_actions = list(object({
-      behavior = string
+      behavior   = string
       parameters = string
     }))
 
