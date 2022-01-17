@@ -2,8 +2,6 @@ name: Static Analysis
 
 on:
   push:
-    branches-ignore:
-      - main
 
 jobs:
   static_analysis:
