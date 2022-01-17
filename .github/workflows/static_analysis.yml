@@ -21,6 +21,15 @@ jobs:
             fi
           done
 
+      - name: check
+        run: |
+          TAG=latest
+          for f in *; do
+            if [ -d "$f" ]; then
+              ls -la "$f"
+            fi
+          done
+
       - name: run_test
         run: |
           TAG=latest
