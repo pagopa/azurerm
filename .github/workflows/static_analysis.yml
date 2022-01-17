@@ -18,16 +18,6 @@ jobs:
         run: |
           bash terraform_run_all.sh validate
 
-      - name: run_tfsec
-        run: |
-          TAG=latest
-          for f in *; do
-            if [ -d "$f" ]; then
-              echo "$f"
-              docker run -v "$(pwd):/src" aquasec/tfsec-alpine:$TAG $f
-            fi
-          done
-
       - name: run_test
         run: |
           TAG=latest
