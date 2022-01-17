@@ -80,6 +80,6 @@ data "azurerm_function_app_host_keys" "this" {
 
 resource "azurerm_app_service_slot_virtual_network_swift_connection" "this" {
   slot_name      = azurerm_function_app_slot.this.name
-  app_service_id = azurerm_function_app_slot.this.id
+  app_service_id = var.function_app_id
   subnet_id      = var.subnet_id
 }

@@ -11,6 +11,10 @@ variable "function_app_name" {
   description = "Name of the function app. (The production slot)"
 }
 
+variable "function_app_id" {
+  type        = string
+  description = "Id of the function app. (The production slot)"
+}
 
 variable "resource_group_name" {
   type = string
