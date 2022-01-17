@@ -7,3 +7,4 @@ repos:
         args:
           - tfvars hcl --output-file terraform.tfvars.model .
       - id: terraform_tfsec
+      - id: terraform_validate
