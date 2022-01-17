@@ -14,10 +14,6 @@ jobs:
         run: |
           bash terraform_run_all.sh init
 
-      - name: run_validate
-        run: |
-          bash terraform_run_all.sh validate
-
       - name: run_test
         run: |
           TAG=latest
