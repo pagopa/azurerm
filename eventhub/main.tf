@@ -15,7 +15,7 @@ locals {
 }
 
 resource "azurerm_eventhub_namespace" "this" {
-  name                     = var.name
+  name                     = var.name2
   location                 = var.location
   resource_group_name      = var.resource_group_name
   sku                      = var.sku
