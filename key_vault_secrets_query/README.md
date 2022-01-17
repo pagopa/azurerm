@@ -1,4 +1,3 @@
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
@@ -35,4 +34,3 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_values"></a> [values](#output\_values) | n/a |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
