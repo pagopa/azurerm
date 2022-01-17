@@ -183,13 +183,113 @@ resource "azurerm_cdn_endpoint" "this" {
   }
 
   dynamic "delivery_rule" {
-    for_each = { for d in var.delivery_rule_rewrite : d.order => d }
+    for_each = {for d in var.delivery_rule_rewrite : d.order => d}
     content {
-      name  = delivery_rule.value.name
+      name = delivery_rule.value.name
       order = delivery_rule.value.order
 
       dynamic "request_uri_condition" {
         for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "request_uri_condition"]
+        iterator = c
+
+        content {
+          operator = c.value.operator
+          match_values = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms = c.value.transforms
+        }
+      }
+
+      dynamic "url_path_condition" {
+        for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "url_path_condition"]
+        iterator = c
+
+        content {
+          operator = c.value.operator
+          match_values = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms = c.value.transforms
+        }
+      }
+
+      dynamic "url_file_extension_condition" {
+        for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "url_file_extension_condition"]
+        iterator = c
+
+        content {
+          operator = c.value.operator
+          match_values = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms = c.value.transforms
+        }
+      }
+
+      url_rewrite_action {
+        source_pattern = delivery_rule.value.url_rewrite_action.source_pattern
+        destination = delivery_rule.value.url_rewrite_action.destination
+        preserve_unmatched_path = delivery_rule.value.url_rewrite_action.preserve_unmatched_path
+      }
+
+    }
+  }
+
+  dynamic "delivery_rule" {
+    for_each = { for d in var.delivery_rule : d.order => d }
+    content {
+      name  = delivery_rule.value.name
+      order = delivery_rule.value.order
+
+      // start conditions
+      dynamic "cookies_condition" {
+        for_each = delivery_rule.value.cookies_conditions
+        iterator = c
+
+        content {
+          selector         = c.value.selector
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
+        }
+      }
+
+      dynamic "device_condition" {
+        for_each = delivery_rule.value.device_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+        }
+      }
+
+      dynamic "http_version_condition" {
+        for_each = delivery_rule.value.http_version_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+        }
+      }
+
+      dynamic "post_arg_condition" {
+        for_each = delivery_rule.value.post_arg_conditions
+        iterator = c
+
+        content {
+          selector         = c.value.selector
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
+        }
+      }
+
+      dynamic "query_string_condition" {
+        for_each = delivery_rule.value.query_string_conditions
         iterator = c
 
         content {
@@ -200,8 +300,66 @@ resource "azurerm_cdn_endpoint" "this" {
         }
       }
 
-      dynamic "url_path_condition" {
-        for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "url_path_condition"]
+      dynamic "remote_address_condition" {
+        for_each = delivery_rule.value.remote_address_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+        }
+      }
+
+      dynamic "request_body_condition" {
+        for_each = delivery_rule.value.request_body_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
+        }
+      }
+
+      dynamic "request_header_condition" {
+        for_each = delivery_rule.value.request_header_conditions
+        iterator = c
+
+        content {
+          selector         = c.value.selector
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
+        }
+      }
+
+      dynamic "request_method_condition" {
+        for_each = delivery_rule.value.request_method_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+        }
+      }
+
+      dynamic "request_scheme_condition" {
+        for_each = delivery_rule.value.request_scheme_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+        }
+      }
+
+      dynamic "request_uri_condition" {
+        for_each = delivery_rule.value.request_uri_conditions
         iterator = c
 
         content {
@@ -213,7 +371,7 @@ resource "azurerm_cdn_endpoint" "this" {
       }
 
       dynamic "url_file_extension_condition" {
-        for_each = [for c in delivery_rule.value.conditions : c if c.condition_type == "url_file_extension_condition"]
+        for_each = delivery_rule.value.url_file_extension_conditions
         iterator = c
 
         content {
@@ -224,11 +382,99 @@ resource "azurerm_cdn_endpoint" "this" {
         }
       }
 
-      url_rewrite_action {
-        source_pattern          = delivery_rule.value.url_rewrite_action.source_pattern
-        destination             = delivery_rule.value.url_rewrite_action.destination
-        preserve_unmatched_path = delivery_rule.value.url_rewrite_action.preserve_unmatched_path
+      dynamic "url_file_name_condition" {
+        for_each = delivery_rule.value.url_file_name_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
+        }
       }
+
+      dynamic "url_path_condition" {
+        for_each = delivery_rule.value.url_path_conditions
+        iterator = c
+
+        content {
+          operator         = c.value.operator
+          match_values     = c.value.match_values
+          negate_condition = c.value.negate_condition
+          transforms       = c.value.transforms
+        }
+      }
+      // end conditions
+
+      // start actions
+      dynamic "cache_expiration_action" {
+        for_each = delivery_rule.value.cache_expiration_actions
+        iterator = c
+
+        content {
+          behavior = c.value.behavior
+          duration = c.value.duration
+        }
+      }
+
+      dynamic "cache_key_query_string_action" {
+        for_each = delivery_rule.value.cache_key_query_string_actions
+        iterator = c
+
+        content {
+          behavior = c.value.behavior
+          parameters = c.value.parameters
+        }
+      }
+
+      dynamic "modify_request_header_action" {
+        for_each = delivery_rule.value.modify_request_header_actions
+        iterator = c
+
+        content {
+          action = c.value.action
+          name   = c.value.name
+          value  = c.value.value
+        }
+      }
+
+      dynamic "modify_response_header_action" {
+        for_each = delivery_rule.value.modify_response_header_actions
+        iterator = c
+
+        content {
+          action = c.value.action
+          name   = c.value.name
+          value  = c.value.value
+        }
+      }
+
+      dynamic "url_redirect_action" {
+        for_each = delivery_rule.value.url_redirect_actions
+        iterator = c
+
+        content {
+          redirect_type = c.value.redirect_type
+          protocol      = c.value.protocol
+          hostname      = c.value.hostname
+          path          = c.value.path
+          fragment      = c.value.fragment
+          query_string  = c.value.query_string
+        }
+      }
+
+      dynamic "url_rewrite_action" {
+        for_each = delivery_rule.value.url_rewrite_actions
+        iterator = c
+
+        content {
+          source_pattern          = c.value.source_pattern
+          destination             = c.value.destination
+          preserve_unmatched_path = c.value.preserve_unmatched_path
+        }
+      }
+      // end actions
 
     }
   }

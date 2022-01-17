@@ -144,6 +144,151 @@ variable "delivery_rule_rewrite" {
   default = []
 }
 
+variable "delivery_rule" {
+  type = list(object({
+    name  = string
+    order = number
+
+    // start conditions
+    cookies_conditions = list(object({
+      selector         = string
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    device_conditions = list(object({
+      operator         = string
+      match_values     = string
+      negate_condition = bool
+    }))
+
+    http_version_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+    }))
+
+    post_arg_conditions = list(object({
+      selector         = string
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    query_string_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    remote_address_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+    }))
+
+    request_body_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    request_header_conditions = list(object({
+      selector         = string
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    request_method_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+    }))
+
+    request_scheme_conditions = list(object({
+      operator         = string
+      match_values     = string
+      negate_condition = bool
+    }))
+
+    request_uri_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    url_file_extension_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    url_file_name_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+
+    url_path_conditions = list(object({
+      operator         = string
+      match_values     = list(string)
+      negate_condition = bool
+      transforms       = list(string)
+    }))
+    // end conditions
+
+    // start actions
+    cache_expiration_actions = list(object({
+      behavior = string
+      duration = string
+    }))
+
+    cache_key_query_string_actions = list(object({
+      behavior = string
+      parameters = string
+    }))
+
+    modify_request_header_actions = list(object({
+      action = string
+      name   = string
+      value  = string
+    }))
+
+    modify_response_header_actions = list(object({
+      action = string
+      name   = string
+      value  = string
+    }))
+
+    url_redirect_actions = list(object({
+      redirect_type = string
+      protocol      = string
+      hostname      = string
+      path          = string
+      fragment      = string
+      query_string  = string
+    }))
+
+    url_rewrite_actions = list(object({
+      source_pattern          = string
+      destination             = string
+      preserve_unmatched_path = string
+    }))
+    // end actions
+  }))
+  default = []
+}
+
 variable "https_rewrite_enabled" {
   type    = bool
   default = true
