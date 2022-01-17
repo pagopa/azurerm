@@ -91,6 +91,12 @@ variable "app_settings" {
   default = {}
 }
 
+variable "os_type" {
+  type        = string
+  description = "(Optional) App service os type. For Linux app service plan set with linux"
+  default     = null
+}
+
 variable "allowed_ips" {
   // List of ip
   type    = list(string)
