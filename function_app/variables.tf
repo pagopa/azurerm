@@ -78,8 +78,8 @@ variable "pre_warmed_instance_count" {
 
 variable "always_on" {
   type        = bool
-  description = "(Optional) Should the app be loaded at all times? Defaults to false."
-  default     = false
+  description = "(Optional) Should the app be loaded at all times? Defaults to null."
+  default     = null
 }
 
 variable "application_insights_instrumentation_key" {
@@ -93,8 +93,14 @@ variable "app_settings" {
 
 variable "os_type" {
   type        = string
-  description = "(Optional) App service os type. For Linux app service plan set with linux"
+  description = "(Optional) A string indicating the Operating System type for this function app. This value will be linux for Linux derivatives, or an empty string for Windows (default). When set to linux you must also set azurerm_app_service_plan arguments as kind = Linux and reserved = true"
   default     = null
+}
+
+variable "https_only" {
+  type        = bool
+  description = "(Required) n the Function App only be accessed via HTTPS? Defaults to true."
+  default     = true
 }
 
 variable "allowed_ips" {

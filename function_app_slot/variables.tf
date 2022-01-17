@@ -32,6 +32,12 @@ variable "pre_warmed_instance_count" {
   default = 1
 }
 
+variable "always_on" {
+  type        = bool
+  description = "(Optional) Should the app be loaded at all times? Defaults to null."
+  default     = null
+}
+
 variable "application_insights_instrumentation_key" {
   type = string
 }
@@ -65,6 +71,17 @@ variable "subnet_id" {
   description = "The ID of the subnet the app service will be associated to (the subnet must have a service_delegation configured for Microsoft.Web/serverFarms)"
 }
 
+variable "os_type" {
+  type        = string
+  description = "(Optional) A string indicating the Operating System type for this function app. This value will be linux for Linux derivatives, or an empty string for Windows (default). When set to linux you must also set azurerm_app_service_plan arguments as kind = Linux and reserved = true"
+  default     = null
+}
+
+variable "https_only" {
+  type        = bool
+  description = "(Required) n the Function App only be accessed via HTTPS? Defaults to true."
+  default     = true
+}
 
 variable "storage_account_name" {
   type        = string
@@ -77,10 +94,10 @@ variable "storage_account_access_key" {
   default     = null
 }
 
-variable "durable_function_storage_connection_string" {
+variable "internal_storage_connection_string" {
   type        = string
   description = "Storage account connection string for durable functions. Null in case of standard function"
-
+  default     = null
 }
 
 variable "app_service_plan_sku" {
