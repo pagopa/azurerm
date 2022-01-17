@@ -13,10 +13,14 @@ resource "azurerm_function_app_slot" "this" {
   app_service_plan_id        = var.app_service_plan_id
   storage_account_name       = var.storage_account_name
   storage_account_access_key = var.storage_account_access_key
+  https_only                 = var.https_only
+  os_type                    = var.os_type
 
   site_config {
     min_tls_version           = "1.2"
     ftps_state                = "Disabled"
+    http2_enabled             = true
+    always_on                 = var.always_on
     pre_warmed_instance_count = var.pre_warmed_instance_count
     vnet_route_all_enabled    = var.subnet_id == null ? false : true
 
@@ -54,9 +58,9 @@ resource "azurerm_function_app_slot" "this" {
       WEBSITE_DNS_SERVER              = "168.63.129.16"
       APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
-    var.durable_function_storage_connection_string != null ? {
-      DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = var.durable_function_storage_connection_string
-      INTERNAL_STORAGE_CONNECTION_STRING         = var.durable_function_storage_connection_string
+    var.internal_storage_connection_string != null ? {
+      DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = var.internal_storage_connection_string
+      INTERNAL_STORAGE_CONNECTION_STRING         = var.internal_storage_connection_string
     } : {},
     var.app_settings,
   )
@@ -74,7 +78,8 @@ data "azurerm_function_app_host_keys" "this" {
   depends_on          = [azurerm_function_app_slot.this]
 }
 
-resource "azurerm_app_service_virtual_network_swift_connection" "this" {
-  app_service_id = azurerm_function_app_slot.this.id
+resource "azurerm_app_service_slot_virtual_network_swift_connection" "this" {
+  slot_name      = azurerm_function_app_slot.this.name
+  app_service_id = var.function_app_id
   subnet_id      = var.subnet_id
 }
