@@ -100,11 +100,6 @@ variable "internal_storage_connection_string" {
   default     = null
 }
 
-variable "app_service_plan_sku" {
-  type        = string
-  description = "App service plan sku"
-}
-
 variable "auto_swap_slot_name" {
   type        = string
   description = "The name of the slot to automatically swap to during deployment"
