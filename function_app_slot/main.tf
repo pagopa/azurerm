@@ -54,8 +54,10 @@ resource "azurerm_function_app_slot" "this" {
       WEBSITE_DNS_SERVER              = "168.63.129.16"
       APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
-    var.durable_function_storage_connection_string ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = var.durable_function_storage_connection_string } : {},
-    var.durable_function_storage_connection_string ? { INTERNAL_STORAGE_CONNECTION_STRING = var.durable_function_storage_connection_string } : {},
+    var.durable_function_storage_connection_string != null ? {
+      DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = var.durable_function_storage_connection_string
+      INTERNAL_STORAGE_CONNECTION_STRING         = var.durable_function_storage_connection_string
+    } : {},
     var.app_settings,
   )
 
