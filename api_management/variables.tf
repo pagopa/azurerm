@@ -179,6 +179,10 @@ EOD
     frequency = string
     # Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D.
     window_size = string
+    # Possible values are 0, 1, 2, 3.
+    severity = number
+    # Possible values are true, false
+    auto_mitigate = bool
 
     criteria = set(object(
       {
