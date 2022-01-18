@@ -167,6 +167,8 @@ resource "azurerm_monitor_metric_alert" "this" {
   scopes              = [azurerm_api_management.this.id]
   frequency           = each.value.frequency
   window_size         = each.value.window_size
+  severity            = each.value.severity
+  auto_mitigate       = each.value.auto_mitigate
   enabled             = var.alerts_enabled
 
   dynamic "action" {
