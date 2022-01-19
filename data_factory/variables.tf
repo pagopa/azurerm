@@ -20,13 +20,13 @@ variable "name_prefix" {
 
 variable "github_conf" {
   description = "Configuration of the github repo associated to the data factory"
-  type = map(object({
+  type = object({
     account_name = string
     branch_name = string
     git_url = string
     repository_name = string
     root_folder = string
-  }))
+  })
 }
 
 variable "private_dns_zone" {
