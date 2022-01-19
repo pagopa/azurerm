@@ -55,7 +55,7 @@ resource "azurerm_private_dns_a_record" "record" {
   zone_name           = var.private_endpoint.private_dns_zone.name
   resource_group_name = var.private_endpoint.private_dns_zone.rg
   ttl                 = 300
-  records             = azurerm_private_endpoint.this.private_service_connection.*.private_ip_address
+  records             = azurerm_private_endpoint.this[count.index].private_service_connection.*.private_ip_address
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "this" {
