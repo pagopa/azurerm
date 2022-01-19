@@ -8,7 +8,7 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "resource_name" {
+variable "name" {
   description = "Short Resource Name, used to customize subresource names"
   type = string
 }
