@@ -2,7 +2,7 @@ resource "azurerm_data_factory" "this" {
   name                   = format("%s-data-factory", var.name)
   location               = var.location
   resource_group_name    = var.resource_group_name
-  public_network_enabled = false
+  public_network_enabled = !(var.private_endpoint.enabled)
 
   github_configuration {
     # (Required) Specifies the GitHub account name
@@ -25,15 +25,18 @@ resource "azurerm_data_factory" "this" {
 }
 
 resource "azurerm_private_endpoint" "this" {
+
+  count = var.private_endpoint.enabled? 1 : 0
+
   name                = format("%s-private-endpoint", var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = var.subnet_id
+  subnet_id           = var.private_endpoint.subnet_id
 
   private_dns_zone_group {
     name = format("%s-private-dns-zone-group", var.name)
     # One of the concatenated arrays is empty
-    private_dns_zone_ids = [var.private_dns_zone.id]
+    private_dns_zone_ids = [var.private_endpoint.private_dns_zone.id]
   }
 
   private_service_connection {
@@ -45,9 +48,12 @@ resource "azurerm_private_endpoint" "this" {
 }
 
 resource "azurerm_private_dns_a_record" "record" {
+
+  count = var.dns_a_record_name? 1 : 0
+
   name                = var.name
-  zone_name           = var.private_dns_zone.name
-  resource_group_name = var.private_dns_zone_rg_name
+  zone_name           = var.private_endpoint.private_dns_zone.name
+  resource_group_name = var.private_endpoint.private_dns_zone.rg
   ttl                 = 300
   records             = azurerm_private_endpoint.this.private_service_connection.*.private_ip_address
 }

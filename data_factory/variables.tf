@@ -8,11 +8,6 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "private_dns_zone_rg_name" {
-  description = "Resource Group in which the private DNS zone is located"
-  type = string
-}
-
 variable "name" {
   description = "Short Resource Name, used to customize subresource names"
   type = string
@@ -34,17 +29,17 @@ variable "github_conf" {
   })
 }
 
-variable "private_dns_zone" {
-  description = "Private DNS Zone where the private endpoint will be created"
+variable "private_endpoint" {
+  description = "Enable private endpoint with required params"
   type = object({
+    enabled              = bool
+    subnet_id            = string
+    private_dns_zone    = object({
     id   = string
     name = string
+    rg = string
   })
-}
-
-variable "subnet_id" {
-  description = "ID of the subnet in which the private endpoint is created"
-  type = string
+  })
 }
 
 variable "resources_managed_private_enpoint" {
