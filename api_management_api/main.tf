@@ -1,7 +1,3 @@
-provider "azurerm" {
-  features {}
-}
-
 resource "azurerm_api_management_api" "this" {
   name                 = var.api_version != null ? join("-", [var.name, var.api_version]) : var.name
   resource_group_name  = var.resource_group_name
