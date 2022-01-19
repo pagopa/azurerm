@@ -20,7 +20,6 @@ resource "azurerm_data_factory" "df" {
   }
 
   # Still doesn't work: https://github.com/hashicorp/terraform-provider-azurerm/issues/12949
-
   managed_virtual_network_enabled = true 
 
 }
@@ -53,9 +52,9 @@ resource "azurerm_private_dns_a_record" "record" {
   records             = azurerm_private_endpoint.pe.private_service_connection.*.private_ip_address
 }
 
-resource "azurerm_data_factory_managed_private_endpoint" "pe" {
+resource "azurerm_data_factory_managed_private_endpoint" "mpe" {
   foreach = var.resources_managed_private_enpoint
-  name               = replace(format("%s-tae-blob-private-endpoint", var.name_prefix), "-", "_")
+  name               = replace(format("%s-%s-%s-mng-private-endpoint", var.name_prefix, var.name, each.key.name), "-", "_")
   data_factory_id    = azurerm_data_factory.df.id
   target_resource_id = each.key.id
   subresource_name   = each.key.name
