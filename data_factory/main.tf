@@ -1,4 +1,4 @@
-resource "azurerm_data_factory" "df" {
+resource "azurerm_data_factory" "this" {
   name                   = format("%s-%s-data-factory", var.name_prefix, var.name)
   location               = var.location
   resource_group_name    = var.resource_group_name
@@ -24,7 +24,7 @@ resource "azurerm_data_factory" "df" {
 
 }
 
-resource "azurerm_private_endpoint" "pe" {
+resource "azurerm_private_endpoint" "this" {
   name                = format("%s-%s-private-endpoint", var.name_prefix, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -38,7 +38,7 @@ resource "azurerm_private_endpoint" "pe" {
 
   private_service_connection {
     name                           = format("%s-%s-private-service-connection", var.name_prefix, var.name)
-    private_connection_resource_id = azurerm_data_factory.df.id
+    private_connection_resource_id = azurerm_data_factory.this.id
     is_manual_connection           = false
     subresource_names              = ["datafactory"]
   }
@@ -49,13 +49,13 @@ resource "azurerm_private_dns_a_record" "record" {
   zone_name           = var.private_dns_zone.name
   resource_group_name = var.private_dns_zone_rg_name
   ttl                 = 300
-  records             = azurerm_private_endpoint.pe.private_service_connection.*.private_ip_address
+  records             = azurerm_private_endpoint.this.private_service_connection.*.private_ip_address
 }
 
-resource "azurerm_data_factory_managed_private_endpoint" "mpe" {
+resource "azurerm_data_factory_managed_private_endpoint" "this" {
   for_each = var.resources_managed_private_enpoint
   name               = replace(format("%s-%s-%s-mng-private-endpoint", var.name_prefix, var.name, substr(sha256(each.key), 0, 3)), "-", "_")
-  data_factory_id    = azurerm_data_factory.df.id
+  data_factory_id    = azurerm_data_factory.this.id
   target_resource_id = each.key
   subresource_name   = each.value
 }
