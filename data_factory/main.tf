@@ -6,27 +6,27 @@ resource "azurerm_data_factory" "this" {
 
   github_configuration {
     # (Required) Specifies the GitHub account name
-    account_name    = var.github_conf.account_name 
+    account_name = var.github_conf.account_name
     # (Required) Specifies the collaboration branch of the repository to get code from.
     # The poublish branch is automatically set to adf_publish
-    branch_name     = var.github_conf.branch_name 
+    branch_name = var.github_conf.branch_name
     # (Required) Specifies the GitHub Enterprise host name. 
     # For example: https://github.mydomain.com. Use https://github.com for open source repositories
-    git_url         = var.github_conf.git_url
+    git_url = var.github_conf.git_url
     # (Required) Specifies the name of the git repository
     repository_name = var.github_conf.repository_name
     # (Required) Specifies the root folder within the repository. Set to / for the top level.
-    root_folder     = var.github_conf.root_folder
+    root_folder = var.github_conf.root_folder
   }
 
   # Still doesn't work: https://github.com/hashicorp/terraform-provider-azurerm/issues/12949
-  managed_virtual_network_enabled = true 
+  managed_virtual_network_enabled = true
 
 }
 
 resource "azurerm_private_endpoint" "this" {
 
-  count = var.private_endpoint.enabled? 1 : 0
+  count = var.private_endpoint.enabled ? 1 : 0
 
   name                = format("%s-private-endpoint", var.name)
   location            = var.location
@@ -49,7 +49,7 @@ resource "azurerm_private_endpoint" "this" {
 
 resource "azurerm_private_dns_a_record" "record" {
 
-  count = var.dns_a_record_name? 1 : 0
+  count = var.dns_a_record_name ? 1 : 0
 
   name                = var.name
   zone_name           = var.private_endpoint.private_dns_zone.name
@@ -59,7 +59,7 @@ resource "azurerm_private_dns_a_record" "record" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "this" {
-  for_each = var.resources_managed_private_enpoint
+  for_each           = var.resources_managed_private_enpoint
   name               = replace(format("%s-%s-mng-private-endpoint", var.name, substr(sha256(each.key), 0, 3)), "-", "_")
   data_factory_id    = azurerm_data_factory.this.id
   target_resource_id = each.key

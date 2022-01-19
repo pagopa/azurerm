@@ -1,49 +1,49 @@
 variable "location" {
   description = "Azure Location in which the resources are located"
-  type = string
+  type        = string
 }
 
 variable "resource_group_name" {
   description = "Resource Group in which the resources are located"
-  type = string
+  type        = string
 }
 
 variable "name" {
   description = "Short Resource Name, used to customize subresource names"
-  type = string
+  type        = string
 }
 
 variable "dns_a_record_name" {
   description = "String to be prefixed to resource names created by this module"
-  type = string
+  type        = string
 }
 
 variable "github_conf" {
   description = "Configuration of the github repo associated to the data factory"
   type = object({
-    account_name = string
-    branch_name = string
-    git_url = string
+    account_name    = string
+    branch_name     = string
+    git_url         = string
     repository_name = string
-    root_folder = string
+    root_folder     = string
   })
 }
 
 variable "private_endpoint" {
   description = "Enable private endpoint with required params"
   type = object({
-    enabled              = bool
-    subnet_id            = string
-    private_dns_zone    = object({
-    id   = string
-    name = string
-    rg = string
-  })
+    enabled   = bool
+    subnet_id = string
+    private_dns_zone = object({
+      id   = string
+      name = string
+      rg   = string
+    })
   })
 }
 
 variable "resources_managed_private_enpoint" {
   description = "Map of resource to which a data factory must connect via managed private endpoint"
-  type = map(string)
+  type        = map(string)
 }
 
