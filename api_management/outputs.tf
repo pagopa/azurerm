@@ -33,3 +33,7 @@ output "principal_id" {
 output "diagnostic_id" {
   value = length(azurerm_api_management_diagnostic.this.*.id) == 0 ? null : azurerm_api_management_diagnostic.this[0].id
 }
+
+output "logger_id" {
+  value = var.application_insights_instrumentation_key != null ? azurerm_api_management_logger.this[0].id : null
+}
