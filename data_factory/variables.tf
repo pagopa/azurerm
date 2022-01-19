@@ -20,13 +20,13 @@ variable "name_prefix" {
 
 variable "github_conf" {
   description = "Configuration of the github repo associated to the data factory"
-  type = object({
+  type = map(object({
     account_name = string
     branch_name = string
     git_url = string
     repository_name = string
     root_folder = string
-  })
+  }))
 }
 
 variable "private_dns_zone" {
@@ -43,8 +43,8 @@ variable "subnet_id" {
 }
 
 variable "resources_managed_private_enpoint" {
-  description = ""
-  type = list(object({
+  description = "Map of resource to which a data factory must connect via managed private endpoint"
+  type = map(object({
     id   = string
     name = string
   }))
