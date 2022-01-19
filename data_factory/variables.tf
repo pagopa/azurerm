@@ -44,9 +44,6 @@ variable "subnet_id" {
 
 variable "resources_managed_private_enpoint" {
   description = "Map of resource to which a data factory must connect via managed private endpoint"
-  type = map(object({
-    id   = string
-    name = string
-  }))
+  type = map(string)
 }
 

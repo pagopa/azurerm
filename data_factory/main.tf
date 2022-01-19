@@ -54,9 +54,9 @@ resource "azurerm_private_dns_a_record" "record" {
 
 resource "azurerm_data_factory_managed_private_endpoint" "mpe" {
   for_each = var.resources_managed_private_enpoint
-  name               = replace(format("%s-%s-%s-mng-private-endpoint", var.name_prefix, var.name, each.value.name), "-", "_")
+  name               = replace(format("%s-%s-%s-mng-private-endpoint", var.name_prefix, var.name, each.value), "-", "_")
   data_factory_id    = azurerm_data_factory.df.id
-  target_resource_id = each.value.id
-  subresource_name   = each.value.name
+  target_resource_id = each.key
+  subresource_name   = each.value
 }
 
