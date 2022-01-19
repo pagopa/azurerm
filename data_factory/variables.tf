@@ -8,6 +8,11 @@ variable "resource_group_name" {
   type = string
 }
 
+variable "private_dns_zone_rg_name" {
+  description = "Resource Group in which the private DNS zone is located"
+  type = string
+}
+
 variable "name" {
   description = "Short Resource Name, used to customize subresource names"
   type = string

@@ -47,7 +47,7 @@ resource "azurerm_private_endpoint" "pe" {
 resource "azurerm_private_dns_a_record" "record" {
   name                = var.name
   zone_name           = var.private_dns_zone.name
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.private_dns_zone_rg_name
   ttl                 = 300
   records             = azurerm_private_endpoint.pe.private_service_connection.*.private_ip_address
 }
