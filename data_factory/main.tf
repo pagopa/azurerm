@@ -16,7 +16,7 @@ resource "azurerm_data_factory" "df" {
     # (Required) Specifies the name of the git repository
     repository_name = var.github_conf.repository_name
     # (Required) Specifies the root folder within the repository. Set to / for the top level.
-    root_folder     = var.github_conf.root
+    root_folder     = var.github_conf.root_folder
   }
 
   # Still doesn't work: https://github.com/hashicorp/terraform-provider-azurerm/issues/12949
