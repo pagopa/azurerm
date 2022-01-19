@@ -18,7 +18,7 @@ variable "name" {
   type = string
 }
 
-variable "name_prefix" {
+variable "dns_a_record_name" {
   description = "String to be prefixed to resource names created by this module"
   type = string
 }

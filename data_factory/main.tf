@@ -1,5 +1,5 @@
 resource "azurerm_data_factory" "this" {
-  name                   = format("%s-%s-data-factory", var.name_prefix, var.name)
+  name                   = format("%s-data-factory", var.name)
   location               = var.location
   resource_group_name    = var.resource_group_name
   public_network_enabled = false
@@ -25,19 +25,19 @@ resource "azurerm_data_factory" "this" {
 }
 
 resource "azurerm_private_endpoint" "this" {
-  name                = format("%s-%s-private-endpoint", var.name_prefix, var.name)
+  name                = format("%s-private-endpoint", var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id
 
   private_dns_zone_group {
-    name = format("%s-%s-private-dns-zone-group", var.name_prefix, var.name)
+    name = format("%s-private-dns-zone-group", var.name)
     # One of the concatenated arrays is empty
     private_dns_zone_ids = [var.private_dns_zone.id]
   }
 
   private_service_connection {
-    name                           = format("%s-%s-private-service-connection", var.name_prefix, var.name)
+    name                           = format("%s-private-service-connection", var.name)
     private_connection_resource_id = azurerm_data_factory.this.id
     is_manual_connection           = false
     subresource_names              = ["datafactory"]
@@ -54,7 +54,7 @@ resource "azurerm_private_dns_a_record" "record" {
 
 resource "azurerm_data_factory_managed_private_endpoint" "this" {
   for_each = var.resources_managed_private_enpoint
-  name               = replace(format("%s-%s-%s-mng-private-endpoint", var.name_prefix, var.name, substr(sha256(each.key), 0, 3)), "-", "_")
+  name               = replace(format("%s-%s-mng-private-endpoint", var.name, substr(sha256(each.key), 0, 3)), "-", "_")
   data_factory_id    = azurerm_data_factory.this.id
   target_resource_id = each.key
   subresource_name   = each.value
