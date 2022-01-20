@@ -13,8 +13,8 @@ variable "name" {
   type        = string
 }
 
-variable "dns_a_record_name" {
-  description = "String to be prefixed to resource names created by this module"
+variable "custom_domain_enabled" {
+  description = "If not null enables custom domain for the private endpoint"
   type        = string
 }
 
