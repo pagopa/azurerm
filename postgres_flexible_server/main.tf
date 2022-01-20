@@ -30,9 +30,9 @@ resource "azurerm_postgresql_flexible_server" "this" {
   private_dns_zone_id = var.private_endpoint.private_dns_zone.id
 
 
-  administrator_login          = var.administrator_login
-  administrator_login_password = var.administrator_login_password
-  zone                         = var.zone
+  administrator_login    = var.administrator_login
+  administrator_password = var.administrator_password
+  zone                   = var.zone
 
   storage_mb = var.storage_mb
 

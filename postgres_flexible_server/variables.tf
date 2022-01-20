@@ -28,7 +28,7 @@ variable "administrator_login" {
   description = "The Administrator Login for the PostgreSQL Server."
 }
 
-variable "administrator_login_password" {
+variable "administrator_password" {
   type        = string
   description = "The Password associated with the administrator_login for the PostgreSQL Server."
   sensitive   = true
