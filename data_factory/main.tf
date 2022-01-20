@@ -53,7 +53,7 @@ resource "azurerm_private_dns_a_record" "this" {
 
   count = var.custom_domain_enabled == null ? 0 : 1
 
-  name                = var.name
+  name                = var.custom_domain_enabled
   zone_name           = var.private_endpoint.private_dns_zone.name
   resource_group_name = var.private_endpoint.private_dns_zone.rg
   ttl                 = 300
