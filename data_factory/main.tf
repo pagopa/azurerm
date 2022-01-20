@@ -49,7 +49,7 @@ resource "azurerm_private_endpoint" "this" {
   }
 }
 
-resource "azurerm_private_dns_a_record" "record" {
+resource "azurerm_private_dns_a_record" "this" {
 
   count = var.custom_domain_enabled == null ? 0 : 1
 
