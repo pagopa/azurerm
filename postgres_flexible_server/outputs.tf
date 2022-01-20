@@ -11,7 +11,7 @@ output "fqdn" {
 }
 
 output "public_access_enabled" {
-  value = azurerm_postgresql_flexible_server.this.public_network_access_enabled 
+  value = azurerm_postgresql_flexible_server.this.public_network_access_enabled
 }
 
 output "administrator_login" {
