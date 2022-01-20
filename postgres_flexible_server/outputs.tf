@@ -10,9 +10,9 @@ output "fqdn" {
   value = azurerm_postgresql_flexible_server.this.fqdn
 }
 
-# output "principal_id" {
-#   value = azurerm_postgresql_server.this.identity.0.principal_id
-# }
+output "public_access_enabled" {
+  value = azurerm_postgresql_flexible_server.this.public_network_access_enabled 
+}
 
 output "administrator_login" {
   value = var.administrator_login
