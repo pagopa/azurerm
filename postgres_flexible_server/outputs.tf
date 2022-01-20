@@ -18,7 +18,7 @@ output "administrator_login" {
   value = var.administrator_login
 }
 
-output "administrator_login_password" {
-  value     = var.administrator_login_password
+output "administrator_password" {
+  value     = var.administrator_password
   sensitive = true
 }
