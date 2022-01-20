@@ -47,3 +47,6 @@ variable "resources_managed_private_enpoint" {
   type        = map(string)
 }
 
+variable "tags" {
+  type = map(any)
+}

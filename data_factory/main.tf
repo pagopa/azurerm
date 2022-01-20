@@ -22,6 +22,8 @@ resource "azurerm_data_factory" "this" {
   # Still doesn't work: https://github.com/hashicorp/terraform-provider-azurerm/issues/12949
   managed_virtual_network_enabled = true
 
+  tags = var.tags
+
 }
 
 resource "azurerm_private_endpoint" "this" {
