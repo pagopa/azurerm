@@ -60,6 +60,8 @@ resource "azurerm_private_dns_a_record" "this" {
   resource_group_name = var.private_endpoint.private_dns_zone.rg
   ttl                 = 300
   records             = azurerm_private_endpoint.this[count.index].private_service_connection.*.private_ip_address
+
+  tags = var.tags
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "this" {
