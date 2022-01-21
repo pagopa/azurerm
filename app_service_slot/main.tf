@@ -56,7 +56,7 @@ resource "azurerm_app_service_slot" "this" {
 }
 
 resource "azurerm_app_service_slot_virtual_network_swift_connection" "app_service_virtual_network_swift_connection" {
-  count = var.subnet_id != null ? 1 : 0
+  count = var.vnet_integration ? 1 : 0
 
   slot_name      = azurerm_app_service_slot.this.name
   app_service_id = var.app_service_id
