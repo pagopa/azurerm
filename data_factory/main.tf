@@ -47,6 +47,8 @@ resource "azurerm_private_endpoint" "this" {
     is_manual_connection           = false
     subresource_names              = ["datafactory"]
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_private_dns_a_record" "this" {
