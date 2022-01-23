@@ -29,6 +29,7 @@ resource "azurerm_api_management" "this" {
 
   virtual_network_type = var.virtual_network_type
 
+  # subnet
   dynamic "virtual_network_configuration" {
     for_each = contains(["Internal", "External"], var.virtual_network_type) ? ["dummy"] : []
     content {
@@ -90,6 +91,9 @@ resource "azurerm_api_management" "this" {
   tags = var.tags
 }
 
+#
+# Diagnostic, Logs & Monitor
+#
 resource "azurerm_api_management_logger" "this" {
   count = var.application_insights_instrumentation_key != null ? 1 : 0
 
@@ -157,8 +161,6 @@ resource "azurerm_api_management_diagnostic" "this" {
     }
   }
 }
-
-
 
 resource "azurerm_monitor_metric_alert" "this" {
   for_each = var.metric_alerts
@@ -229,7 +231,9 @@ resource "azurerm_monitor_metric_alert" "this" {
   }
 }
 
-
+#
+# 🧺 REDIS
+#
 resource "azurerm_api_management_redis_cache" "this" {
   count = var.redis_connection_string != null ? 1 : 0
 
@@ -239,6 +243,9 @@ resource "azurerm_api_management_redis_cache" "this" {
   redis_cache_id    = var.redis_cache_id
 }
 
+#
+# Certificate
+#
 data "azurerm_key_vault_certificate" "key_vault_certificate" {
   count        = var.key_vault_id != null ? length(var.certificate_names) : 0
   name         = var.certificate_names[count.index]
@@ -254,14 +261,9 @@ resource "azurerm_api_management_certificate" "this" {
   key_vault_secret_id = trimsuffix(data.azurerm_key_vault_certificate.key_vault_certificate[count.index].secret_id, data.azurerm_key_vault_certificate.key_vault_certificate[count.index].version)
 }
 
-resource "azurerm_management_lock" "this" {
-  count      = var.lock_enable ? 1 : 0
-  name       = format("%s-lock", azurerm_api_management.this.name)
-  scope      = azurerm_api_management.this.id
-  lock_level = "CanNotDelete"
-  notes      = "This items can't be deleted in this subscription!"
-}
-
+#
+# Diagnostic settings
+#
 resource "azurerm_monitor_diagnostic_setting" "apim" {
   count                          = var.sec_log_analytics_workspace_id != null ? 1 : 0
   name                           = "LogSecurity"
@@ -301,3 +303,13 @@ resource "azurerm_monitor_diagnostic_setting" "apim" {
   }
 }
 
+#
+# Other
+#
+resource "azurerm_management_lock" "this" {
+  count      = var.lock_enable ? 1 : 0
+  name       = format("%s-lock", azurerm_api_management.this.name)
+  scope      = azurerm_api_management.this.id
+  lock_level = "CanNotDelete"
+  notes      = "This items can't be deleted in this subscription!"
+}
