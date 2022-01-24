@@ -83,7 +83,7 @@ resource "azurerm_cosmosdb_account" "this" {
 }
 
 resource "azurerm_private_endpoint" "sql" {
-  count = var.private_endpoint_enabled && length(var.capabilities) == 0
+  count = var.private_endpoint_enabled && length(var.capabilities) == 0 ? 1 : 0
 
   name                = var.name
   location            = var.location
