@@ -58,6 +58,12 @@ variable "private_endpoint_enabled" {
   default     = true
 }
 
+variable "private_endpoint_name" {
+  type        = string
+  description = "Private endpoint name. If null it will assume the cosmosdb account name."
+  default     = null
+}
+
 variable "public_network_access_enabled" {
   type        = bool
   description = "Whether or not public network access is allowed for this CosmosDB account"

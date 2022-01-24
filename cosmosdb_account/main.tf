@@ -85,7 +85,7 @@ resource "azurerm_cosmosdb_account" "this" {
 resource "azurerm_private_endpoint" "sql" {
   count = var.private_endpoint_enabled && length(var.capabilities) == 0 ? 1 : 0
 
-  name                = var.name
+  name                = collasce(var.private_endpoint_name, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id
@@ -109,7 +109,7 @@ resource "azurerm_private_endpoint" "sql" {
 resource "azurerm_private_endpoint" "mongo" {
   count = var.private_endpoint_enabled && contains(var.capabilities, "EnableMongo") ? 1 : 0
 
-  name                = var.name
+  name                = collasce(var.private_endpoint_name, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id
@@ -133,7 +133,7 @@ resource "azurerm_private_endpoint" "mongo" {
 resource "azurerm_private_endpoint" "cassandra" {
   count = var.private_endpoint_enabled && contains(var.capabilities, "EnableCassandra") ? 1 : 0
 
-  name                = var.name
+  name                = collasce(var.private_endpoint_name, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id
