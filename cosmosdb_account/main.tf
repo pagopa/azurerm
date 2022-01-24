@@ -133,7 +133,7 @@ resource "azurerm_private_endpoint" "mongo" {
 resource "azurerm_private_endpoint" "cassandra" {
   count = var.private_endpoint_enabled && contains(var.capabilities, "EnableCassandra") ? 1 : 0
 
-  name                = collasce(var.private_endpoint_name, var.name)
+  name                = coalesce(var.private_endpoint_name, var.name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id
