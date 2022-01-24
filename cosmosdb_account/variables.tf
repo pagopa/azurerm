@@ -10,11 +10,13 @@ variable "name" {
 variable "subnet_id" {
   type        = string
   description = "Used only for private endpoints"
+  default     = null
 }
 
 variable "private_dns_zone_ids" {
   type        = list(string)
   description = "Used only for private endpoints"
+  default     = []
 }
 
 // Resource Group
@@ -54,6 +56,12 @@ variable "private_endpoint_enabled" {
   type        = bool
   description = "Enable private endpoint"
   default     = true
+}
+
+variable "private_endpoint_name" {
+  type        = string
+  description = "Private endpoint name. If null it will assume the cosmosdb account name."
+  default     = null
 }
 
 variable "public_network_access_enabled" {
