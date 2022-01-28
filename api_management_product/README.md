@@ -1,4 +1,4 @@
-# api management
+# api management product
 
 This module allow the creation of api management product, and associate to a groups and create policy if requested
 
