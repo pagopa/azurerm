@@ -24,7 +24,7 @@ resource "azurerm_app_service" "this" {
   resource_group_name = var.resource_group_name
 
   app_service_plan_id = var.plan_type == "internal" ? azurerm_app_service_plan.this[0].id : var.plan_id
-  https_only          = true
+  https_only          = var.https_only
   client_cert_enabled = var.client_cert_enabled
 
   app_settings = var.app_settings
@@ -61,7 +61,7 @@ resource "azurerm_app_service" "this" {
   }
 
   dynamic "storage_account" {
-    for_each = var.storage_mounts != null ? var.storage_mounts : [] 
+    for_each = var.storage_mounts != null ? var.storage_mounts : []
     content {
       name         = lookup(storage_account.value, "name")
       type         = lookup(storage_account.value, "type", "AzureFiles")

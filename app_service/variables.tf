@@ -79,6 +79,12 @@ variable "name" {
   description = "(Required) Specifies the name of the App Service. Changing this forces a new resource to be created."
 }
 
+variable "https_only" {
+  type        = bool
+  description = "(Optional) Enforce https connection. Default true"
+  default     = true
+}
+
 variable "client_cert_enabled" {
   type        = bool
   description = "(Optional) Does the App Service require client certificates for incoming requests? Defaults to false."
@@ -157,7 +163,7 @@ variable "tags" {
 }
 
 variable "storage_mounts" {
-  type = list(map(string))
+  type        = list(map(string))
   description = "List of mapping with storage path mapping (name,type,account_name,share_name,access_key,mount_path)"
-  default = [] 
+  default     = []
 }
