@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# install unzip
+# install zip unzip
 
 apt-get -y update
-apt-get -y install unzip
+apt-get -y install zip unzip
 
 # install az cli from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt#option-2-step-by-step-installation-instructions
 
