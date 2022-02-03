@@ -164,10 +164,10 @@ resource "azurerm_application_gateway" "this" {
           dynamic "condition" {
             for_each = rewrite_rule.value.condition == null ? [] : ["dummy"]
             content {
-              variable    = condition.value.variable
-              pattern     = condition.value.pattern
-              ignore_case = condition.value.ignore_case
-              negate      = condition.value.negate
+              variable    = rewrite_rule.value.condition.variable
+              pattern     = rewrite_rule.value.condition.pattern
+              ignore_case = rewrite_rule.value.condition.ignore_case
+              negate      = rewrite_rule.value.condition.negate
             }
           }
 
@@ -186,6 +186,15 @@ resource "azurerm_application_gateway" "this" {
             content {
               header_name  = res_header.value.header_name
               header_value = res_header.value.header_value
+            }
+          }
+
+          dynamic "url" {
+            for_each = rewrite_rule.value.url != null ? ["dummy"] : []
+
+            content {
+              path         = rewrite_rule.value.url.path
+              query_string = rewrite_rule.value.url.query_string
             }
           }
         }

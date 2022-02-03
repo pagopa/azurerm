@@ -118,6 +118,11 @@ variable "rewrite_rule_sets" {
         header_value = string
       }))
 
+      url = object({
+        path         = string
+        query_string = string
+      })
+
     }))
   }))
   default = []

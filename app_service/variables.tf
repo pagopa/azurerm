@@ -133,6 +133,12 @@ variable "allowed_ips" {
   default     = []
 }
 
+variable "vnet_integration" {
+  type        = bool
+  description = "(optional) enable vnet integration. Wheter it's true the subnet_id should not be null."
+  default     = false
+}
+
 variable "subnet_id" {
   type        = string
   description = "(Optional) Subnet id wether you want to integrate the app service to a subnet."
