@@ -1,6 +1,6 @@
-# kubernetes_cluster
+# app gateway
 
-Module that allows the creation of an AKS cluster.
+Module that allows the creation of an App Gateway.
 
 ## Architecture
 

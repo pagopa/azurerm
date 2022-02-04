@@ -35,44 +35,46 @@ variable "public_ip_id" {
 
 variable "backends" {
   type = map(object({
-    protocol                    = string
-    host                        = string
-    port                        = number
-    ip_addresses                = list(string)
-    fqdns                       = list(string)
-    probe                       = string
-    probe_name                  = string
-    request_timeout             = number
-    pick_host_name_from_backend = bool
+    protocol                    = string  #(Required) The Protocol which should be used. Possible values are Http and Https
+    host                        = string  #(Optional) The Hostname used for this Probe. If the Application Gateway is configured for a single site, by default the Host name should be specified as ‘127.0.0.1’, unless otherwise configured in custom probe. Cannot be set if pick_host_name_from_backend_http_settings is set to true
+    port                        = number  #(Optional) Custom port which will be used for probing the backend servers. The valid value ranges from 1 to 65535. In case not set, port from http settings will be used.
+    ip_addresses                = list(string)  #(Optional) A list of IP Addresses which should be part of the Backend Address Pool.
+    fqdns                       = list(string)  #(Optional) A list of FQDN's which should be part of the Backend Address Pool.
+    probe                       = string  #(Required) The Path used for this Probe.
+    probe_name                  = string  #(Required) The Name of the Probe.
+    request_timeout             = number  #(Required) The Timeout used for this Probe, which indicates when a probe becomes unhealthy. Possible values range from 1 second to a maximum of 86,400 seconds.
+    pick_host_name_from_backend = bool  #(Optional) Whether the host header should be picked from the backend http settings
   }))
+
+  description = "Obj that allow to configure: backend_address_pool, backend_http_settings, probe"
 }
 
 variable "listeners" {
   type = map(object({
-    protocol           = string
-    host               = string
-    port               = number
-    ssl_profile_name   = string
-    firewall_policy_id = string
+    protocol           = string #(Required) The Protocol which should be used. Possible values are Http and Https
+    host               = string #(Optional) The Hostname which should be used for this HTTP Listener. Setting this value changes Listener Type to 'Multi site'.
+    port               = number #(Required) The port used for this Frontend Port.
+    ssl_profile_name   = string #(Optional) The name of the associated SSL Profile which should be used for this HTTP Listener.
+    firewall_policy_id = string #(Optional) The ID of the Web Application Firewall Policy which should be used for this HTTP Listener.
     certificate = object({
-      name = string
-      id   = string
+      name = string #(Required) The Name of the SSL certificate that is unique within this Application Gateway
+      id   = string #(Optional) Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for keyvault to use this feature. Required if data is not set.
     })
   }))
 }
 
 variable "ssl_profiles" {
   type = list(object({
-    name                             = string
-    trusted_client_certificate_names = list(string)
-    verify_client_cert_issuer_dn     = bool
+    name                             = string #(Required) The name of the SSL Profile that is unique within this Application Gateway.
+    trusted_client_certificate_names = list(string) #(Optional) The name of the Trusted Client Certificate that will be used to authenticate requests from clients.
+    verify_client_cert_issuer_dn     = bool #(Optional) Should client certificate issuer DN be verified? Defaults to false
 
     ssl_policy = object({
-      disabled_protocols   = list(string)
-      policy_type          = string
-      policy_name          = string
-      cipher_suites        = list(string)
-      min_protocol_version = string
+      disabled_protocols   = list(string) #(Optional) A list of SSL Protocols which should be disabled on this Application Gateway. Possible values are TLSv1_0, TLSv1_1 and TLSv1_2.
+      policy_type          = string #(Optional) The Type of the Policy. Possible values are Predefined and Custom.
+      policy_name          = string #(Optional) The Name of the Policy e.g AppGwSslPolicy20170401S. Required if policy_type is set to Predefined. Possible values can change over time and are published here https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-ssl-policy-overview. Not compatible with disabled_protocols.
+      cipher_suites        = list(string) #(Optional) A List of accepted cipher suites. see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway#cipher_suites for possible values
+      min_protocol_version = string #(Optional) The minimal TLS version. Possible values are TLSv1_0, TLSv1_1 and TLSv1_2.
     })
   }))
   default = []
@@ -82,50 +84,51 @@ variable "ssl_profiles" {
 # Secrects'name in the key vault can't have low hyphens but just hyphens in it.
 variable "trusted_client_certificates" {
   type = list(object({
-    secret_name  = string
-    key_vault_id = string
+    secret_name  = string #(Required) The name of the Trusted Client Certificate that is unique within this Application Gateway.
+    key_vault_id = string #(Required) Key vault id, that contains the certificate.
   }))
 }
 
 variable "routes" {
   type = map(object({
-    listener              = string
-    backend               = string
-    rewrite_rule_set_name = string
+    listener              = string  #(Required)Prefix for http_listener_name
+    backend               = string  #(Required) Prefix for backend_address_pool_name, backend_http_settings_name
+    rewrite_rule_set_name = string  #(Optional) The Name of the Rewrite Rule Set which should be used for this Routing Rule.
   }))
 }
 
 variable "rewrite_rule_sets" {
   type = list(object({
-    name = string
+    name = string #(Required) Unique name of the rewrite rule set block
     rewrite_rules = list(object({
-      name          = string
-      rule_sequence = number
-      condition = object({
-        variable    = string
-        pattern     = string
-        ignore_case = bool
-        negate      = bool
+      name          = string  #(Required) Unique name of the rewrite rule block
+      rule_sequence = number  #(Required) Rule sequence of the rewrite rule that determines the order of execution in a set.
+      condition = object({  #(Optional) One or more condition blocks as defined above.
+        variable    = string  #(Required) The variable of the condition.
+        pattern     = string  #(Required) The pattern, either fixed string or regular expression, that evaluates the truthfulness of the condition.
+        ignore_case = bool  #(Optional) Perform a case in-sensitive comparison. Defaults to false
+        negate      = bool  #(Optional) Negate the result of the condition evaluation. Defaults to false
       })
 
       request_header_configurations = list(object({
-        header_name  = string
-        header_value = string
+        header_name  = string #(Required) Header name of the header configuration.
+        header_value = string #(Required) Header value of the header configuration. To delete a request header set this property to an empty string.
       }))
 
       response_header_configurations = list(object({
-        header_name  = string
-        header_value = string
+        header_name  = string #(Required) Header name of the header configuration.
+        header_value = string #(Required) Header value of the header configuration. To delete a response header set this property to an empty string.
       }))
 
       url = object({
-        path         = string
-        query_string = string
+        path         = string #(Optional) The URL path to rewrite.
+        query_string = string #(Optional) The query string to rewrite.
       })
 
     }))
   }))
   default = []
+  description = "Rewrite rules sets obj descriptor"
 }
 
 # TLS
@@ -137,14 +140,14 @@ variable "identity_ids" {
 # WAF
 variable "waf_enabled" {
   type        = bool
-  description = "Enable WAF"
   default     = true
+  description = "Enable WAF"
 }
 
 variable "waf_disabled_rule_group" {
   type = list(object({
-    rule_group_name = string
-    rules           = list(string)
+    rule_group_name = string        #(Required) The rule group where specific rules should be disabled.
+    rules           = list(string)  #(Optional) A list of rules which should be disabled in that group. Disables all rules in the specified group if rules is not specified.
   }))
   default = []
 }
@@ -153,10 +156,12 @@ variable "waf_disabled_rule_group" {
 
 variable "app_gateway_max_capacity" {
   type = string
+  description = "(Optional) Maximum capacity for autoscaling. Accepted values are in the range 2 to 125."
 }
 
 variable "app_gateway_min_capacity" {
   type = string
+  description = "(Required) Minimum capacity for autoscaling. Accepted values are in the range 0 to 100."
 }
 
 variable "sec_log_analytics_workspace_id" {
