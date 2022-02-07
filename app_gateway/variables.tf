@@ -57,8 +57,8 @@ variable "listeners" {
     ssl_profile_name   = string # The name of the associated SSL Profile which should be used for this HTTP Listener.
     firewall_policy_id = string # The ID of the Web Application Firewall Policy which should be used for this HTTP Listener.
     certificate = object({
-      name = string #(Required) The Name of the SSL certificate that is unique within this Application Gateway
-      id   = string #(Optional) Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for keyvault to use this feature. Required if data is not set.
+      name = string # The Name of the SSL certificate that is unique within this Application Gateway
+      id   = string # Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for keyvault to use this feature. Required if data is not set.
     })
   }))
 }
