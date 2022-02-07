@@ -140,8 +140,9 @@ resource "azurerm_application_gateway" "this" {
     iterator = route
 
     content {
+      #⚠️ backend_address_pool_name, backend_http_settings_name, redirect_configuration_name, and rewrite_rule_set_name are applicable only when rule_type is Basic.
       name                       = format("%s-reqs-routing-rule", route.key)
-      rule_type                  = "Basic"
+      rule_type                  = "Basic" #(Required) The Type of Routing that should be used for this Rule. Possible values are Basic and PathBasedRouting.
       http_listener_name         = format("%s-listener", route.value.listener)
       backend_address_pool_name  = format("%s-address-pool", route.value.backend)
       backend_http_settings_name = format("%s-http-settings", route.value.backend)
@@ -203,6 +204,7 @@ resource "azurerm_application_gateway" "this" {
     }
   }
 
+  # see: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway#identity
   identity {
     type         = "UserAssigned"
     identity_ids = var.identity_ids
@@ -210,6 +212,7 @@ resource "azurerm_application_gateway" "this" {
 
   ssl_policy {
     policy_type = "Custom"
+    # this cipher suites are the defaults ones
     cipher_suites = [
       "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
       "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
