@@ -8,7 +8,7 @@ This module allow the creation of api management product, and associate to a gro
 
 ## How to use it
 
-```json
+```ts
 
 resource "azurerm_api_management_api_version_set" "apim_hub_spid_login_api" {
   name                = format("%s-spid-login-api", var.env_short)

@@ -8,7 +8,7 @@ This module allow the creation of api management product, and associate to a gro
 
 ## How to use it
 
-```json
+```ts
 ##############
 ## Products ##
 ##############
