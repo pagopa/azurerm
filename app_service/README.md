@@ -23,7 +23,7 @@ Is mandatory to setup this two env variables, to enable internal dns:
 
 ### Docker Version
 
-```json
+```ts
 resource "azurerm_resource_group" "app_docker_rg" {
   name     = "${local.project}-app-docker-rg"
   location = var.location
