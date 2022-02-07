@@ -29,7 +29,7 @@ Module that allows the creation of an App Gateway.
 
 ###  2.1. <a name='Externalresources'></a>External resources
 
-```json
+```ts
 data "azurerm_public_ip" "appgateway_public_ip" {
   resource_group_name = data.azurerm_resource_group.rg_vnet.name
   name                = local.pip_appgw_name
@@ -73,7 +73,7 @@ module "appgateway_snet" {
 
 ###  2.2. <a name='Appgatewaydefinition'></a>App gateway definition
 
-```json
+```ts
 ## Application gateway ##
 module "app_gw" {
   source = "git::https://github.com/pagopa/azurerm.git//app_gateway?ref=v2.1.21"
