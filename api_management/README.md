@@ -8,7 +8,7 @@ This module allow the creation of api management
 
 ## How to use it
 
-```dart
+```js
 # 🔐 KV
 data "azurerm_key_vault_secret" "apim_publisher_email" {
   name         = "apim-publisher-email"
