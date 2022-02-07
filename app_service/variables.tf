@@ -26,7 +26,7 @@ variable "plan_type" {
 
 variable "plan_id" {
   type        = string
-  description = "(Optional) Specifies the external app service plan id."
+  description = "(Optional only if plan_type=internal) Specifies the external app service plan id."
   default     = null
 }
 
