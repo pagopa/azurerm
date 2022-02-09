@@ -36,3 +36,21 @@ echo \
 
 apt-get -y update
 apt-get -y install docker-ce docker-ce-cli containerd.io
+
+# install kubectl from https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management
+
+curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
+
+apt-get -y update
+apt-get -y install kubectl
+
+# install helm from https://helm.sh/docs/intro/install/#from-apt-debianubuntu
+
+curl https://baltocdn.com/helm/signing.asc | apt-key add -
+
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
+
+apt-get -y update
+apt-get -y install helm
