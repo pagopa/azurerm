@@ -77,3 +77,9 @@ variable "severity" {
   description = "The severity of this Metric Alert."
   default     = 1
 }
+
+variable "content_validation" {
+  type        = string
+  description = "Required text that should appear in the response for this WebTest."
+  default     = null
+}

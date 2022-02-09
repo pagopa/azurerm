@@ -9,6 +9,7 @@ locals {
     request_url                       = var.request_url
     expected_http_status              = var.expected_http_status
     ignore_http_status                = var.ignore_http_status
+    content_validation                = var.content_validation
     ssl_cert_remaining_lifetime_check = var.ssl_cert_remaining_lifetime_check
     location                          = var.location
   })
