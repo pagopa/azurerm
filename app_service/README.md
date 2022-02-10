@@ -134,12 +134,6 @@ resource "azurerm_role_assignment" "webapp_docker_to_acr" {
 
 No requirements.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
 ## Modules
 
 No modules.

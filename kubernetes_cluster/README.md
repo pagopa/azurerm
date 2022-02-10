@@ -114,12 +114,6 @@ resource "azurerm_key_vault_secret" "aks_apiserver_url" {
 
 No requirements.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
 ## Modules
 
 No modules.

@@ -47,12 +47,6 @@ module "api_config_snet" {
 
 No requirements.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
 ## Modules
 
 No modules.
