@@ -15,6 +15,7 @@ resource "azurerm_function_app_slot" "this" {
   storage_account_access_key = var.storage_account_access_key
   https_only                 = var.https_only
   os_type                    = var.os_type
+  use_32_bit_worker_process  = var.use_32_bit_worker_process
 
   site_config {
     min_tls_version           = "1.2"

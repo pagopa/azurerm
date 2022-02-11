@@ -82,6 +82,12 @@ variable "always_on" {
   default     = null
 }
 
+variable "use_32_bit_worker_process" {
+  type        = bool
+  description = "(Optional) Should the Function App run in 32 bit mode, rather than 64 bit mode? Defaults to false."
+  default     = false
+}
+
 variable "application_insights_instrumentation_key" {
   type = string
 }
