@@ -15,8 +15,7 @@ resource "azurerm_function_app_slot" "this" {
   storage_account_access_key = var.storage_account_access_key
   https_only                 = var.https_only
   os_type                    = var.os_type
-  use_32_bit_worker_process  = var.use_32_bit_worker_process
-
+  
   site_config {
     min_tls_version           = "1.2"
     ftps_state                = "Disabled"
@@ -24,6 +23,7 @@ resource "azurerm_function_app_slot" "this" {
     always_on                 = var.always_on
     pre_warmed_instance_count = var.pre_warmed_instance_count
     vnet_route_all_enabled    = var.subnet_id == null ? false : true
+    use_32_bit_worker_process  = var.use_32_bit_worker_process
 
     dynamic "ip_restriction" {
       for_each = local.ip_restrictions
