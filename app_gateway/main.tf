@@ -4,6 +4,8 @@ data "azurerm_key_vault_secret" "client_cert" {
   key_vault_id = each.value.key_vault_id
 }
 
+  
+  
 resource "azurerm_application_gateway" "this" {
   name                = var.name
   resource_group_name = var.resource_group_name
