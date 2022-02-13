@@ -21,3 +21,5 @@ resource "azurerm_subnet" "this" {
 
   enforce_private_link_endpoint_network_policies = var.enforce_private_link_endpoint_network_policies
 }
+
+
