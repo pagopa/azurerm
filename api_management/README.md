@@ -65,6 +65,7 @@ No modules.
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The id of the subnet that will be used for the API Management. | `string` | `null` | no |
 | <a name="input_virtual_network_type"></a> [virtual\_network\_type](#input\_virtual\_network\_type) | The type of virtual network you want to use, valid values include. | `string` | `null` | no |
 | <a name="input_xml_content"></a> [xml\_content](#input\_xml\_content) | Xml content for all api policy | `string` | `null` | no |
+| <a name="input_zones"></a> [zones](#input\_zones) | A list of availability zones. | `list(string)` | `[]` | no |
 
 ## Outputs
 
