@@ -36,3 +36,4 @@ override.tf.json
 .vscode
 .metals
 .history
+.DS_STORE

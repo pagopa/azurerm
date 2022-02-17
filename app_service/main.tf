@@ -60,6 +60,7 @@ resource "azurerm_app_service" "this" {
     }
   }
 
+  # Managed identity
   identity {
     type = "SystemAssigned"
   }
