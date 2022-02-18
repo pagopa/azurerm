@@ -65,12 +65,6 @@ module "apim_hub_spid_login_api_v1" {
 
 No requirements.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.92.0 |
-
 ## Modules
 
 No modules.

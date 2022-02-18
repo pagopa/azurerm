@@ -38,12 +38,6 @@ module "apim_product_devopslab" {
 
 No requirements.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.92.0 |
-
 ## Modules
 
 No modules.
