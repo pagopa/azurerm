@@ -36,7 +36,8 @@ resource "azurerm_app_service" "this" {
     min_tls_version        = "1.2"
     ftps_state             = var.ftps_state
     vnet_route_all_enabled = var.subnet_id == null ? false : var.vnet_route_all_enabled
-
+    http2_enabled          = var.http2_enabled
+    
     health_check_path = var.health_check_path != null ? var.health_check_path : null
 
     dynamic "ip_restriction" {
