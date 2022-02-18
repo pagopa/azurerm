@@ -85,6 +85,12 @@ variable "https_only" {
   default     = true
 }
 
+variable "http2_enabled" {
+  type        = bool
+  description = "(Optional) Is HTTP2 Enabled on this App Service? Defaults to true."
+  default     = true
+}
+
 variable "client_cert_enabled" {
   type        = bool
   description = "(Optional) Does the App Service require client certificates for incoming requests? Defaults to false."
