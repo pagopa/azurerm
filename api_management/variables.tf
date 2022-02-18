@@ -45,7 +45,7 @@ variable "application_insights_instrumentation_key" {
 
 variable "virtual_network_type" {
   type        = string
-  description = "The type of virtual network you want to use, valid values include."
+  description = "The type of virtual network you want to use, valid values include: None, External, Internal"
   default     = null
 }
 
