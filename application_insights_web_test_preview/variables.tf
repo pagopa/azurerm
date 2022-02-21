@@ -51,7 +51,12 @@ variable "ignore_http_status" {
   type        = bool
   description = "Ignore http status code."
   default     = false
+}
 
+variable "auto_mitigate" {
+  type        = bool
+  description = "(Optional) Should the alerts in this Metric Alert be auto resolved? Defaults to false."
+  default     = false
 }
 
 variable "ssl_cert_remaining_lifetime_check" {

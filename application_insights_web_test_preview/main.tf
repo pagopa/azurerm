@@ -42,7 +42,8 @@ resource "azurerm_monitor_metric_alert" "this" {
       var.application_insight_name
     ),
   ]
-  description = "Web availability check alert triggered when it fails."
+  description   = "Web availability check alert triggered when it fails."
+  auto_mitigate = var.auto_mitigate
 
   application_insights_web_test_location_availability_criteria {
     web_test_id = format("/subscriptions/%s/resourcegroups/%s/providers/microsoft.insights/webTests/%s-%s",
