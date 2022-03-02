@@ -6,7 +6,7 @@ This module allow the creation of subnet
 
 ### Simple subnet
 
-```json
+```ts
 module "apim_snet" {
   source               = "git::https://github.com/pagopa/azurerm.git//subnet?ref=v2.1.21"
   name                 = "${local.project}-apim-snet"
@@ -21,7 +21,7 @@ module "apim_snet" {
 
 ### Subnet with delegation
 
-```json
+```ts
 module "api_config_snet" {
   count                                          = var.api_config_enabled && var.cidr_subnet_api_config != null ? 1 : 0
   source                                         = "git::https://github.com/pagopa/azurerm.git//subnet?ref=v1.0.51"

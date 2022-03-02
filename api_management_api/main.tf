@@ -6,6 +6,7 @@ resource "azurerm_api_management_api" "this" {
   revision_description = var.revision_description
   display_name         = var.display_name
   description          = var.description
+
   dynamic "oauth2_authorization" {
     for_each = var.oauth2_authorization.authorization_server_name != null ? ["dummy"] : []
     content {
@@ -19,7 +20,6 @@ resource "azurerm_api_management_api" "this" {
   subscription_required = var.subscription_required
   version               = var.api_version
   version_set_id        = var.version_set_id
-
 
   import {
     content_format = var.content_format
