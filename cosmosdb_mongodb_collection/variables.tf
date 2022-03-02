@@ -24,22 +24,22 @@ variable "cosmosdb_mongo_database_name" {
 }
 
 variable "ttl" {
-  type = number
-  default = -1
+  type    = number
+  default = 0
 }
 
 variable "analytical_storage_ttl" {
-  type = number
+  type    = number
   default = null
 }
 
 variable "shard_key" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "throughput" {
-  type = number
+  type    = number
   default = null
 }
 
@@ -51,12 +51,12 @@ variable "indexes" {
 }
 
 variable "max_throughput" {
-  type = number
+  type    = number
   default = null
 }
 
 variable "timeout_create" {
-  type = string
+  type    = string
   default = null
 }
 
