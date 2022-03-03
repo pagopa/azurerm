@@ -5,7 +5,7 @@ resource "azurerm_cosmosdb_mongo_collection" "this" {
   account_name  = var.cosmosdb_mongo_account_name
   database_name = var.cosmosdb_mongo_database_name
 
-  default_ttl_seconds    = var.ttl
+  default_ttl_seconds    = var.default_ttl_seconds
   analytical_storage_ttl = var.analytical_storage_ttl
 
   shard_key  = var.shard_key
