@@ -194,11 +194,12 @@ locals {
 }
 
 resource "azurerm_function_app" "this" {
-  name                       = var.name
-  resource_group_name        = var.resource_group_name
-  location                   = var.location
-  version                    = var.runtime_version
-  app_service_plan_id        = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this[0].id
+  name                = var.name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  version             = var.runtime_version
+  app_service_plan_id = var.app_service_plan_id != null ? var.app_service_plan_id : azurerm_app_service_plan.this[0].id
+  #  The backend storage account name which will be used by this Function App (such as the dashboard, logs)
   storage_account_name       = module.storage_account.name
   storage_account_access_key = module.storage_account.primary_access_key
   https_only                 = var.https_only
@@ -234,6 +235,7 @@ resource "azurerm_function_app" "this" {
 
   }
 
+  # https://docs.microsoft.com/en-us/azure/azure-functions/functions-app-settings
   app_settings = merge(
     {
       APPINSIGHTS_INSTRUMENTATIONKEY = var.application_insights_instrumentation_key
@@ -242,9 +244,11 @@ resource "azurerm_function_app" "this" {
       # default value for health_check_path, override it in var.app_settings if needed
       WEBSITE_HEALTHCHECK_MAXPINGFAILURES = var.health_check_path != null ? var.health_check_maxpingfailures : null
       # https://docs.microsoft.com/en-us/samples/azure-samples/azure-functions-private-endpoints/connect-to-private-endpoints-with-azure-functions/
-      SLOT_TASK_HUBNAME               = "ProductionTaskHub"
-      WEBSITE_RUN_FROM_PACKAGE        = 1
-      WEBSITE_DNS_SERVER              = "168.63.129.16"
+      SLOT_TASK_HUBNAME        = "ProductionTaskHub"
+      WEBSITE_RUN_FROM_PACKAGE = 1
+      # https://docs.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
+      WEBSITE_DNS_SERVER = "168.63.129.16"
+      # https://docs.microsoft.com/en-us/azure/azure-monitor/app/sampling
       APPINSIGHTS_SAMPLING_PERCENTAGE = 5
     },
     var.internal_storage.enable ? { DURABLE_FUNCTION_STORAGE_CONNECTION_STRING = local.durable_function_storage_connection_string } : {},
@@ -266,6 +270,7 @@ data "azurerm_function_app_host_keys" "this" {
   depends_on          = [azurerm_function_app.this]
 }
 
+# Manages an App Service Virtual Network Association
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {
   app_service_id = azurerm_function_app.this.id
   subnet_id      = var.subnet_id

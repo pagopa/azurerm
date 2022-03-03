@@ -3,7 +3,8 @@ variable "location" {
 }
 
 variable "name" {
-  type = string
+  type        = string
+  description = "(Required) Specifies the name of the Function App. Changing this forces a new resource to be created."
 }
 
 variable "storage_account_name" {
@@ -29,15 +30,16 @@ variable "resource_group_name" {
 }
 
 variable "runtime_version" {
-  type    = string
-  default = "~3"
+  type        = string
+  default     = "~3"
+  description = "The runtime version associated with the Function App. Version ~3 is required for Linux Function Apps."
 }
 
 variable "storage_account_info" {
   type = object({
-    account_tier                      = string
-    account_replication_type          = string
-    access_tier                       = string
+    account_tier                      = string # Defines the Tier to use for this storage account. Valid options are Standard and Premium. For BlockBlobStorage and FileStorage accounts only Premium is valid.
+    account_replication_type          = string # Defines the type of replication to use for this storage account. Valid options are LRS, GRS, RAGRS, ZRS, GZRS and RAGZRS.
+    access_tier                       = string # Defines the access tier for BlobStorage, FileStorage and StorageV2 accounts. Valid options are Hot and Cool, defaults to Hot.
     advanced_threat_protection_enable = bool
   })
 
@@ -51,17 +53,19 @@ variable "storage_account_info" {
 
 variable "app_service_plan_id" {
   type        = string
-  description = "The app service plan id to associate to the function. If null a new plan is created, if not null the app_service_plan_info is not relevant."
+  description = "The external app service plan id to associate to the function. If null a new plan is created, use app_service_plan_info to configure it."
   default     = null
 }
 
 variable "app_service_plan_info" {
   type = object({
-    kind                         = string
-    sku_tier                     = string
-    sku_size                     = string
-    maximum_elastic_worker_count = number
+    kind                         = string # The kind of the App Service Plan to create. Possible values are Windows (also available as App), Linux, elastic (for Premium Consumption) and FunctionApp (for a Consumption Plan).
+    sku_tier                     = string # Specifies the plan's pricing tier.
+    sku_size                     = string # Specifies the plan's instance size.
+    maximum_elastic_worker_count = number # The maximum number of total workers allowed for this ElasticScaleEnabled App Service Plan.
   })
+
+  description = "Allows to configurate the internal service plan"
 
   default = {
     kind                         = "elastic"
@@ -72,8 +76,9 @@ variable "app_service_plan_info" {
 }
 
 variable "pre_warmed_instance_count" {
-  type    = number
-  default = 1
+  type        = number
+  description = "The number of pre-warmed instances for this function app. Only affects apps on the Premium plan."
+  default     = 1
 }
 
 variable "always_on" {
@@ -89,7 +94,8 @@ variable "use_32_bit_worker_process" {
 }
 
 variable "application_insights_instrumentation_key" {
-  type = string
+  type        = string
+  description = "Application insights instrumentation key"
 }
 
 variable "app_settings" {
@@ -105,28 +111,30 @@ variable "os_type" {
 
 variable "https_only" {
   type        = bool
-  description = "(Required) n the Function App only be accessed via HTTPS? Defaults to true."
+  description = "(Required) Can the Function App only be accessed via HTTPS?. Defaults true"
   default     = true
 }
 
 variable "allowed_ips" {
   // List of ip
-  type    = list(string)
-  default = []
+  type        = list(string)
+  description = "The IP Address used for this IP Restriction in CIDR notation"
+  default     = []
+}
+
+variable "allowed_subnets" {
+  type        = list(string)
+  description = "List of subnet ids, The Virtual Network Subnet ID used for this IP Restriction."
+  default     = []
 }
 
 variable "cors" {
   type = object({
-    allowed_origins = list(string)
+    allowed_origins = list(string) # A list of origins which should be able to make cross-origin calls. * can be used to allow all calls.
   })
   default = null
 }
 
-variable "allowed_subnets" {
-  // List of subnet id
-  type    = list(string)
-  default = []
-}
 
 variable "subnet_id" {
   type        = string
@@ -140,8 +148,8 @@ variable "internal_storage" {
     private_dns_zone_blob_ids  = list(string)
     private_dns_zone_queue_ids = list(string)
     private_dns_zone_table_ids = list(string)
-    queues                     = list(string)
-    containers                 = list(string)
+    queues                     = list(string) # Queues names
+    containers                 = list(string) # Containers names 
     blobs_retention_days       = number
   })
 
@@ -165,8 +173,9 @@ variable "health_check_path" {
 }
 
 variable "health_check_maxpingfailures" {
-  type    = number
-  default = 10
+  type        = number
+  description = "Max ping failures allowed"
+  default     = 10
 }
 
 variable "export_keys" {
