@@ -234,6 +234,10 @@ resource "azurerm_function_app" "this" {
 
   }
 
+  auth_settings {
+    enabled = false
+  }
+
   app_settings = merge(
     {
       APPINSIGHTS_INSTRUMENTATIONKEY = var.application_insights_instrumentation_key
