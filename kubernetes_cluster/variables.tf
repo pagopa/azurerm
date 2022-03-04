@@ -119,6 +119,12 @@ variable "enable_auto_scaling" {
   default     = false
 }
 
+variable "enable_azure_policy" {
+  type        = bool
+  description = "Should the Azure Policy addon be enabled for this Node Pool? "
+  default     = false
+}
+
 variable "min_count" {
   type        = number
   description = "The minimum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000"
@@ -143,7 +149,7 @@ variable "upgrade_settings_max_surge" {
   default     = "33%"
 }
 
-# Logs 
+# Logs
 variable "log_analytics_workspace_id" {
   type        = string
   description = "The ID of the Log Analytics Workspace which the OMS Agent should send data to."
