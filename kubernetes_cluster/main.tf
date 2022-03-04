@@ -76,6 +76,10 @@ resource "azurerm_kubernetes_cluster" "this" {
       enabled = var.enable_azure_policy
     }
 
+    azure_keyvault_secrets_provider {
+      enabled = var.enable_azure_keyvault_secrets_provider
+    }
+
     http_application_routing {
       enabled = false
     }

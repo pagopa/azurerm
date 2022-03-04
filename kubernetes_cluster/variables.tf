@@ -125,6 +125,12 @@ variable "enable_azure_policy" {
   default     = false
 }
 
+variable "enable_azure_keyvault_secrets_provider" {
+  type        = bool
+  description = "Should the Azure Secrets Store CSI addon be enabled for this Node Pool? "
+  default     = false
+}
+
 variable "min_count" {
   type        = number
   description = "The minimum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000"
