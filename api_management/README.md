@@ -1,12 +1,78 @@
+# api management
+
+This module allow the creation of api management
+
+## Architecture
+
+![This is an image](./docs/module-arch.drawio.png)
+
+## How to use it
+
+```ts
+# 🔐 KV
+data "azurerm_key_vault_secret" "apim_publisher_email" {
+  name         = "apim-publisher-email"
+  key_vault_id = data.azurerm_key_vault.kv.id
+}
+
+#--------------------------------------------------------------------------------------------------
+
+resource "azurerm_resource_group" "rg_api" {
+  name     = "${local.project}-api-rg"
+  location = var.location
+
+  tags = var.tags
+}
+
+# APIM subnet
+module "apim_snet" {
+  source               = "git::https://github.com/pagopa/azurerm.git//subnet?ref=v1.0.84"
+  name                 = "${local.project}-apim-snet"
+  resource_group_name  = data.azurerm_resource_group.rg_vnet.name
+  virtual_network_name = data.azurerm_virtual_network.vnet.name
+  address_prefixes     = var.cidr_subnet_apim
+
+  enforce_private_link_endpoint_network_policies = true
+  service_endpoints                              = ["Microsoft.Web"]
+}
+
+###########################
+## Api Management (apim) ##
+###########################
+
+module "apim" {
+  source = "git::https://github.com/pagopa/azurerm.git//api_management?ref=v2.0.18"
+
+  name = "${local.project}-apim"
+
+  subnet_id           = module.apim_snet.id
+  location            = azurerm_resource_group.rg_api.location
+  resource_group_name = azurerm_resource_group.rg_api.name
+
+  publisher_name       = var.apim_publisher_name
+  publisher_email      = data.azurerm_key_vault_secret.apim_publisher_email.value
+  sku_name             = var.apim_sku
+  virtual_network_type = "Internal"
+
+  redis_connection_string = null
+  redis_cache_id          = null
+
+  # This enables the Username and Password Identity Provider
+  sign_up_enabled = false
+
+  lock_enable                              = var.lock_enable
+  application_insights_instrumentation_key = data.azurerm_application_insights.application_insights.instrumentation_key
+
+  tags = var.tags
+}
+
+```
+
+<!-- markdownlint-disable -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.92.0 |
 
 ## Modules
 
@@ -30,13 +96,6 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
-| <a name="input_publisher_email"></a> [publisher\_email](#input\_publisher\_email) | The email of publisher/company. | `string` | n/a | yes |
-| <a name="input_publisher_name"></a> [publisher\_name](#input\_publisher\_name) | The name of publisher/company. | `string` | n/a | yes |
-| <a name="input_redis_cache_id"></a> [redis\_cache\_id](#input\_redis\_cache\_id) | The resource ID of the Cache for Redis. | `string` | n/a | yes |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | n/a | yes |
 | <a name="input_action"></a> [action](#input\_action) | The ID of the Action Group and optional map of custom string properties to include with the post webhook operation. | <pre>set(object(<br>    {<br>      action_group_id    = string<br>      webhook_properties = map(string)<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_alerts_enabled"></a> [alerts\_enabled](#input\_alerts\_enabled) | Should Metrics Alert be enabled? | `bool` | `true` | no |
 | <a name="input_application_insights_instrumentation_key"></a> [application\_insights\_instrumentation\_key](#input\_application\_insights\_instrumentation\_key) | The instrumentation key used to push data to Application Insights. | `string` | `null` | no |
@@ -52,18 +111,25 @@ No modules.
 | <a name="input_diagnostic_verbosity"></a> [diagnostic\_verbosity](#input\_diagnostic\_verbosity) | Logging verbosity. Possible values are verbose, information or error. | `string` | `"error"` | no |
 | <a name="input_hostname_configuration"></a> [hostname\_configuration](#input\_hostname\_configuration) | Custom domains | <pre>object({<br><br>    proxy = list(object(<br>      {<br>        default_ssl_binding = bool<br>        host_name           = string<br>        key_vault_id        = string<br>    }))<br><br>    management = object({<br>      host_name    = string<br>      key_vault_id = string<br>    })<br><br>    portal = object({<br>      host_name    = string<br>      key_vault_id = string<br>    })<br><br>    developer_portal = object({<br>      host_name    = string<br>      key_vault_id = string<br>    })<br><br>  })</pre> | `null` | no |
 | <a name="input_key_vault_id"></a> [key\_vault\_id](#input\_key\_vault\_id) | Key vault id. | `string` | `null` | no |
+| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_lock_enable"></a> [lock\_enable](#input\_lock\_enable) | Apply lock to block accedentaly deletions. | `bool` | `false` | no |
 | <a name="input_metric_alerts"></a> [metric\_alerts](#input\_metric\_alerts) | Map of name = criteria objects | <pre>map(object({<br>    description = string<br>    # Possible values are PT1M, PT5M, PT15M, PT30M and PT1H<br>    frequency = string<br>    # Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D.<br>    window_size = string<br>    # Possible values are 0, 1, 2, 3.<br>    severity = number<br>    # Possible values are true, false<br>    auto_mitigate = bool<br><br>    criteria = set(object(<br>      {<br>        # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]<br>        aggregation = string<br>        dimension = list(object(<br>          {<br>            name     = string<br>            operator = string<br>            values   = list(string)<br>          }<br>        ))<br>        metric_name      = string<br>        metric_namespace = string<br>        # criteria.0.operator to be one of [Equals NotEquals GreaterThan GreaterThanOrEqual LessThan LessThanOrEqual]<br>        operator               = string<br>        skip_metric_validation = bool<br>        threshold              = number<br>      }<br>    ))<br><br>    dynamic_criteria = set(object(<br>      {<br>        # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]<br>        aggregation       = string<br>        alert_sensitivity = string<br>        dimension = list(object(<br>          {<br>            name     = string<br>            operator = string<br>            values   = list(string)<br>          }<br>        ))<br>        evaluation_failure_count = number<br>        evaluation_total_count   = number<br>        ignore_data_before       = string<br>        metric_name              = string<br>        metric_namespace         = string<br>        operator                 = string<br>        skip_metric_validation   = bool<br>      }<br>    ))<br>  }))</pre> | `{}` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_notification_sender_email"></a> [notification\_sender\_email](#input\_notification\_sender\_email) | Email address from which the notification will be sent. | `string` | `null` | no |
 | <a name="input_policy_path"></a> [policy\_path](#input\_policy\_path) | (Deprecated). Path of the policy file. | `string` | `null` | no |
+| <a name="input_publisher_email"></a> [publisher\_email](#input\_publisher\_email) | The email of publisher/company. | `string` | n/a | yes |
+| <a name="input_publisher_name"></a> [publisher\_name](#input\_publisher\_name) | The name of publisher/company. | `string` | n/a | yes |
+| <a name="input_redis_cache_id"></a> [redis\_cache\_id](#input\_redis\_cache\_id) | The resource ID of the Cache for Redis. | `string` | n/a | yes |
 | <a name="input_redis_connection_string"></a> [redis\_connection\_string](#input\_redis\_connection\_string) | Connection string for redis external cache | `string` | `null` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_sec_log_analytics_workspace_id"></a> [sec\_log\_analytics\_workspace\_id](#input\_sec\_log\_analytics\_workspace\_id) | Log analytics workspace security (it should be in a different subscription). | `string` | `null` | no |
 | <a name="input_sec_storage_id"></a> [sec\_storage\_id](#input\_sec\_storage\_id) | Storage Account security (it should be in a different subscription). | `string` | `null` | no |
 | <a name="input_sign_up_enabled"></a> [sign\_up\_enabled](#input\_sign\_up\_enabled) | Can users sign up on the development portal? | `bool` | `false` | no |
 | <a name="input_sign_up_terms_of_service"></a> [sign\_up\_terms\_of\_service](#input\_sign\_up\_terms\_of\_service) | the development portal terms\_of\_service | <pre>object(<br>    {<br>      consent_required = bool<br>      enabled          = bool<br>      text             = string<br>    }<br>  )</pre> | `null` | no |
 | <a name="input_sku_name"></a> [sku\_name](#input\_sku\_name) | n/a | `string` | `"A string consisting of two parts separated by an underscore(_). The first part is the name, valid values include: Consumption, Developer, Basic, Standard and Premium. The second part is the capacity (e.g. the number of deployed units of the sku), which must be a positive integer (e.g. Developer_1)."` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The id of the subnet that will be used for the API Management. | `string` | `null` | no |
-| <a name="input_virtual_network_type"></a> [virtual\_network\_type](#input\_virtual\_network\_type) | The type of virtual network you want to use, valid values include. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | n/a | yes |
+| <a name="input_virtual_network_type"></a> [virtual\_network\_type](#input\_virtual\_network\_type) | The type of virtual network you want to use, valid values include: None, External, Internal | `string` | `null` | no |
 | <a name="input_xml_content"></a> [xml\_content](#input\_xml\_content) | Xml content for all api policy | `string` | `null` | no |
 
 ## Outputs
@@ -74,8 +140,10 @@ No modules.
 | <a name="output_gateway_hostname"></a> [gateway\_hostname](#output\_gateway\_hostname) | n/a |
 | <a name="output_gateway_url"></a> [gateway\_url](#output\_gateway\_url) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
+| <a name="output_logger_id"></a> [logger\_id](#output\_logger\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id) | n/a |
 | <a name="output_private_ip_addresses"></a> [private\_ip\_addresses](#output\_private\_ip\_addresses) | n/a |
 | <a name="output_public_ip_addresses"></a> [public\_ip\_addresses](#output\_public\_ip\_addresses) | n/a |
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | n/a |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

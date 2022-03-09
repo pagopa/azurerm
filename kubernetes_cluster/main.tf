@@ -62,7 +62,6 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   addon_profile {
-
     oms_agent {
       enabled                    = var.log_analytics_workspace_id != null ? true : false #tfsec:ignore:AZU009
       log_analytics_workspace_id = var.log_analytics_workspace_id
@@ -73,7 +72,12 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
 
     azure_policy {
-      enabled = false
+      enabled = var.enable_azure_policy
+    }
+
+    azure_keyvault_secrets_provider {
+      enabled                 = var.enable_azure_keyvault_secrets_provider
+      secret_rotation_enabled = true
     }
 
     http_application_routing {

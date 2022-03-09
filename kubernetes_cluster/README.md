@@ -58,6 +58,9 @@ module "aks" {
   max_pods            = var.aks_max_pods
   sku_tier            = var.aks_sku_tier
 
+  enable_azure_policy = true
+  enable_azure_keyvault_secrets_provider = true
+
   private_cluster_enabled = var.aks_private_cluster_enabled
 
   rbac_enabled        = true
@@ -142,6 +145,8 @@ No modules.
 | <a name="input_dns_prefix"></a> [dns\_prefix](#input\_dns\_prefix) | Dns prefix. | `string` | n/a | yes |
 | <a name="input_dns_prefix_private_cluster"></a> [dns\_prefix\_private\_cluster](#input\_dns\_prefix\_private\_cluster) | Specifies the DNS prefix to use with private clusters. Changing this forces a new resource to be created. | `string` | `null` | no |
 | <a name="input_enable_auto_scaling"></a> [enable\_auto\_scaling](#input\_enable\_auto\_scaling) | Should the Kubernetes Auto Scaler be enabled for this Node Pool? | `bool` | `false` | no |
+| <a name="input_enable_azure_keyvault_secrets_provider"></a> [enable\_azure\_keyvault\_secrets\_provider](#input\_enable\_azure\_keyvault\_secrets\_provider) | Should the Azure Secrets Store CSI addon be enabled for this Node Pool? | `bool` | `false` | no |
+| <a name="input_enable_azure_policy"></a> [enable\_azure\_policy](#input\_enable\_azure\_policy) | Should the Azure Policy addon be enabled for this Node Pool? | `bool` | `false` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | (Optional) Version of Kubernetes specified when creating the AKS managed cluster. | `string` | `null` | no |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_log_analytics_workspace_id"></a> [log\_analytics\_workspace\_id](#input\_log\_analytics\_workspace\_id) | The ID of the Log Analytics Workspace which the OMS Agent should send data to. | `string` | `null` | no |

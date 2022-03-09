@@ -46,12 +46,12 @@ variable "published" {
 
 variable "policy_xml" {
   type        = string
-  description = "The XML Content for this Product Policy."
+  description = "(Optional) The XML Content for this Product Policy."
   default     = null
 }
 
 variable "groups" {
   type        = set(string)
-  description = "The groups that the product is included"
+  description = "(Optional) The groups where the product is included"
   default     = []
 }

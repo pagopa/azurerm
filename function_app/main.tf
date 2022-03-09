@@ -235,6 +235,10 @@ resource "azurerm_function_app" "this" {
 
   }
 
+  auth_settings {
+    enabled = false
+  }
+
   # https://docs.microsoft.com/en-us/azure/azure-functions/functions-app-settings
   app_settings = merge(
     {
