@@ -62,7 +62,7 @@ variable "autoscale" {
     scale_in_value                = "1"
     scale_in_cooldown             = "PT30M"
   }
-  description = "Configure Apim autoscale on capacity metric"
+  description = "Configure Apim autoscale rule on capacity metric"
 }
 
 variable "subnet_id" {
