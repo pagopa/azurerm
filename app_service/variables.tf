@@ -79,6 +79,18 @@ variable "name" {
   description = "(Required) Specifies the name of the App Service. Changing this forces a new resource to be created."
 }
 
+variable "https_only" {
+  type        = bool
+  description = "(Optional) Enforce https connection. Default true"
+  default     = true
+}
+
+variable "http2_enabled" {
+  type        = bool
+  description = "(Optional) Is HTTP2 Enabled on this App Service? Defaults to true."
+  default     = true
+}
+
 variable "client_cert_enabled" {
   type        = bool
   description = "(Optional) Does the App Service require client certificates for incoming requests? Defaults to false."
@@ -154,4 +166,10 @@ variable "vnet_route_all_enabled" {
 
 variable "tags" {
   type = map(any)
+}
+
+variable "storage_mounts" {
+  type        = list(map(string))
+  description = "List of mapping with storage path mapping (name,type,account_name,share_name,access_key,mount_path)"
+  default     = []
 }

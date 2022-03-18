@@ -44,6 +44,12 @@ variable "always_on" {
   default     = false
 }
 
+variable "http2_enabled" {
+  type        = bool
+  description = "(Optional) Is HTTP2 Enabled on this App Service? Defaults to true."
+  default     = true
+}
+
 # Ex. for linux "NODE|10-lts"
 variable "linux_fx_version" {
   type        = string
