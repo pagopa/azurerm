@@ -1,5 +1,3 @@
-#tfsec:ignore:azure-database-postgres-configuration-connection-throttling # fix added but ignored by tfsec, probably a bug
-
 locals {
   # for B_Gen5_1 B_Gen5_2 must be true
   public_network_access_enabled = contains(["B_Gen5_1", "B_Gen5_2"], var.sku_name) ? true : var.public_network_access_enabled
@@ -20,6 +18,7 @@ locals {
   replica_monitor_metric_alert_criteria = var.enable_replica && var.alerts_enabled ? var.replica_monitor_metric_alert_criteria : {}
 }
 
+#tfsec:ignore:azure-database-postgres-configuration-connection-throttling # suggestion added but ignored by tfsec, probably a bug
 resource "azurerm_postgresql_server" "this" {
   name                = var.name
   location            = var.location
@@ -58,6 +57,7 @@ resource "azurerm_postgresql_server" "this" {
   tags = var.tags
 }
 
+#tfsec:ignore:azure-database-postgres-configuration-connection-throttling # suggestion added but ignored by tfsec, probably a bug
 resource "azurerm_postgresql_server" "replica" {
   count = var.enable_replica ? 1 : 0
 
