@@ -18,7 +18,6 @@ locals {
   replica_monitor_metric_alert_criteria = var.enable_replica && var.alerts_enabled ? var.replica_monitor_metric_alert_criteria : {}
 }
 
-#tfsec:ignore:azure-database-postgres-configuration-connection-throttling # suggestion added but ignored by tfsec, probably a bug
 resource "azurerm_postgresql_server" "this" {
   name                = var.name
   location            = var.location
@@ -332,14 +331,14 @@ resource "azurerm_postgresql_configuration" "replica_log_checkpoints" {
 }
 
 # tfsec https://tfsec.dev/docs/azure/database/postgres-configuration-log-connection-throttling/#azure/database
-
+#tfsec:ignore:azure-database-postgres-configuration-connection-throttling # suggestion added but ignored by tfsec, probably a bug
 resource "azurerm_postgresql_configuration" "this_connection_throttling" {
   name                = "connection_throttling"
   resource_group_name = var.resource_group_name
   server_name         = azurerm_postgresql_server.this.name
   value               = "on"
 }
-
+#tfsec:ignore:azure-database-postgres-configuration-connection-throttling # suggestion added but ignored by tfsec, probably a bug
 resource "azurerm_postgresql_configuration" "replica_connection_throttling" {
   count               = var.enable_replica ? 1 : 0
   name                = "connection_throttling"
