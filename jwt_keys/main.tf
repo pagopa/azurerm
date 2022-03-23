@@ -24,6 +24,7 @@ resource "tls_self_signed_cert" "jwt_self" {
   }
 }
 
+#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "jwt_private_key" {
   name         = format("%s-private-key", var.jwt_name)
   value        = tls_private_key.jwt.private_key_pem
@@ -32,6 +33,7 @@ resource "azurerm_key_vault_secret" "jwt_private_key" {
   key_vault_id = var.key_vault_id
 }
 
+#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "jwt_public_key" {
   name         = format("%s-public-key", var.jwt_name)
   value        = tls_private_key.jwt.public_key_pem
@@ -40,6 +42,7 @@ resource "azurerm_key_vault_secret" "jwt_public_key" {
   key_vault_id = var.key_vault_id
 }
 
+#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "jwt_cert" {
   name         = format("%s-cert", var.jwt_name)
   value        = tls_self_signed_cert.jwt_self.cert_pem
@@ -48,6 +51,7 @@ resource "azurerm_key_vault_secret" "jwt_cert" {
   key_vault_id = var.key_vault_id
 }
 
+#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "jwt_kid" {
   name         = format("%s-kid", var.jwt_name)
   value        = local.kid
