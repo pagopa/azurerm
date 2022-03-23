@@ -312,7 +312,7 @@ resource "azurerm_management_lock" "replica" {
   notes      = "This items can't be deleted in this subscription!"
 }
 
-# tfsec https://tfsec.dev/docs/azure/database/postgres-configuration-log-checkpoints/#azure/database
+# https://tfsec.dev/docs/azure/database/postgres-configuration-log-checkpoints/#azure/database
 
 resource "azurerm_postgresql_configuration" "this_log_checkpoints" {
   name                = "log_checkpoints"
@@ -329,7 +329,7 @@ resource "azurerm_postgresql_configuration" "replica_log_checkpoints" {
   value               = "on"
 }
 
-# tfsec https://tfsec.dev/docs/azure/database/postgres-configuration-log-connection-throttling/#azure/database
+# https://tfsec.dev/docs/azure/database/postgres-configuration-log-connection-throttling/#azure/database
 
 resource "azurerm_postgresql_configuration" "this_connection_throttling" {
   name                = "connection_throttling"
@@ -346,7 +346,7 @@ resource "azurerm_postgresql_configuration" "replica_connection_throttling" {
   value               = "on"
 }
 
-# tfsec https://tfsec.dev/docs/azure/database/postgres-configuration-log-connections/#azure/database
+# https://tfsec.dev/docs/azure/database/postgres-configuration-log-connections/#azure/database
 
 resource "azurerm_postgresql_configuration" "this_log_connections" {
   name                = "log_connections"

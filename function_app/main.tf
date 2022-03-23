@@ -1,6 +1,6 @@
 #tfsec:ignore:azure-storage-default-action-deny
 module "storage_account" {
-  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.5.2"
 
   name                       = coalesce(var.storage_account_name, format("%sst", replace(var.name, "-", "")))
   account_kind               = "StorageV2"
@@ -18,7 +18,7 @@ module "storage_account" {
 module "storage_account_durable_function" {
   count = var.internal_storage.enable ? 1 : 0
 
-  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v1.0.58"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.5.2"
 
   name                       = coalesce(var.storage_account_durable_name, format("%ssdt", replace(var.name, "-", "")))
   account_kind               = "StorageV2"
