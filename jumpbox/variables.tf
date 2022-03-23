@@ -18,8 +18,7 @@ variable "subnet_id" {
 variable "source_address_prefix" {
   type        = string
   description = "CIDR or source IP range or * to match any IP. ue"
-  default     = "*"
-
+  default     = null
 }
 
 variable "admin_username" {

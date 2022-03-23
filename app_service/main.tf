@@ -65,7 +65,7 @@ resource "azurerm_app_service" "this" {
     }
 
   }
-  
+
   #tfsec:ignore:azure-appservice-authentication-enabled
   auth_settings {
     enabled = false
