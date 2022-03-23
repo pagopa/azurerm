@@ -42,7 +42,7 @@ resource "azurerm_app_service" "this" {
 
     php_version    = "7.4"
     python_version = "3.4"
-    http2_enabled  = false
+    http2_enabled  = true
 
     dynamic "ip_restriction" {
       for_each = var.allowed_subnets
@@ -65,7 +65,8 @@ resource "azurerm_app_service" "this" {
     }
 
   }
-
+  
+  #tfsec:ignore:azure-appservice-authentication-enabled
   auth_settings {
     enabled = false
   }
