@@ -25,6 +25,7 @@ resource "azurerm_app_service" "this" {
 
   app_service_plan_id = var.plan_type == "internal" ? azurerm_app_service_plan.this[0].id : var.plan_id
   https_only          = true
+  #tfsec:ignore:azure-appservice-require-client-cert
   client_cert_enabled = var.client_cert_enabled
 
   app_settings = var.app_settings
@@ -38,6 +39,10 @@ resource "azurerm_app_service" "this" {
     vnet_route_all_enabled = var.subnet_id == null ? false : var.vnet_route_all_enabled
 
     health_check_path = var.health_check_path != null ? var.health_check_path : null
+
+    php_version    = "7.4"
+    python_version = "3.4"
+    http2_enabled  = false
 
     dynamic "ip_restriction" {
       for_each = var.allowed_subnets
@@ -58,6 +63,11 @@ resource "azurerm_app_service" "this" {
         virtual_network_subnet_id = null
       }
     }
+
+  }
+
+  auth_settings {
+    enabled = false
   }
 
   # Managed identity
