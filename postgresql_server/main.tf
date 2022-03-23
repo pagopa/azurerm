@@ -18,8 +18,6 @@ locals {
   replica_monitor_metric_alert_criteria = var.enable_replica && var.alerts_enabled ? var.replica_monitor_metric_alert_criteria : {}
 }
 
-#tfsec:ingnore:azure-database-postgres-configuration-connection-throttling
-#tfsec:ingnore:azure-database-postgres-configuration-log-checkpoints
 resource "azurerm_postgresql_server" "this" {
   name                = var.name
   location            = var.location
