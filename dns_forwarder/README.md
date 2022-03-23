@@ -1,13 +1,8 @@
+<!-- markdownlint-disable -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-| <a name="provider_local"></a> [local](#provider\_local) | n/a |
 
 ## Modules
 
@@ -34,3 +29,4 @@ No modules.
 ## Outputs
 
 No outputs.
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

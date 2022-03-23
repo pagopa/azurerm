@@ -1,13 +1,8 @@
+<!-- markdownlint-disable -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
 
 ## Modules
 
@@ -30,9 +25,9 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cert_common_name"></a> [cert\_common\_name](#input\_cert\_common\_name) | cert info | `string` | n/a | yes |
 | <a name="input_cert_password"></a> [cert\_password](#input\_cert\_password) | n/a | `string` | n/a | yes |
+| <a name="input_cert_validity_hours"></a> [cert\_validity\_hours](#input\_cert\_validity\_hours) | n/a | `number` | `8640` | no |
 | <a name="input_jwt_name"></a> [jwt\_name](#input\_jwt\_name) | n/a | `string` | n/a | yes |
 | <a name="input_key_vault_id"></a> [key\_vault\_id](#input\_key\_vault\_id) | n/a | `string` | n/a | yes |
-| <a name="input_cert_validity_hours"></a> [cert\_validity\_hours](#input\_cert\_validity\_hours) | n/a | `number` | `8640` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | <pre>{<br>  "CreatedBy": "Terraform"<br>}</pre> | no |
 
 ## Outputs
@@ -43,3 +38,4 @@ No modules.
 | <a name="output_jwt_kid"></a> [jwt\_kid](#output\_jwt\_kid) | n/a |
 | <a name="output_jwt_private_key_pem"></a> [jwt\_private\_key\_pem](#output\_jwt\_private\_key\_pem) | n/a |
 | <a name="output_jwt_public_key_pem"></a> [jwt\_public\_key\_pem](#output\_jwt\_public\_key\_pem) | n/a |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

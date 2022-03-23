@@ -10,7 +10,7 @@ Module that allows the creation of an Storage account.
 
 ```ts
 module "selc-contracts-storage" {
-  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.2.1"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.5.2"
 
   name                       = replace(format("%s-contracts-storage", local.project), "-", "")
   account_kind               = "StorageV2"

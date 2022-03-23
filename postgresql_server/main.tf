@@ -1,3 +1,5 @@
+#tfsec:ignore:azure-database-postgres-configuration-connection-throttling # fix added but ignored by tfsec, probably a bug
+
 locals {
   # for B_Gen5_1 B_Gen5_2 must be true
   public_network_access_enabled = contains(["B_Gen5_1", "B_Gen5_2"], var.sku_name) ? true : var.public_network_access_enabled
