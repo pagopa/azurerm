@@ -95,7 +95,14 @@ variable "network_profile" {
     outbound_type      = string # e.g. 'loadBalancer'. The outbound (egress) routing method which should be used for this Kubernetes Cluster. Possible values are loadBalancer, userDefinedRouting, managedNATGateway and userAssignedNATGateway. Defaults to loadBalancer
     service_cidr       = string # e.g. '10.2.0.0/16'. The Network Range used by the Kubernetes service
   })
-  default     = null
+  default = {
+    docker_bridge_cidr = "172.17.0.1/16"
+    dns_service_ip     = "10.2.0.10"
+    network_policy     = "azure"
+    network_plugin     = "azure"
+    outbound_type      = "loadBalancer"
+    service_cidr       = "10.2.0.0/16"
+  }
   description = "See variable description to understand how to use it, and see examples"
 }
 
