@@ -54,6 +54,7 @@ resource "kubernetes_manifest" "this_mounter" {
     "${path.module}/assets/mounter.yaml.tpl",
     {
       namespace             = var.namespace
+      identity_name         = local.identity_name
       secret_provider_class = local.secret_name
     }
   ))
