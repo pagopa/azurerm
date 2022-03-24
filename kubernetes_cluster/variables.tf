@@ -138,6 +138,12 @@ variable "enable_azure_keyvault_secrets_provider" {
   default     = false
 }
 
+variable "enable_azure_pod_identity" {
+  type        = bool
+  description = "Should the AAD pod-managed identities be enabled for this Node Pool? "
+  default     = false
+}
+
 variable "min_count" {
   type        = number
   description = "The minimum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000"
