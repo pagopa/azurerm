@@ -48,5 +48,6 @@ variable "key_vault" {
 }
 
 locals {
-  secret_name = replace(var.host, ".", "-")
+  secret_name   = replace(var.host, ".", "-")
+  identity_name = "${var.namespace}-ingress-pod-identity"
 }

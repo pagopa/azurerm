@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        aadpodidbinding: ${namespace}-ingress-pod-identity
+        aadpodidbinding: ${identity_name}
         app: ${secret_provider_class}-mounter
     spec:
       containers:
