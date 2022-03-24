@@ -9,7 +9,7 @@ variable "rules" {
     service_name = string
     service_port = number
   }))
-  description = "Ingress rules."
+  description = "List of ingress rules."
 }
 
 variable "name" {
@@ -19,32 +19,32 @@ variable "name" {
 
 variable "host" {
   type        = string
-  description = "Ingress host."
+  description = "Ingress host, it supports only one host per ingress."
 }
 
 variable "tenant_id" {
   type        = string
-  description = "Azure tenant id of the KeyVault with the certificate."
+  description = "Azure tenant id of the KeyVault with the TLS certificate."
 }
 
 variable "location" {
   type        = string
-  description = "Location of the Kubernetes cluster"
+  description = "Location of the Kubernetes cluster."
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Resource group of the Kubernetes cluster"
+  description = "Resource group of the Kubernetes cluster."
 }
 
 variable "cluster_name" {
   type        = string
-  description = "Name of the Kubernetes cluster"
+  description = "Name of the Kubernetes cluster."
 }
 
 variable "key_vault" {
   type        = any
-  description = "KeyVault azurerm resource"
+  description = "KeyVault azurerm resource."
 }
 
 locals {
