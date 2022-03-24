@@ -60,49 +60,16 @@ resource "kubernetes_manifest" "this_mounter" {
   ))
 }
 
-resource "azurerm_user_assigned_identity" "this" {
+module "ingress_pod_identity" {
+  source = "../kubernetes_pod_identity"
+
   resource_group_name = var.resource_group_name
   location            = var.location
-  name                = "${var.namespace}-ingress-pod-identity"
-}
-
-resource "azurerm_key_vault_access_policy" "this" {
-  key_vault_id = var.keyvault.id
-  tenant_id    = var.tenant_id
-  object_id    = azurerm_user_assigned_identity.this.principal_id
+  identity_name       = local.identity_name
+  key_vault           = var.key_vault
+  tenant_id           = var.tenant_id
+  cluster_name        = var.cluster_name
+  namespace           = var.namespace
 
   secret_permissions = ["get"]
 }
-
-resource "null_resource" "create_pod_identity" {
-  triggers = {
-    resource_group = var.resource_group_name
-    cluster_name   = var.cluster_name
-    namespace      = var.namespace
-    name           = "${var.namespace}-ingress"
-    identity_id    = azurerm_user_assigned_identity.this.id
-  }
-
-  provisioner "local-exec" {
-    command = <<EOT
-      az aks pod-identity add \
-        --resource-group ${self.triggers.resource_group} \
-        --cluster-name ${self.triggers.cluster_name} \
-        --namespace ${self.triggers.namespace} \
-        --name "${self.triggers.namespace}-ingress-pod-identity" \
-        --identity-resource-id "${self.triggers.identity_id}"
-    EOT
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = <<EOT
-      az aks pod-identity delete \
-        --resource-group ${self.triggers.resource_group} \
-        --cluster-name ${self.triggers.cluster_name} \
-        --namespace ${self.triggers.namespace} \
-        --name ${self.triggers.name}
-    EOT
-  }
-}
-
