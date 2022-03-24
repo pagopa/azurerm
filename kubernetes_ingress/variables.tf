@@ -42,7 +42,7 @@ variable "cluster_name" {
   description = "Name of the Kubernetes cluster"
 }
 
-variable "keyvault" {
+variable "key_vault" {
   type        = any
   description = "KeyVault azurerm resource"
 }

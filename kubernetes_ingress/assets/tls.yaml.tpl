@@ -17,7 +17,7 @@ spec:
     usePodIdentity: "true"
     useVMManagedIdentity: "false"
     userAssignedIdentityID: ""
-    keyvaultName: ${keyvault_name}
+    keyvaultName: ${key_vault_name}
     tenantId: ${tenant_id}
     cloudName: ""
     objects: |

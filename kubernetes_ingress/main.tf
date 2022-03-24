@@ -39,10 +39,10 @@ resource "kubernetes_manifest" "this_certificates" {
   manifest = yamldecode(templatefile(
     "${path.module}/assets/tls.yaml.tpl",
     {
-      namespace     = var.namespace
-      secret_name   = local.secret_name
-      tenant_id     = var.tenant_id
-      keyvault_name = var.keyvault.name
+      namespace      = var.namespace
+      secret_name    = local.secret_name
+      tenant_id      = var.tenant_id
+      key_vault_name = var.key_vault.name
     }
   ))
 }
