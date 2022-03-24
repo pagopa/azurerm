@@ -42,18 +42,17 @@ No requirements.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_ingress_pod_identity"></a> [ingress\_pod\_identity](#module\_ingress\_pod\_identity) | ../kubernetes_pod_identity | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [azurerm_key_vault_access_policy.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_access_policy) | resource |
-| [azurerm_user_assigned_identity.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) | resource |
 | [kubernetes_ingress.this](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/ingress) | resource |
 | [kubernetes_manifest.this_certificates](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.this_mounter](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
-| [null_resource.create_pod_identity](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 
 ## Inputs
 
@@ -61,7 +60,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the Kubernetes cluster | `string` | n/a | yes |
 | <a name="input_host"></a> [host](#input\_host) | Ingress host. | `string` | n/a | yes |
-| <a name="input_keyvault"></a> [keyvault](#input\_keyvault) | KeyVault azurerm resource | `any` | n/a | yes |
+| <a name="input_key_vault"></a> [key\_vault](#input\_key\_vault) | KeyVault azurerm resource | `any` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Location of the Kubernetes cluster | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Ingress name. | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace. | `string` | n/a | yes |
