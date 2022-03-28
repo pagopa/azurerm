@@ -22,3 +22,8 @@ output "administrator_password" {
   value     = var.administrator_password
   sensitive = true
 }
+
+output "port_pgbouncer" {
+  value     = "6432"
+  sensitive = true
+}
