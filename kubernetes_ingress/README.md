@@ -36,10 +36,6 @@ module "helm-template-ingress" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 | Name | Source | Version |

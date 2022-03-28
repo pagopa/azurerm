@@ -61,10 +61,6 @@ module "apim_hub_spid_login_api_v1" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 No modules.

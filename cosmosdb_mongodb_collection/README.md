@@ -113,10 +113,6 @@ module "mongdb_collection_name" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 No modules.

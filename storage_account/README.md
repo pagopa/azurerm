@@ -33,10 +33,6 @@ module "selc-contracts-storage" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 No modules.

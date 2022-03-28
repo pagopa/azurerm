@@ -34,10 +34,6 @@ module "apim_product_devopslab" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 No modules.

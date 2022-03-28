@@ -130,10 +130,6 @@ resource "azurerm_role_assignment" "webapp_docker_to_acr" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 No modules.

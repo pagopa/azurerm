@@ -14,10 +14,6 @@ Module that allows the creation of an Azure function app.
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 | Name | Source | Version |

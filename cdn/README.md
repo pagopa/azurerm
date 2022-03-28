@@ -3,10 +3,6 @@
 Storage account
 **/
 
-## Requirements
-
-No requirements.
-
 ## Modules
 
 | Name | Source | Version |

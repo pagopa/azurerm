@@ -113,10 +113,6 @@ resource "azurerm_key_vault_secret" "aks_apiserver_url" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
 ## Modules
 
 No modules.

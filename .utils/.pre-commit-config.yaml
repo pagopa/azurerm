@@ -7,3 +7,4 @@ repos:
         args:
           - --args=--hide providers --hide requirements
       - id: terraform_tfsec
+      - id: terraform_validate
