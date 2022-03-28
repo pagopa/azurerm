@@ -4,6 +4,6 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
-        args:
-          - --args=--hide providers --hide requirements
+        # args:
+        #   - --args=--hide providers --hide requirements
       - id: terraform_tfsec

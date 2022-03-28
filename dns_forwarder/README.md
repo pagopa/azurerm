@@ -1,5 +1,18 @@
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.99.0 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.2.2 |
+
 ## Modules
 
 No modules.
@@ -8,8 +21,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_container_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_group) | resource |
-| [azurerm_network_profile.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_profile) | resource |
+| [azurerm_container_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/container_group) | resource |
+| [azurerm_network_profile.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/network_profile) | resource |
 | [local_file.corefile](https://registry.terraform.io/providers/hashicorp/local/latest/docs/data-sources/file) | data source |
 
 ## Inputs

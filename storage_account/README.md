@@ -33,6 +33,18 @@ module "selc-contracts-storage" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.99.0 |
+
 ## Modules
 
 No modules.
@@ -41,10 +53,10 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_advanced_threat_protection.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/advanced_threat_protection) | resource |
-| [azurerm_management_lock.management_lock](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) | resource |
-| [azurerm_storage_account.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account) | resource |
-| [azurerm_template_deployment.versioning](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/template_deployment) | resource |
+| [azurerm_advanced_threat_protection.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/advanced_threat_protection) | resource |
+| [azurerm_management_lock.management_lock](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/management_lock) | resource |
+| [azurerm_storage_account.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/storage_account) | resource |
+| [azurerm_template_deployment.versioning](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/template_deployment) | resource |
 
 ## Inputs
 

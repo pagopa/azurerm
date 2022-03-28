@@ -36,6 +36,18 @@ module "helm-template-ingress" {
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.9.0 |
+
 ## Modules
 
 | Name | Source | Version |

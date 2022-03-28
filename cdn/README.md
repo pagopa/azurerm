@@ -3,6 +3,19 @@
 Storage account
 **/
 
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.99.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.1.1 |
+
 ## Modules
 
 | Name | Source | Version |
@@ -13,11 +26,11 @@ Storage account
 
 | Name | Type |
 |------|------|
-| [azurerm_cdn_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_endpoint) | resource |
-| [azurerm_cdn_profile.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_profile) | resource |
-| [azurerm_dns_a_record.hostname](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_a_record) | resource |
-| [azurerm_dns_cname_record.cdnverify](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_cname_record) | resource |
-| [azurerm_dns_cname_record.custom_subdomain](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_cname_record) | resource |
+| [azurerm_cdn_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/cdn_endpoint) | resource |
+| [azurerm_cdn_profile.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/cdn_profile) | resource |
+| [azurerm_dns_a_record.hostname](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/dns_a_record) | resource |
+| [azurerm_dns_cname_record.cdnverify](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/dns_cname_record) | resource |
+| [azurerm_dns_cname_record.custom_subdomain](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/dns_cname_record) | resource |
 | [null_resource.custom_domain](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 
 ## Inputs

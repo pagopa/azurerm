@@ -1,5 +1,17 @@
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.99.0 |
+
 ## Modules
 
 No modules.
@@ -8,8 +20,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_app_service_slot.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_slot) | resource |
-| [azurerm_app_service_slot_virtual_network_swift_connection.app_service_virtual_network_swift_connection](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_slot_virtual_network_swift_connection) | resource |
+| [azurerm_app_service_slot.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/app_service_slot) | resource |
+| [azurerm_app_service_slot_virtual_network_swift_connection.app_service_virtual_network_swift_connection](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/app_service_slot_virtual_network_swift_connection) | resource |
 
 ## Inputs
 
