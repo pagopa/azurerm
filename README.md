@@ -31,5 +31,9 @@ Check your code before commit.
 <https://github.com/antonbabenko/pre-commit-terraform#how-to-install>
 
 ```sh
+# for terraform modules we need to initialize them with
+# run this commands when there is a change in .utils/provider.tf
+bash .utils/clean_all.sh
+bash .utils/terraform_run_all.sh init
 pre-commit run -a
 ```

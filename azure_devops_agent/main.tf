@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    null = {
-      source  = "hashicorp/null"
-      version = "=3.1.0"
-    }
-  }
-}
-
 resource "null_resource" "this" {
   # needs az cli > 2.0.81
   # see https://github.com/Azure/azure-cli/issues/12152

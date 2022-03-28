@@ -36,7 +36,15 @@ module "apim_product_devopslab" {
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.99.0 |
 
 ## Modules
 
@@ -46,9 +54,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_api_management_product.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product) | resource |
-| [azurerm_api_management_product_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_group) | resource |
-| [azurerm_api_management_product_policy.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_policy) | resource |
+| [azurerm_api_management_product.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/api_management_product) | resource |
+| [azurerm_api_management_product_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/api_management_product_group) | resource |
+| [azurerm_api_management_product_policy.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/api_management_product_policy) | resource |
 
 ## Inputs
 
