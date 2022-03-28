@@ -42,5 +42,6 @@ No modules.
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | n/a |
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
+| <a name="output_port_pgbouncer"></a> [port\_pgbouncer](#output\_port\_pgbouncer) | n/a |
 | <a name="output_public_access_enabled"></a> [public\_access\_enabled](#output\_public\_access\_enabled) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
