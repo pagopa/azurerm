@@ -31,16 +31,21 @@ resource "azurerm_postgresql_flexible_server" "this" {
   dynamic "high_availability" {
     for_each = var.high_availability_enabled && var.standby_availability_zone != null ? ["dummy"] : []
     
-    mode = "ZoneRedundant" #only possible value
-    standby_availability_zone = var.standby_availability_zone
+    content {
+      #only possible value
+      mode = "ZoneRedundant" 
+      standby_availability_zone = var.standby_availability_zone
+    }
   }
 
   dynamic "maintenance_window" {
     for_each = var.maintenance_window_config != null ? ["dummy"] : []
     
-    day_of_week = var.maintenance_window_config.day_of_week
-    start_hour = var.maintenance_window_config.start_hour
-    start_minute = var.maintenance_window_config.start_minute
+    content {
+      day_of_week = var.maintenance_window_config.day_of_week
+      start_hour = var.maintenance_window_config.start_hour
+      start_minute = var.maintenance_window_config.start_minute
+    }
   }
 
   tags = var.tags
