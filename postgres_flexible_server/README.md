@@ -1,3 +1,17 @@
+# postgres flexible
+
+Module that allows the creation of a postgres flexible.
+
+## Architecture
+
+![architecture](./docs/module-arch.drawio.png)
+
+## How to use it
+
+```ts
+
+```
+
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
