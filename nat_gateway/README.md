@@ -4,7 +4,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
 
 ## Providers
 
@@ -20,10 +21,10 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_nat_gateway.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/nat_gateway) | resource |
-| [azurerm_nat_gateway_public_ip_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/nat_gateway_public_ip_association) | resource |
-| [azurerm_public_ip.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/public_ip) | resource |
-| [azurerm_subnet_nat_gateway_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/subnet_nat_gateway_association) | resource |
+| [azurerm_nat_gateway.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/nat_gateway) | resource |
+| [azurerm_nat_gateway_public_ip_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/nat_gateway_public_ip_association) | resource |
+| [azurerm_public_ip.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
+| [azurerm_subnet_nat_gateway_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_nat_gateway_association) | resource |
 
 ## Inputs
 

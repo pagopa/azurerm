@@ -4,7 +4,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
 
 ## Providers
 
@@ -20,8 +21,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/private_endpoint) | resource |
-| [azurerm_redis_cache.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/redis_cache) | resource |
+| [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
+| [azurerm_redis_cache.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache) | resource |
 
 ## Inputs
 

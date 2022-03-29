@@ -4,7 +4,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
 
 ## Providers
 
@@ -20,10 +21,10 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_key_vault.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/key_vault) | resource |
-| [azurerm_key_vault_access_policy.terraform_cloud_policy](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/key_vault_access_policy) | resource |
-| [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/management_lock) | resource |
-| [azurerm_monitor_diagnostic_setting.key_vault](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/monitor_diagnostic_setting) | resource |
+| [azurerm_key_vault.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault) | resource |
+| [azurerm_key_vault_access_policy.terraform_cloud_policy](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_access_policy) | resource |
+| [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) | resource |
+| [azurerm_monitor_diagnostic_setting.key_vault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting) | resource |
 
 ## Inputs
 

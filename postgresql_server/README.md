@@ -4,7 +4,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
 
 ## Providers
 
@@ -20,28 +21,28 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_management_lock.replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/management_lock) | resource |
-| [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/management_lock) | resource |
-| [azurerm_monitor_metric_alert.replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/monitor_metric_alert) | resource |
-| [azurerm_monitor_metric_alert.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/monitor_metric_alert) | resource |
-| [azurerm_postgresql_configuration.replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_configuration.replica_connection_throttling](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_configuration.replica_log_checkpoints](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_configuration.replica_log_connections](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_configuration.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_configuration.this_connection_throttling](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_configuration.this_log_checkpoints](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_configuration.this_log_connections](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_configuration) | resource |
-| [azurerm_postgresql_firewall_rule.azure](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_firewall_rule) | resource |
-| [azurerm_postgresql_firewall_rule.azure_replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_firewall_rule) | resource |
-| [azurerm_postgresql_firewall_rule.replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_firewall_rule) | resource |
-| [azurerm_postgresql_firewall_rule.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_firewall_rule) | resource |
-| [azurerm_postgresql_server.replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_server) | resource |
-| [azurerm_postgresql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_server) | resource |
-| [azurerm_postgresql_virtual_network_rule.replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_virtual_network_rule) | resource |
-| [azurerm_postgresql_virtual_network_rule.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/postgresql_virtual_network_rule) | resource |
-| [azurerm_private_endpoint.replica](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/private_endpoint) | resource |
-| [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/private_endpoint) | resource |
+| [azurerm_management_lock.replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) | resource |
+| [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) | resource |
+| [azurerm_monitor_metric_alert.replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_metric_alert) | resource |
+| [azurerm_monitor_metric_alert.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_metric_alert) | resource |
+| [azurerm_postgresql_configuration.replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_configuration.replica_connection_throttling](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_configuration.replica_log_checkpoints](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_configuration.replica_log_connections](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_configuration.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_configuration.this_connection_throttling](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_configuration.this_log_checkpoints](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_configuration.this_log_connections](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration) | resource |
+| [azurerm_postgresql_firewall_rule.azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_firewall_rule) | resource |
+| [azurerm_postgresql_firewall_rule.azure_replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_firewall_rule) | resource |
+| [azurerm_postgresql_firewall_rule.replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_firewall_rule) | resource |
+| [azurerm_postgresql_firewall_rule.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_firewall_rule) | resource |
+| [azurerm_postgresql_server.replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_server) | resource |
+| [azurerm_postgresql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_server) | resource |
+| [azurerm_postgresql_virtual_network_rule.replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_virtual_network_rule) | resource |
+| [azurerm_postgresql_virtual_network_rule.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_virtual_network_rule) | resource |
+| [azurerm_private_endpoint.replica](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
+| [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
 
 ## Inputs
 

@@ -4,7 +4,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
 
 ## Providers
 
@@ -20,9 +21,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_app_service_slot_virtual_network_swift_connection.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/app_service_slot_virtual_network_swift_connection) | resource |
-| [azurerm_function_app_slot.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/function_app_slot) | resource |
-| [azurerm_function_app_host_keys.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/data-sources/function_app_host_keys) | data source |
+| [azurerm_app_service_slot_virtual_network_swift_connection.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_slot_virtual_network_swift_connection) | resource |
+| [azurerm_function_app_slot.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app_slot) | resource |
+| [azurerm_function_app_host_keys.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/function_app_host_keys) | data source |
 
 ## Inputs
 

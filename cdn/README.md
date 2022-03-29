@@ -7,7 +7,9 @@ Storage account
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.1.1 |
 
 ## Providers
 
@@ -20,17 +22,17 @@ Storage account
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cdn_storage_account"></a> [cdn\_storage\_account](#module\_cdn\_storage\_account) | git::https://github.com/pagopa/azurerm.git//storage_account | v2.5.2 |
+| <a name="module_cdn_storage_account"></a> [cdn\_storage\_account](#module\_cdn\_storage\_account) | git::https://github.com/pagopa/azurerm.git//storage_account | v2.7.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [azurerm_cdn_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/cdn_endpoint) | resource |
-| [azurerm_cdn_profile.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/cdn_profile) | resource |
-| [azurerm_dns_a_record.hostname](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/dns_a_record) | resource |
-| [azurerm_dns_cname_record.cdnverify](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/dns_cname_record) | resource |
-| [azurerm_dns_cname_record.custom_subdomain](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/dns_cname_record) | resource |
+| [azurerm_cdn_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_endpoint) | resource |
+| [azurerm_cdn_profile.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_profile) | resource |
+| [azurerm_dns_a_record.hostname](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_a_record) | resource |
+| [azurerm_dns_cname_record.cdnverify](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_cname_record) | resource |
+| [azurerm_dns_cname_record.custom_subdomain](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_cname_record) | resource |
 | [null_resource.custom_domain](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 
 ## Inputs
