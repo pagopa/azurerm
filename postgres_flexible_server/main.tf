@@ -1,3 +1,13 @@
+module "errorcheck_invalid" {
+  source = "rhythmictech/errorcheck/terraform"
+  version = "1.0.0"
+
+  assert = var.high_availability_enabled && length(regexall("^B_.*", var.sku_name)) > 0
+  #https://docs.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-business-continuity
+  error_message = "ERROR: High Availability is not allow for Burstable(B) series"
+}
+
+
 resource "azurerm_postgresql_flexible_server" "this" {
 
   name                = var.name
