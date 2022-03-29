@@ -1,5 +1,5 @@
 resource "null_resource" "ha_sku_check" {
-  count = var.high_availability_enabled && length(regexall("^B_.*", var.sku_name)) > 0 ? 0 : "ERROR: High Availability is not allow for Burstable(B) series"
+  count = var.high_availability_enabled == true && length(regexall("^B_.*", var.sku_name)) > 0 ? 0 : "ERROR: High Availability is not allow for Burstable(B) series"
 }
 
 resource "azurerm_postgresql_flexible_server" "this" {
