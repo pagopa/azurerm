@@ -3,7 +3,7 @@
  **/
 module "cdn_storage_account" {
 
-  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.5.2"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.7.0"
 
   name            = replace(format("%s-%s-sa", var.prefix, var.name), "-", "")
   versioning_name = format("%s-%s-sa-versioning", var.prefix, var.name)

@@ -1,22 +1,24 @@
 #!/bin/bash
 
-TAG=latest
-unameOut="$(uname -s)"
+COMMAND=${1}
+MODE=${2}
+TAG=${3}
+
 
 for f in *; do
   if [ -d "$f" ]; then
     echo "$f"
-    rm -rf "$f/.provider.tf"
+    rm -rf "$f/.ignore_features.tf"
     rm -rf "$f/.terraform"
     rm -rf "$f/.terraform.lock.hcl"
-    cp ".utils/provider.tf" "$f/ignore_provider.tf"
+    cp ".utils/features.tf" "$f/ignore_features.tf"
     cd "$f"
 
-    case "${unameOut}" in
-      Linux*)
-        docker run -v "$(pwd)":/tmp -w /tmp hashicorp/terraform:$TAG "$1"
+    case "${MODE}" in
+      docker*)
+        docker run -v "$(pwd)":/tmp -w /tmp hashicorp/terraform:"$TAG" "$COMMAND"
       ;;
-      Darwin*)
+      local*)
         terraform "$1"
       ;;
     *)

@@ -38,7 +38,8 @@ module "apim_product_devopslab" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
 
 ## Providers
 
@@ -54,9 +55,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_api_management_product.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/api_management_product) | resource |
-| [azurerm_api_management_product_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/api_management_product_group) | resource |
-| [azurerm_api_management_product_policy.this](https://registry.terraform.io/providers/hashicorp/azurerm/2.99.0/docs/resources/api_management_product_policy) | resource |
+| [azurerm_api_management_product.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product) | resource |
+| [azurerm_api_management_product_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_group) | resource |
+| [azurerm_api_management_product_policy.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_policy) | resource |
 
 ## Inputs
 

@@ -40,7 +40,10 @@ module "helm-template-ingress" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | = 2.99.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.3.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.1.1 |
 
 ## Providers
 
@@ -52,7 +55,7 @@ module "helm-template-ingress" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ingress_pod_identity"></a> [ingress\_pod\_identity](#module\_ingress\_pod\_identity) | git::https://github.com/pagopa/azurerm.git//kubernetes_pod_identity | v2.6.0 |
+| <a name="module_ingress_pod_identity"></a> [ingress\_pod\_identity](#module\_ingress\_pod\_identity) | git::https://github.com/pagopa/azurerm.git//kubernetes_pod_identity | v2.7.0 |
 
 ## Resources
 

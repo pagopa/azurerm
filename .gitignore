@@ -31,7 +31,7 @@ override.tf.json
 # example: *tfplan*
 .terraform.lock.hcl
 
-ignore_provider.tf
+ignore_features.tf
 
 .idea
 .vscode
