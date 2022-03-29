@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMMAND=${3}
+COMMAND=${1}
 MODE=${2}
 TAG=${3}
 
