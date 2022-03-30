@@ -67,7 +67,7 @@ resource "azurerm_private_dns_zone" "privatelink_postgres_database_azure_com" {
 
 resource "azurerm_private_dns_zone_virtual_network_link" "privatelink_postgres_database_azure_com_vnet" {
 
-  name                  = "${local.project}-pg-flex-link"
+  name                  = data.azurerm_virtual_network.vnet.name
   private_dns_zone_name = azurerm_private_dns_zone.privatelink_postgres_database_azure_com.name
 
   resource_group_name = data.azurerm_resource_group.rg_vnet.name
