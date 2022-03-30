@@ -6,6 +6,10 @@ Module that allows the creation of a postgres flexible.
 
 ![architecture](./docs/module-arch.drawio.png)
 
+## Connection to DB
+
+* if **pgbounce** is enabled: the port is 6432, otherwise: 5432
+
 ## Limits and constraints
 
 * **HA** and **pg bouncer** is not avaible for B series machines
@@ -184,6 +188,7 @@ module "postgres_flexible_server_public" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.1.1 |
 
 ## Providers
 
