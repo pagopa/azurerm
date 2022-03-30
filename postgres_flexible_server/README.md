@@ -37,7 +37,7 @@ resource "azurerm_resource_group" "postgres_dbs" {
 
 # Postgres Flexible Server subnet
 module "postgres_flexible_snet" {
-  source                                         = "git::https://github.com/pagopa/azurerm.git//subnet?ref=v2.1.13"
+  source                                         = "git::https://github.com/pagopa/azurerm.git//subnet?ref=v2.7.2"
   name                                           = "${local.project}-pgres-flexible-snet"
   address_prefixes                               = var.cidr_subnet_flex_dbms
   resource_group_name                            = data.azurerm_resource_group.rg_vnet.name
