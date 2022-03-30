@@ -1,22 +1,23 @@
 #!/bin/bash
 
-COMMAND=${1}
-MODE=${2}
-TAG=${3}
+TAG=$(cat .terraform-version)
+ACTION="$1"
+MODE="$2"
 
+for folder in *; do
+  if [ -d "$folder" ]; then
+    echo "🔬 folder: $folder in under terraform: $ACTION action $MODE mode"
 
-for f in *; do
-  if [ -d "$f" ]; then
-    echo "$f"
-    rm -rf "$f/.ignore_features.tf"
-    rm -rf "$f/.terraform"
-    rm -rf "$f/.terraform.lock.hcl"
-    cp ".utils/features.tf" "$f/ignore_features.tf"
-    cd "$f"
+    rm -rf "$folder/.ignore_features.tf"
+    rm -rf "$folder/.terraform"
+    rm -rf "$folder/.terraform.lock.hcl"
+    cp ".utils/features.tf" "$folder/ignore_features.tf"
+
+    cd "$folder" || exit
 
     case "${MODE}" in
       docker*)
-        docker run -v "$(pwd)":/tmp -w /tmp hashicorp/terraform:"$TAG" "$COMMAND"
+        docker run -v "$(pwd):/tmp" -w /tmp "hashicorp/terraform:$TAG" "$ACTION"
       ;;
       local*)
         terraform "$1"

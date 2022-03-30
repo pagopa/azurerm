@@ -12,8 +12,7 @@ jobs:
 
       - name: run_init
         run: |
-          TAG=$(cat .terraform-version)
-          bash .utils/terraform_run_all.sh init docker $TAG
+          bash .utils/terraform_run_all.sh init docker
 
       - name: run_test
         run: |
