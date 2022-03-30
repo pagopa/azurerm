@@ -60,6 +60,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
 
 } # end azurerm_postgresql_flexible_server
 
+# Configure: Enable PgBouncer
 resource "azurerm_postgresql_flexible_server_configuration" "pgbouncer_enabled" {
   
   count = var.pgbouncer_enabled ? 1 : 0
