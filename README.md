@@ -32,8 +32,6 @@ Check your code before commit.
 
 ```sh
 # for terraform modules we need to initialize them with
-# run this commands when there is a change in .utils/provider.tf
-bash .utils/clean_all.sh
-bash .utils/terraform_run_all.sh init
+bash .utils/terraform_run_all.sh init local
 pre-commit run -a
 ```

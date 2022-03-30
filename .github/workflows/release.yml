@@ -8,9 +8,9 @@ on:
       - main
       - master
     paths-ignore:
-      - 'CODEOWNERS'
-      - '**.md'
-      - '.**'
+      - "CODEOWNERS"
+      - "**.md"
+      - ".**"
 
 jobs:
   release:

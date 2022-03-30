@@ -12,11 +12,9 @@ jobs:
 
       - name: run_init
         run: |
-          bash .utils/terraform_run_all.sh init
+          bash .utils/terraform_run_all.sh init docker
 
       - name: run_test
         run: |
-          rm -rf .pre-commit-config.yaml
-          cp .utils/.pre-commit-config.yaml .pre-commit-config.yaml
           TAG=nightly
           docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a

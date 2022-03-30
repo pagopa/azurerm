@@ -1,22 +1,25 @@
 #!/bin/bash
 
-TAG=latest
-unameOut="$(uname -s)"
+TAG=$(cat .terraform-version)
+ACTION="$1"
+MODE="$2"
 
-for f in *; do
-  if [ -d "$f" ]; then
-    echo "$f"
-    rm -rf "$f/.provider.tf"
-    rm -rf "$f/.terraform"
-    rm -rf "$f/.terraform.lock.hcl"
-    cp ".utils/provider.tf" "$f/ignore_provider.tf"
-    cd "$f"
+for folder in *; do
+  if [ -d "$folder" ]; then
+    echo "🔬 folder: $folder in under terraform: $ACTION action $MODE mode"
 
-    case "${unameOut}" in
-      Linux*)
-        docker run -v "$(pwd)":/tmp -w /tmp hashicorp/terraform:$TAG "$1"
+    rm -rf "$folder/.ignore_features.tf"
+    rm -rf "$folder/.terraform"
+    rm -rf "$folder/.terraform.lock.hcl"
+    cp ".utils/features.tf" "$folder/ignore_features.tf"
+
+    cd "$folder" || exit
+
+    case "${MODE}" in
+      docker*)
+        docker run -v "$(pwd):/tmp" -w /tmp "hashicorp/terraform:$TAG" "$ACTION"
       ;;
-      Darwin*)
+      local*)
         terraform "$1"
       ;;
     *)
