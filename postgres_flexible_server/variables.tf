@@ -1,15 +1,15 @@
 variable "name" {
-  type = string
+  type        = string
   description = "(Required) The name which should be used for this PostgreSQL Flexible Server. Changing this forces a new PostgreSQL Flexible Server to be created."
 }
 
 variable "location" {
-  type = string
+  type        = string
   description = "(Required) The Azure Region where the PostgreSQL Flexible Server should exist."
 }
 
 variable "resource_group_name" {
-  type = string
+  type        = string
   description = "(Required) The name of the Resource Group where the PostgreSQL Flexible Server should exist."
 }
 
@@ -23,19 +23,19 @@ variable "db_version" {
 #
 
 variable "private_endpoint_enabled" {
-  type = bool
+  type        = bool
   description = "Is this instance private only?"
 }
 
 variable "private_dns_zone_id" {
-  type = string
-  default = null
+  type        = string
+  default     = null
   description = "(Optional) The ID of the private dns zone to create the PostgreSQL Flexible Server. Changing this forces a new PostgreSQL Flexible Server to be created."
 }
 
 variable "delegated_subnet_id" {
-  type = string
-  default = null
+  type        = string
+  default     = null
   description = "(Optional) The ID of the virtual network subnet to create the PostgreSQL Flexible Server. The provided subnet should not have any other resource deployed in it and this subnet will be delegated to the PostgreSQL Flexible Server, if not already delegated."
 }
 
@@ -43,31 +43,31 @@ variable "delegated_subnet_id" {
 # ♊️ High Availability
 #
 variable "high_availability_enabled" {
-  type = bool
+  type        = bool
   description = "(Required) Is the High Availability Enabled"
 }
 
 variable "standby_availability_zone" {
-  type = number
-  default = null
+  type        = number
+  default     = null
   description = "(Optional) Specifies the Availability Zone in which the standby Flexible Server should be located."
 }
 
 variable "maintenance_window_config" {
   type = object({
-    day_of_week = number
-    start_hour = number
+    day_of_week  = number
+    start_hour   = number
     start_minute = number
   })
 
   default = {
-    day_of_week = 3
-    start_hour = 2
+    day_of_week  = 3
+    start_hour   = 2
     start_minute = 0
   }
 
   description = "(Optional) Allows the configuration of the maintenance window, if not configured default is Wednesday@2.00am"
-  
+
 }
 
 #
@@ -127,8 +127,8 @@ variable "zone" {
 # DB Configurations
 #
 variable "pgbouncer_enabled" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "Is PgBouncer enabled into configurations?"
 }
 
