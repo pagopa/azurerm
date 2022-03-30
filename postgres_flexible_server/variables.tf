@@ -61,12 +61,12 @@ variable "maintenance_window_config" {
   })
 
   default = {
-    day_of_week = 6
+    day_of_week = 3
     start_hour = 2
     start_minute = 0
   }
 
-  description = "(Optional) Allows the configuration of the maintenance window, if not configured default is sunday@2.00am"
+  description = "(Optional) Allows the configuration of the maintenance window, if not configured default is Wednesday@2.00am"
   
 }
 
@@ -122,6 +122,16 @@ variable "zone" {
   description = "(Optional) Specifies the Availability Zone in which the PostgreSQL Flexible Server should be located."
   default     = 1
 }
+
+#
+# DB Configurations
+#
+variable "pgbouncer_enabled" {
+  type = bool
+  default = true
+  description = "Is PgBouncer enabled into configurations?"
+}
+
 
 variable "tags" {
   type = map(any)

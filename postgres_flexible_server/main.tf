@@ -54,4 +54,13 @@ resource "azurerm_postgresql_flexible_server" "this" {
 
   tags = var.tags
 
+} # end azurerm_postgresql_flexible_server
+
+resource "azurerm_postgresql_flexible_server_configuration" "pgbouncer_enabled" {
+  
+  count = var.pgbouncer_enabled ? 1 : 0
+  
+  name      = "pgbouncer.enabled"
+  server_id = azurerm_postgresql_flexible_server.this.id
+  value     = "on"
 }

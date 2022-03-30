@@ -23,7 +23,7 @@ output "administrator_password" {
   sensitive = true
 }
 
-output "port_pgbouncer" {
-  value     = "6432"
-  sensitive = true
+output "connection_port" {
+  value     = var.pgbouncer_enabled ? "6432" : "5432"
+  sensitive = false
 }
