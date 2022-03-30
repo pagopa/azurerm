@@ -2,6 +2,10 @@ resource "null_resource" "ha_sku_check" {
   count = var.high_availability_enabled == true && length(regexall("^B_.*", var.sku_name)) > 0 ? "ERROR: High Availability is not allow for Burstable(B) series" : 0
 }
 
+resource "null_resource" "pgbouncer_check" {
+  count = length(regexall("^B_.*", var.sku_name)) > 0 && var.pgbouncer_enabled ? "ERROR: PgBouncer is not allow for Burstable(B) series" : 0
+}
+
 resource "azurerm_postgresql_flexible_server" "this" {
 
   name                = var.name
