@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#
+# bash .utils/terraform_run_all.sh init local
+# bash .utils/terraform_run_all.sh init docker
+#
+
 TAG=$(cat .terraform-version)
 ACTION="$1"
 MODE="$2"
