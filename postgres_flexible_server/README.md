@@ -155,7 +155,7 @@ resource "azurerm_resource_group" "postgres_dbs" {
 
 # https://docs.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-compare-single-server-flexible-server
 module "postgres_flexible_server_public" {
-  source = "git::https://github.com/pagopa/azurerm.git//postgres_flexible_server?ref=postgres_flexible_production_ready"
+  source = "git::https://github.com/pagopa/azurerm.git//postgres_flexible_server?ref=v2.8.0"
 
   name                = "${local.project}-public-pgflex"
   location            = azurerm_resource_group.postgres_dbs.location
