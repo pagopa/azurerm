@@ -32,7 +32,7 @@ No modules.
 | <a name="input_actions"></a> [actions](#input\_actions) | n/a | <pre>list(object({<br>    action_group_id = string<br>  }))</pre> | n/a | yes |
 | <a name="input_application_insight_name"></a> [application\_insight\_name](#input\_application\_insight\_name) | Application insight instance name. | `string` | n/a | yes |
 | <a name="input_auto_mitigate"></a> [auto\_mitigate](#input\_auto\_mitigate) | (Optional) Should the alerts in this Metric Alert be auto resolved? Defaults to false. | `bool` | `false` | no |
-| <a name="input_content_validation"></a> [content\_validation](#input\_content\_validation) | Required text that should appear in the response for this WebTest. | `string` | `null` | no |
+| <a name="input_content_validation"></a> [content\_validation](#input\_content\_validation) | Required text that should appear in the response for this WebTest. | `string` | `"null"` | no |
 | <a name="input_expected_http_status"></a> [expected\_http\_status](#input\_expected\_http\_status) | Expeced http status code. | `number` | `200` | no |
 | <a name="input_failed_location_count"></a> [failed\_location\_count](#input\_failed\_location\_count) | The number of failed locations. | `number` | `1` | no |
 | <a name="input_frequency"></a> [frequency](#input\_frequency) | Interval in seconds between test runs for this WebTest. | `number` | `300` | no |
