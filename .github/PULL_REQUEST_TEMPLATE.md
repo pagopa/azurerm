@@ -25,3 +25,12 @@
 ### Other information
 
 <!-- Any other information that is important to this PR such as screenshots of how the component looks before and after the change. -->
+
+### Run checks
+
+Useful commands to run checks on local machine
+
+```sh
+bash .utils/terraform_run_all.sh init local
+pre-commit run -a
+```
