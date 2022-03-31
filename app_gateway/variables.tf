@@ -97,6 +97,28 @@ variable "routes" {
   }))
 }
 
+variable "routes_path_based" {
+  description = "To configure path based routing"
+  type = map(object({
+    listener     = string # Prefix for http_listener_name
+    url_map_name = string # The Name of the URL Path Map which should be associated with this Routing Rule.
+    priority     = number # Rule evaluation order can be dictated by specifying an integer value from 1 to 20000 with 1 being the highest priority and 20000 being the lowest priority.
+  }))
+  default = {}
+}
+
+variable "url_path_map" {
+  type = map(object({
+    default_backend               = string # Prefix for backend_address_pool_name, backend_http_settings_name
+    default_rewrite_rule_set_name = string # The Name of the Rewrite Rule Set which should be used for this Routing Rule.
+    path_rule = map(object({
+      paths                 = list(string) # A list of Paths used in this Path Rule
+      backend               = string
+      rewrite_rule_set_name = string # The Name of the Rewrite Rule Set which should be used for this URL Path Map
+    }))
+  }))
+}
+
 variable "rewrite_rule_sets" {
   type = list(object({
     name = string # Unique name of the rewrite rule set block
