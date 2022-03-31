@@ -90,6 +90,6 @@ resource "azurerm_app_service" "this" {
 resource "azurerm_app_service_virtual_network_swift_connection" "app_service_virtual_network_swift_connection" {
   count = var.vnet_integration ? 1 : 0
 
-  app_service_id = azurerm_app_service.this.id
+  app_service_id = var.plan_type == "internal" ? azurerm_app_service_plan.this[0].id : var.plan_id
   subnet_id      = var.subnet_id
 }
