@@ -136,6 +136,44 @@ resource "azurerm_application_gateway" "this" {
   }
 
   dynamic "request_routing_rule" {
+    for_each = var.routes_path_based
+    iterator = route
+
+    content {
+      name               = format("%s-reqs-routing-rule-by-path", route.key)
+      rule_type          = "PathBasedRouting"
+      http_listener_name = format("%s-listener", route.value.listener)
+      url_path_map_name  = format("%s-url-map", route.value.url_map_name)
+      priority           = route.value.priority
+    }
+  }
+
+  dynamic "url_path_map" {
+    for_each = var.url_path_map
+    iterator = path
+
+    content {
+      name                               = format("%s-url-map", path.key)
+      default_backend_address_pool_name  = format("%s-address-pool", path.value.default_backend)
+      default_backend_http_settings_name = format("%s-http-settings", path.value.default_backend)
+      default_rewrite_rule_set_name      = path.value.default_rewrite_rule_set_name
+
+      dynamic "path_rule" {
+        for_each = path.value.path_rule
+        iterator = path_rule
+
+        content {
+          name                       = path_rule.key
+          paths                      = path_rule.value.paths
+          backend_address_pool_name  = format("%s-address-pool", path_rule.value.backend)
+          backend_http_settings_name = format("%s-http-settings", path_rule.value.backend)
+          rewrite_rule_set_name      = path_rule.value.rewrite_rule_set_name
+        }
+      }
+    }
+  }
+
+  dynamic "request_routing_rule" {
     for_each = var.routes
     iterator = route
 

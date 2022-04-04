@@ -86,5 +86,5 @@ variable "severity" {
 variable "content_validation" {
   type        = string
   description = "Required text that should appear in the response for this WebTest."
-  default     = null
+  default     = "null"
 }
