@@ -186,19 +186,19 @@ variable "outbound_ip_address_ids" {
 # addons
 #
 
-variable "enable_azure_policy" {
+variable "addon_azure_policy_enabled" {
   type        = bool
   description = "Should the Azure Policy addon be enabled for this Node Pool? "
   default     = false
 }
 
-variable "enable_azure_keyvault_secrets_provider" {
+variable "addon_azure_keyvault_secrets_provider_enabled" {
   type        = bool
   description = "Should the Azure Secrets Store CSI addon be enabled for this Node Pool? "
   default     = false
 }
 
-variable "enable_azure_pod_identity" {
+variable "addon_azure_pod_identity_enabled" {
   type        = bool
   description = "Should the AAD pod-managed identities be enabled for this Node Pool? "
   default     = false
