@@ -29,6 +29,12 @@ variable "aad_admin_group_ids" {
 variable "system_node_pool_name" {
   type        = string
   description = "(Required) The name which should be used for the default Kubernetes Node Pool. Changing this forces a new resource to be created."
+  validation {
+    condition = (
+      length(var.system_node_pool_name) <= 12
+    )
+    error_message = "Max length is 12 chars."
+  }
 }
 
 variable "system_node_pool_vm_size" {
@@ -46,18 +52,6 @@ variable "system_node_pool_os_disk_size_gb" {
   type        = number
   description = "(Optional) The size of the OS Disk which should be used for each agent in the Node Pool. Changing this forces a new resource to be created."
   default     = 80
-}
-
-variable "system_node_pool_only_critical_addons_enabled" {
-  type        = bool
-  description = "(Optional) Enabling this option will taint default node pool with CriticalAddonsOnly=true:NoSchedule taint. Changing this forces a new resource to be created."
-  default     = true
-}
-
-variable "system_node_pool_ultra_ssd_enabled" {
-  type        = bool
-  description = "(Optional) Used to specify whether the UltraSSD is enabled in the Default Node Pool. Defaults to false."
-  default     = false
 }
 
 variable "system_node_pool_node_count_min" {
@@ -86,6 +80,18 @@ variable "system_node_pool_enable_host_encryption" {
   type        = bool
   description = "(Optional) Should the nodes in the Default Node Pool have host encryption enabled? Defaults to true."
   default     = true
+}
+
+variable "system_node_pool_only_critical_addons_enabled" {
+  type        = bool
+  description = "(Optional) Enabling this option will taint default node pool with CriticalAddonsOnly=true:NoSchedule taint. Changing this forces a new resource to be created."
+  default     = true
+}
+
+variable "system_node_pool_ultra_ssd_enabled" {
+  type        = bool
+  description = "(Optional) Used to specify whether the UltraSSD is enabled in the Default Node Pool. Defaults to false."
+  default     = false
 }
 
 variable "system_node_pool_tags" {
