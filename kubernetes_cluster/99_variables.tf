@@ -147,7 +147,7 @@ variable "dns_prefix_private_cluster" {
 variable "automatic_channel_upgrade" {
   type        = string
   description = "(Optional) The upgrade channel for this Kubernetes Cluster. Possible values are patch, rapid, node-image and stable. Omitting this field sets this value to none."
-  default     = "none"
+  default     = null
 }
 
 variable "api_server_authorized_ip_ranges" {
