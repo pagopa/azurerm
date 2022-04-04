@@ -19,6 +19,10 @@ resource "azurerm_app_service_slot" "this" {
 
     health_check_path = var.health_check_path != null ? var.health_check_path : null
 
+    php_version    = "7.4"
+    python_version = "3.4"
+    http2_enabled  = true
+
     dynamic "ip_restriction" {
       for_each = var.allowed_subnets
       iterator = subnet
