@@ -1,16 +1,16 @@
 variable "name" {
   type        = string
-  description = "Cluster name"
+  description = "(Required) Cluster name"
 }
 
 variable "dns_prefix" {
   type        = string
-  description = "Dns prefix."
+  description = "(Required) DNS prefix specified when creating the managed cluster. Changing this forces a new resource to be created."
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Resource group name."
+  description = "(Required) Resource group name."
 }
 
 variable "location" {
@@ -22,15 +22,83 @@ variable "aad_admin_group_ids" {
   type        = list(string)
 }
 
-variable "node_pool_name" {
+#
+# Default node pool
+#
+
+variable "system_node_pool_name" {
   type        = string
-  default     = "default"
-  description = "The name which should be used for the default Kubernetes Node Pool."
+  description = "(Required) The name which should be used for the default Kubernetes Node Pool. Changing this forces a new resource to be created."
 }
 
-variable "vm_size" {
+variable "system_node_pool_vm_size" {
   type        = string
   description = "(Required) The size of the Virtual Machine, such as Standard_B4ms or Standard_D4s_vX. See https://pagopa.atlassian.net/wiki/spaces/DEVOPS/pages/134840344/Best+practice+su+prodotti"
+}
+
+variable "system_node_pool_os_disk_type" {
+  type        = string
+  description = "(Optional) The type of disk which should be used for the Operating System. Possible values are Ephemeral and Managed. Defaults to Managed."
+  default     = "Ephemeral"
+}
+
+variable "system_node_pool_os_disk_size_gb" {
+  type        = number
+  description = "(Optional) The size of the OS Disk which should be used for each agent in the Node Pool. Changing this forces a new resource to be created."
+  default     = 80
+}
+
+variable "system_node_pool_only_critical_addons_enabled" {
+  type        = bool
+  description = "(Optional) Enabling this option will taint default node pool with CriticalAddonsOnly=true:NoSchedule taint. Changing this forces a new resource to be created."
+  default     = true
+}
+
+variable "system_node_pool_ultra_ssd_enabled" {
+  type        = bool
+  description = "(Optional) Used to specify whether the UltraSSD is enabled in the Default Node Pool. Defaults to false."
+  default     = false
+}
+
+variable "system_node_pool_node_count_min" {
+  type        = number
+  description = "(Required) The minimum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000."
+}
+
+variable "system_node_pool_node_count_max" {
+  type        = number
+  description = "(Required) The maximum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000."
+}
+
+variable "system_node_pool_max_pods" {
+  type        = number
+  description = "(Optional) The maximum number of pods that can run on each agent. Changing this forces a new resource to be created."
+  default     = 150
+}
+
+variable "system_node_pool_node_labels" {
+  type        = map(any)
+  description = "(Optional) A map of Kubernetes labels which should be applied to nodes in the Default Node Pool. Changing this forces a new resource to be created."
+  default     = {}
+}
+
+variable "system_node_pool_enable_host_encryption" {
+  type        = bool
+  description = "(Optional) Should the nodes in the Default Node Pool have host encryption enabled? Defaults to true."
+  default     = true
+}
+
+variable "system_node_pool_tags" {
+  type        = map(any)
+  description = "(Optional) A mapping of tags to assign to the Node Pool."
+  default     = {}
+}
+### END SYSTEM NODE POOL
+
+variable "upgrade_settings_max_surge" {
+  type        = string
+  description = "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade."
+  default     = "33%"
 }
 
 variable "sku_tier" {
@@ -41,30 +109,26 @@ variable "sku_tier" {
 
 variable "kubernetes_version" {
   type        = string
-  description = "(Optional) Version of Kubernetes specified when creating the AKS managed cluster."
-  default     = null
+  description = "(Required) Version of Kubernetes specified when creating the AKS managed cluster."
 }
 
-variable "availability_zones" {
-  type        = list(string)
-  description = "A list of Availability Zones across which the Node Pool should be spread."
-  default     = []
-}
-
+#
+# Network
+#
 variable "private_cluster_enabled" {
   type        = bool
   default     = false
-  description = "Provides a Private IP Address for the Kubernetes API on the Virtual Network where the Kubernetes Cluster is located."
+  description = "(Optional) Provides a Private IP Address for the Kubernetes API on the Virtual Network where the Kubernetes Cluster is located."
 }
 
 variable "vnet_id" {
   type        = string
-  description = "Virtual network id, where the k8s cluster is deployed."
+  description = "(Required) Virtual network id, where the k8s cluster is deployed."
 }
 
 variable "vnet_subnet_id" {
   type        = string
-  description = "The ID of a Subnet where the Kubernetes Node Pool should exist."
+  description = "(Optional) The ID of a Subnet where the Kubernetes Node Pool should exist. Changing this forces a new resource to be created."
   default     = null
 }
 
@@ -76,8 +140,8 @@ variable "dns_prefix_private_cluster" {
 
 variable "automatic_channel_upgrade" {
   type        = string
-  description = "The upgrade channel for this Kubernetes Cluster"
-  default     = null
+  description = "(Optional) The upgrade channel for this Kubernetes Cluster. Possible values are patch, rapid, node-image and stable. Omitting this field sets this value to none."
+  default     = "none"
 }
 
 variable "api_server_authorized_ip_ranges" {
@@ -112,19 +176,9 @@ variable "outbound_ip_address_ids" {
   description = "The ID of the Public IP Addresses which should be used for outbound communication for the cluster load balancer."
 }
 
-# Autoscaling
-
-variable "node_count" {
-  type        = number
-  description = "The initial number of nodes which should exist in this Node Pool."
-  default     = 1
-}
-
-variable "enable_auto_scaling" {
-  type        = bool
-  description = "Should the Kubernetes Auto Scaler be enabled for this Node Pool? "
-  default     = false
-}
+#
+# addons
+#
 
 variable "enable_azure_policy" {
   type        = bool
@@ -144,30 +198,6 @@ variable "enable_azure_pod_identity" {
   default     = false
 }
 
-variable "min_count" {
-  type        = number
-  description = "The minimum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000"
-  default     = null
-}
-
-variable "max_count" {
-  type        = number
-  description = "The maximum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000"
-  default     = null
-}
-
-variable "max_pods" {
-  type        = number
-  description = "The maximum number of pods that can run on each agent. Changing this forces a new resource to be created."
-  default     = 30
-}
-
-variable "upgrade_settings_max_surge" {
-  type        = string
-  description = "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade."
-  default     = "33%"
-}
-
 # Logs
 variable "log_analytics_workspace_id" {
   type        = string
@@ -182,12 +212,15 @@ variable "rbac_enabled" {
   default     = true
 }
 
+#
+# Alerts
+#
 variable "metric_alerts" {
   default = {}
 
   description = <<EOD
 Map of name = criteria objects
-EOD
+  EOD
 
   type = map(object({
     # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]

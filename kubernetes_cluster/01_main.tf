@@ -9,22 +9,41 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   private_cluster_enabled = var.private_cluster_enabled
 
+  #
+  # System node pool
+  #
   default_node_pool {
-    name                = var.node_pool_name
-    vm_size             = var.vm_size
-    availability_zones  = var.availability_zones
-    vnet_subnet_id      = var.vnet_subnet_id
-    enable_auto_scaling = var.enable_auto_scaling
-    node_count          = var.node_count
-    min_count           = var.min_count
-    max_count           = var.max_count
-    max_pods            = var.max_pods
+    name = var.system_node_pool_name
+
+    ### vm configuration
+    vm_size                      = var.system_node_pool_vm_size
+    os_disk_type                 = var.system_node_pool_os_disk_type
+    os_disk_size_gb              = var.system_node_pool_os_disk_size_gb
+    type                         = "VirtualMachineScaleSets"
+    only_critical_addons_enabled = var.system_node_pool_only_critical_addons_enabled
+    availability_zones           = ["1", "2", "3"]
+    ultra_ssd_enabled            = var.system_node_pool_ultra_ssd_enabled
+    enable_host_encryption       = var.system_node_pool_enable_host_encryption
+
+    ### autoscaling
+    enable_auto_scaling = true
+    node_count          = var.system_node_pool_node_count_min
+    min_count           = var.system_node_pool_node_count_min
+    max_count           = var.system_node_pool_node_count_max
+
+    ### K8s node configuration
+    max_pods    = var.system_node_pool_max_pods
+    node_labels = var.system_node_pool_node_labels
+
+    ### networking
+    vnet_subnet_id        = var.vnet_subnet_id
+    enable_node_public_ip = false
 
     upgrade_settings {
       max_surge = var.upgrade_settings_max_surge
     }
 
-    tags = var.tags
+    tags = merge(var.tags, var.system_node_pool_tags)
   }
 
   automatic_channel_upgrade       = var.automatic_channel_upgrade
@@ -48,7 +67,6 @@ resource "azurerm_kubernetes_cluster" "this" {
       load_balancer_sku  = "Standard"
       load_balancer_profile {
         outbound_ip_address_ids = var.outbound_ip_address_ids
-
       }
     }
   }
@@ -66,24 +84,19 @@ resource "azurerm_kubernetes_cluster" "this" {
       enabled                    = var.log_analytics_workspace_id != null ? true : false #tfsec:ignore:AZU009
       log_analytics_workspace_id = var.log_analytics_workspace_id
     }
-
     aci_connector_linux {
       enabled = false
     }
-
     azure_policy {
       enabled = var.enable_azure_policy
     }
-
     azure_keyvault_secrets_provider {
       enabled                 = var.enable_azure_keyvault_secrets_provider
       secret_rotation_enabled = true
     }
-
     http_application_routing {
       enabled = false
     }
-
     kube_dashboard {
       enabled = false
     }
