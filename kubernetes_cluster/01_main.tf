@@ -1,6 +1,6 @@
 # https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-b-series-burstable
-resource "null_resource" "pgbouncer_check" {
-  count = length(regexall("^B_.*", var.system_node_pool_vm_size)) > 0 && var.system_node_pool_os_disk_type == "Ephemeral" ? "ERROR: Burstable(B) series don't allow Ephemeral disks" : 0
+resource "null_resource" "b_series_not_ephemeral" {
+  count = length(regexall("Standard_B", var.system_node_pool_vm_size)) > 0 && var.system_node_pool_os_disk_type == "Ephemeral" ? "ERROR: Burstable(B) series don't allow Ephemeral disks" : 0
 }
 
 
