@@ -22,7 +22,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     name = var.system_node_pool_name
 
     ### vm configuration
-    vm_size                      = var.system_node_pool_vm_size
+    vm_size = var.system_node_pool_vm_size
     # https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-general
     os_disk_type                 = var.system_node_pool_os_disk_type # Managed or Ephemeral
     os_disk_size_gb              = var.system_node_pool_os_disk_size_gb
