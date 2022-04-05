@@ -100,6 +100,95 @@ variable "system_node_pool_tags" {
 }
 ### END SYSTEM NODE POOL
 
+#
+# User node pool
+#
+variable "user_node_pool_enabled" {
+  type        = bool
+  description = "Is user node pool enabled?"
+  default     = false
+}
+
+variable "user_node_pool_name" {
+  type        = string
+  description = "(Required) The name which should be used for the default Kubernetes Node Pool. Changing this forces a new resource to be created."
+  validation {
+    condition = (
+      length(var.user_node_pool_name) <= 12
+    )
+    error_message = "Max length is 12 chars."
+  }
+}
+
+variable "user_node_pool_vm_size" {
+  type        = string
+  description = "(Required) The size of the Virtual Machine, such as Standard_B4ms or Standard_D4s_vX. See https://pagopa.atlassian.net/wiki/spaces/DEVOPS/pages/134840344/Best+practice+su+prodotti"
+}
+
+variable "user_node_pool_os_disk_type" {
+  type        = string
+  description = "(Optional) The type of disk which should be used for the Operating System. Possible values are Ephemeral and Managed. Defaults to Managed."
+  default     = "Ephemeral"
+}
+
+variable "user_node_pool_os_disk_size_gb" {
+  type        = number
+  description = "(Optional) The size of the OS Disk which should be used for each agent in the Node Pool. Changing this forces a new resource to be created."
+}
+
+variable "user_node_pool_node_count_min" {
+  type        = number
+  description = "(Required) The minimum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000."
+}
+
+variable "user_node_pool_node_count_max" {
+  type        = number
+  description = "(Required) The maximum number of nodes which should exist in this Node Pool. If specified this must be between 1 and 1000."
+}
+
+variable "user_node_pool_max_pods" {
+  type        = number
+  description = "(Optional) The maximum number of pods that can run on each agent. Changing this forces a new resource to be created."
+  default     = 250
+}
+
+variable "user_node_pool_node_labels" {
+  type        = map(any)
+  description = "(Optional) A map of Kubernetes labels which should be applied to nodes in the Default Node Pool. Changing this forces a new resource to be created."
+  default     = {}
+}
+
+variable "user_node_pool_node_taints" {
+  type        = list(string)
+  description = "(Optional) A list of Kubernetes taints which should be applied to nodes in the agent pool (e.g key=value:NoSchedule). Changing this forces a new resource to be created."
+  default     = []
+}
+
+variable "user_node_pool_enable_host_encryption" {
+  type        = bool
+  description = "(Optional) Should the nodes in the Default Node Pool have host encryption enabled? Defaults to true."
+  default     = false
+}
+
+variable "user_node_pool_only_critical_addons_enabled" {
+  type        = bool
+  description = "(Optional) Enabling this option will taint default node pool with CriticalAddonsOnly=true:NoSchedule taint. Changing this forces a new resource to be created."
+  default     = true
+}
+
+variable "user_node_pool_ultra_ssd_enabled" {
+  type        = bool
+  description = "(Optional) Used to specify whether the UltraSSD is enabled in the Default Node Pool. Defaults to false."
+  default     = false
+}
+
+variable "user_node_pool_tags" {
+  type        = map(any)
+  description = "(Optional) A mapping of tags to assign to the Node Pool."
+  default     = {}
+}
+### END USER NODE POOL
+
 variable "upgrade_settings_max_surge" {
   type        = string
   description = "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade."

@@ -86,6 +86,9 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
+  #
+  # Addons
+  #
   addon_profile {
     oms_agent {
       enabled                    = var.log_analytics_workspace_id != null ? true : false #tfsec:ignore:AZU009
@@ -116,6 +119,51 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   tags = var.tags
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "this" {
+  count = var.user_node_pool_enabled ? 1 : 0
+
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
+
+  name = var.user_node_pool_name
+
+  ### vm configuration
+  vm_size = var.user_node_pool_vm_size
+  # https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-general
+  os_disk_type           = var.user_node_pool_os_disk_type # Managed or Ephemeral
+  os_disk_size_gb        = var.user_node_pool_os_disk_size_gb
+  availability_zones     = ["1", "2", "3"]
+  ultra_ssd_enabled      = var.user_node_pool_ultra_ssd_enabled
+  enable_host_encryption = var.user_node_pool_enable_host_encryption
+  os_type                = "Linux"
+
+  ### autoscaling
+  enable_auto_scaling = true
+  node_count          = var.user_node_pool_node_count_min
+  min_count           = var.user_node_pool_node_count_min
+  max_count           = var.user_node_pool_node_count_max
+
+  ### K8s node configuration
+  max_pods    = var.user_node_pool_max_pods
+  node_labels = var.user_node_pool_node_labels
+  node_taints = var.user_node_pool_node_taints
+
+  ### networking
+  vnet_subnet_id        = var.vnet_subnet_id
+  enable_node_public_ip = false
+
+  upgrade_settings {
+    max_surge = var.upgrade_settings_max_surge
+  }
+
+  tags = merge(var.tags, var.user_node_pool_tags)
+
+  lifecycle {
+    ignore_changes = [
+      node_count
+    ]
+  }
 }
 
 #
