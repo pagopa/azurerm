@@ -6,10 +6,6 @@ Module that allows the creation of azure container registry.
 
 TBD
 
-## Connection to DB
-
-- if **pgbounce** is enabled: the port is 6432, otherwise: 5432
-
 ## Limits and constraints
 
 - **Private endpoints** is avaible only for Premium sku.
