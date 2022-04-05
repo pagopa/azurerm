@@ -51,7 +51,6 @@ variable "system_node_pool_os_disk_type" {
 variable "system_node_pool_os_disk_size_gb" {
   type        = number
   description = "(Optional) The size of the OS Disk which should be used for each agent in the Node Pool. Changing this forces a new resource to be created."
-  default     = 80
 }
 
 variable "system_node_pool_node_count_min" {
@@ -67,7 +66,7 @@ variable "system_node_pool_node_count_max" {
 variable "system_node_pool_max_pods" {
   type        = number
   description = "(Optional) The maximum number of pods that can run on each agent. Changing this forces a new resource to be created."
-  default     = 150
+  default     = 250
 }
 
 variable "system_node_pool_node_labels" {

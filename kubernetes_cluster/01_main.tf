@@ -1,3 +1,9 @@
+# https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-b-series-burstable
+resource "null_resource" "pgbouncer_check" {
+  count = length(regexall("^B_.*", var.system_node_pool_vm_size)) > 0 && var.system_node_pool_os_disk_type == "Managed" ? "ERROR: Burstable(B) series don't allow Ephemeral disks" : 0
+}
+
+
 #tfsec:ignore:AZU008
 resource "azurerm_kubernetes_cluster" "this" {
   name                = var.name
@@ -17,7 +23,8 @@ resource "azurerm_kubernetes_cluster" "this" {
 
     ### vm configuration
     vm_size                      = var.system_node_pool_vm_size
-    os_disk_type                 = var.system_node_pool_os_disk_type
+    # https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-general
+    os_disk_type                 = var.system_node_pool_os_disk_type # Managed or Ephemeral
     os_disk_size_gb              = var.system_node_pool_os_disk_size_gb
     type                         = "VirtualMachineScaleSets"
     only_critical_addons_enabled = var.system_node_pool_only_critical_addons_enabled
