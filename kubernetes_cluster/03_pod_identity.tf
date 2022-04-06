@@ -2,7 +2,7 @@ resource "null_resource" "enable_pod_identity" {
   # needs az extension
   # see https://docs.microsoft.com/en-us/azure/aks/use-azure-ad-pod-identity#before-you-begin
 
-  count = var.enable_azure_pod_identity ? 1 : 0
+  count = var.addon_azure_pod_identity_enabled ? 1 : 0
 
   triggers = {
     resource_group_name = var.resource_group_name
