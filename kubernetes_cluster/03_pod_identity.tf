@@ -27,21 +27,21 @@ resource "null_resource" "enable_pod_identity" {
     EOT
   }
 
-  provisioner "local-exec" {
-    when    = destroy
-    command = <<EOT
-      if az extension list-available | grep aks-preview > /dev/null
-      then
-        az aks update \
-          -g ${self.triggers.resource_group_name} \
-          -n ${self.triggers.cluster_name} \
-          --disable-pod-identity \
-          --no-wait \
-          --yes
-      else
-        echo "addon: aks-preview not avaible"
-      fi
-    EOT
-  }
+  # provisioner "local-exec" {
+  #   when    = destroy
+  #   command = <<EOT
+  #     if az extension list-available | grep aks-preview > /dev/null
+  #     then
+  #       az aks update \
+  #         -g ${self.triggers.resource_group_name} \
+  #         -n ${self.triggers.cluster_name} \
+  #         --disable-pod-identity \
+  #         --no-wait \
+  #         --yes
+  #     else
+  #       echo "addon: aks-preview not avaible"
+  #     fi
+  #   EOT
+  # }
 }
 
