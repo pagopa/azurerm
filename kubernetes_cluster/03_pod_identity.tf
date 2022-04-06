@@ -16,9 +16,11 @@ resource "null_resource" "enable_pod_identity" {
         az extension add --name aks-preview
 
         az aks update \
-        -g ${self.triggers.resource_group_name} \
-        -n ${self.triggers.cluster_name} \
-        --enable-pod-identity
+          -g ${self.triggers.resource_group_name} \
+          -n ${self.triggers.cluster_name} \
+          --enable-pod-identity \
+          --no-wait \
+          --yes
       else
         echo "addon: aks-preview not avaible"
       fi
@@ -33,7 +35,9 @@ resource "null_resource" "enable_pod_identity" {
         az aks update \
           -g ${self.triggers.resource_group_name} \
           -n ${self.triggers.cluster_name} \
-          --disable-pod-identity
+          --disable-pod-identity \
+          --no-wait \
+          --yes
       else
         echo "addon: aks-preview not avaible"
       fi
