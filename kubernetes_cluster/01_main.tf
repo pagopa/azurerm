@@ -94,15 +94,15 @@ resource "azurerm_kubernetes_cluster" "this" {
       enabled                    = var.log_analytics_workspace_id != null ? true : false #tfsec:ignore:AZU009
       log_analytics_workspace_id = var.log_analytics_workspace_id
     }
-    aci_connector_linux {
-      enabled = false
+    azure_keyvault_secrets_provider {
+      enabled                 = var.addon_azure_keyvault_secrets_provider_enabled
+      secret_rotation_enabled = true
     }
     azure_policy {
       enabled = var.addon_azure_policy_enabled
     }
-    azure_keyvault_secrets_provider {
-      enabled                 = var.addon_azure_keyvault_secrets_provider_enabled
-      secret_rotation_enabled = true
+    aci_connector_linux {
+      enabled = false
     }
     http_application_routing {
       enabled = false

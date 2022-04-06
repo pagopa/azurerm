@@ -16,8 +16,7 @@ data "azurerm_public_ip" "aks_outbound" {
   name                = "${local.aks_public_ip_name}-${count.index + 1}"
 }
 
-#--------------------------------------------------------------------------------------------------
-
+# -------------------------------------
 resource "azurerm_resource_group" "rg_aks" {
   name     = local.aks_rg_name
   location = var.location
@@ -144,6 +143,7 @@ No modules.
 | [azurerm_role_assignment.vnet_outbound_role](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.vnet_role](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [null_resource.b_series_not_ephemeral_check](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [null_resource.enable_pod_identity](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 
 ## Inputs
 

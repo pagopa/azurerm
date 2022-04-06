@@ -273,7 +273,6 @@ variable "outbound_ip_address_ids" {
 #
 # addons
 #
-
 variable "addon_azure_policy_enabled" {
   type        = bool
   description = "Should the Azure Policy addon be enabled for this Node Pool? "
@@ -290,13 +289,6 @@ variable "addon_azure_pod_identity_enabled" {
   type        = bool
   description = "Should the AAD pod-managed identities be enabled for this Node Pool? "
   default     = false
-}
-
-# Logs
-variable "log_analytics_workspace_id" {
-  type        = string
-  description = "The ID of the Log Analytics Workspace which the OMS Agent should send data to."
-  default     = null
 }
 
 # Kubernetes RBAC
@@ -355,6 +347,15 @@ variable "alerts_enabled" {
   type        = bool
   default     = true
   description = "Should Metrics Alert be enabled?"
+}
+
+#
+# Logs
+#
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "The ID of the Log Analytics Workspace which the OMS Agent should send data to."
+  default     = null
 }
 
 variable "sec_log_analytics_workspace_id" {
