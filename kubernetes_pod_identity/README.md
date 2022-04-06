@@ -68,5 +68,7 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_identity"></a> [identity](#output\_identity) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
