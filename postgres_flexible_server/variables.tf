@@ -132,6 +132,14 @@ variable "pgbouncer_enabled" {
   description = "Is PgBouncer enabled into configurations?"
 }
 
+#
+# Monitoring & Alert
+#
+variable "diagnostic_settings_enabled" {
+  type = bool
+  default = true
+  description = "Is diagnostic settings enabled?"
+}
 
 variable "tags" {
   type = map(any)
