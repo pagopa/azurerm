@@ -4,5 +4,7 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
-      # - id: terraform_tfsec
+      - id: terraform_tfsec
+        args:
+          - --args=--exclude-downloaded-modules
       - id: terraform_validate
