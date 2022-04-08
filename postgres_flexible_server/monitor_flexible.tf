@@ -12,7 +12,7 @@ resource "azurerm_monitor_metric_alert" "this" {
   enabled             = var.alerts_enabled
 
   dynamic "action" {
-    for_each = var.action
+    for_each = var.alert_action
     content {
       # action_group_id - (required) is a type of string
       action_group_id = action.value["action_group_id"]
@@ -39,25 +39,18 @@ resource "azurerm_monitor_metric_alert" "this" {
   }
 }
 
+#
+# Diagnostic settings
+#
 resource "azurerm_monitor_diagnostic_setting" "this" {
   count                      = var.diagnostic_settings_enabled ? 1 : 0
   name                       = "LogSecurity"
   target_resource_id         = azurerm_postgresql_flexible_server.this.id
-  log_analytics_workspace_id = var.sec_log_analytics_workspace_id
-  storage_account_id         = var.sec_storage_id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+  storage_account_id         = var.diagnostic_setting_destination_storage_id
 
   log {
-    category = "kube-audit"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-      days    = 365
-    }
-  }
-
-  log {
-    category = "kube-audit-admin"
+    category = "PostgreSQLLogs"
     enabled  = true
 
     retention_policy {
