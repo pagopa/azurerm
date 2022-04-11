@@ -10,7 +10,7 @@ resource "azurerm_monitor_metric_alert" "this" {
   scopes              = [azurerm_postgresql_flexible_server.this.id]
   frequency           = each.value.frequency
   window_size         = each.value.window_size
-  severity = each.value.severity
+  severity            = each.value.severity
 
   dynamic "action" {
     for_each = var.alert_action
@@ -28,15 +28,6 @@ resource "azurerm_monitor_metric_alert" "this" {
     metric_name      = each.value.metric_name
     operator         = each.value.operator
     threshold        = each.value.threshold
-
-    # dynamic "dimension" {
-    #   for_each = each.value.dimension
-    #   content {
-    #     name     = dimension.value.name
-    #     operator = dimension.value.operator
-    #     values   = dimension.value.values
-    #   }
-    # }
   }
 }
 
