@@ -61,8 +61,7 @@ resource "kubernetes_manifest" "this_mounter" {
 }
 
 module "ingress_pod_identity" {
-  source = "git::https://github.com/pagopa/azurerm.git//kubernetes_pod_identity?ref=v2.7.0"
-
+  source = "git::https://github.com/pagopa/azurerm.git//kubernetes_pod_identity?ref=v2.11.0"
 
   resource_group_name = var.resource_group_name
   location            = var.location
