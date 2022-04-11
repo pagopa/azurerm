@@ -27,6 +27,7 @@ resource "azurerm_monitor_metric_alert" "this" {
     metric_name      = each.value.metric_name
     operator         = each.value.operator
     threshold        = each.value.threshold
+    severity         = each.value.severity
 
     # dynamic "dimension" {
     #   for_each = each.value.dimension

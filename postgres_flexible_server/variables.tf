@@ -155,14 +155,8 @@ EOD
     frequency = string
     # Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D.
     window_size = string
-
-    # dimension = list(object(
-    #   {
-    #     name     = string
-    #     operator = string
-    #     values   = list(string)
-    #   }
-    # ))
+    # severity: The severity of this Metric Alert. Possible values are 0, 1, 2, 3 and 4. Defaults to 3.
+    severity = number
   }))
 }
 
