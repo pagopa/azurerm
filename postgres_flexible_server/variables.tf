@@ -132,6 +132,68 @@ variable "pgbouncer_enabled" {
   description = "Is PgBouncer enabled into configurations?"
 }
 
+#
+# Monitoring & Alert
+#
+variable "metric_alerts" {
+  default = {}
+
+  description = <<EOD
+Map of name = criteria objects
+EOD
+
+  type = map(object({
+    # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]
+    aggregation = string
+    metric_name = string
+    # "Insights.Container/pods" "Insights.Container/nodes"
+    metric_namespace = string
+    # criteria.0.operator to be one of [Equals NotEquals GreaterThan GreaterThanOrEqual LessThan LessThanOrEqual]
+    operator  = string
+    threshold = number
+    # Possible values are PT1M, PT5M, PT15M, PT30M and PT1H
+    frequency = string
+    # Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D.
+    window_size = string
+    # severity: The severity of this Metric Alert. Possible values are 0, 1, 2, 3 and 4. Defaults to 3.
+    severity = number
+  }))
+}
+
+variable "alerts_enabled" {
+  type        = bool
+  default     = true
+  description = "Should Metrics Alert be enabled?"
+}
+
+variable "alert_action" {
+  description = "The ID of the Action Group and optional map of custom string properties to include with the post webhook operation."
+  type = set(object(
+    {
+      action_group_id    = string
+      webhook_properties = map(string)
+    }
+  ))
+  default = []
+}
+
+variable "diagnostic_settings_enabled" {
+  type        = bool
+  default     = true
+  description = "Is diagnostic settings enabled?"
+}
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  default     = null
+  description = "(Optional) Specifies the ID of a Log Analytics Workspace where Diagnostics Data should be sent."
+}
+
+variable "diagnostic_setting_destination_storage_id" {
+  type        = string
+  default     = null
+  description = "(Optional) The ID of the Storage Account where logs should be sent. Changing this forces a new resource to be created."
+}
 
 variable "tags" {
   type = map(any)
