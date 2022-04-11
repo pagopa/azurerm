@@ -55,7 +55,7 @@ module "helm-template-ingress" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ingress_pod_identity"></a> [ingress\_pod\_identity](#module\_ingress\_pod\_identity) | git::https://github.com/pagopa/azurerm.git//kubernetes_pod_identity | v2.10.0 |
+| <a name="module_ingress_pod_identity"></a> [ingress\_pod\_identity](#module\_ingress\_pod\_identity) | git::https://github.com/pagopa/azurerm.git//kubernetes_pod_identity | v2.11.0 |
 
 ## Resources
 
