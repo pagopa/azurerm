@@ -65,11 +65,6 @@ resource "azurerm_kubernetes_cluster" "this" {
     type = "SystemAssigned"
   }
 
-  key_vault_secrets_provider {
-    enabled                 = var.addon_key_vault_secrets_provider_enabled
-    secret_rotation_enabled = true
-  }
-
   dynamic "network_profile" {
     for_each = var.network_profile != null ? [var.network_profile] : []
     iterator = p
@@ -92,6 +87,14 @@ resource "azurerm_kubernetes_cluster" "this" {
     azure_active_directory {
       managed                = true
       admin_group_object_ids = var.aad_admin_group_ids
+    }
+  }
+
+  dynamic "key_vault_secrets_provider" {
+    for_each = var.addon_key_vault_secrets_provider_enabled ? ["dummy"] : []
+
+    content {
+      secret_rotation_enabled = true
     }
   }
 

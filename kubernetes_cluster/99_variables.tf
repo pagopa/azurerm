@@ -279,7 +279,7 @@ variable "addon_azure_policy_enabled" {
   default     = false
 }
 
-variable "addon_azure_keyvault_secrets_provider_enabled" {
+variable "addon_key_vault_secrets_provider_enabled" {
   type        = bool
   description = "Should the Azure Secrets Store CSI addon be enabled for this Node Pool? "
   default     = false
