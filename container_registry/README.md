@@ -77,6 +77,10 @@ module "container_registry_private" {
     zone_redundancy_enabled   = true
   }]
 
+  # Logs
+  sec_log_analytics_workspace_id = var.env_short == "p" ? data.azurerm_key_vault_secret.sec_workspace_id[0].value : null
+  sec_storage_id                 = var.env_short == "p" ? data.azurerm_key_vault_secret.sec_storage_id[0].value : null
+
   tags = var.tags
 }
 ```
@@ -114,6 +118,12 @@ module "container_registry_public" {
     location                  = var.location_seconsary
     regional_endpoint_enabled = false
     zone_redundancy_enabled   = true
+  }]
+
+  default = [{
+    default_action  = "Allow"
+    ip_rule         = []
+    virtual_network = []
   }]
 
   tags = var.tags
