@@ -20,6 +20,17 @@ resource "azurerm_container_registry" "this" {
     }
   }
 
+  dynamic "network_rule_set" {
+    for_each = var.sku == "Premium" ? var.network_rule_set : []
+    iterator = n
+
+    content {
+      default_action  = n.value.default_action
+      ip_rule         = n.value.ip_rule
+      virtual_network = n.value.virtual_network
+    }
+  }
+
   tags = var.tags
 }
 
