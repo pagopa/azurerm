@@ -65,6 +65,11 @@ resource "azurerm_kubernetes_cluster" "this" {
     type = "SystemAssigned"
   }
 
+  key_vault_secrets_provider {
+    enabled                 = var.addon_key_vault_secrets_provider_enabled
+    secret_rotation_enabled = true
+  }
+
   dynamic "network_profile" {
     for_each = var.network_profile != null ? [var.network_profile] : []
     iterator = p
@@ -97,10 +102,6 @@ resource "azurerm_kubernetes_cluster" "this" {
     oms_agent {
       enabled                    = var.log_analytics_workspace_id != null ? true : false #tfsec:ignore:AZU009
       log_analytics_workspace_id = var.log_analytics_workspace_id
-    }
-    key_vault_secrets_provider {
-      enabled                 = var.addon_azure_keyvault_secrets_provider_enabled
-      secret_rotation_enabled = true
     }
     azure_policy {
       enabled = var.addon_azure_policy_enabled
