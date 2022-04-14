@@ -69,3 +69,41 @@ resource "azurerm_private_endpoint" "this" {
 
 #   tags = var.tags
 # }
+
+resource "azurerm_monitor_diagnostic_setting" "this" {
+  count                      = var.sec_log_analytics_workspace_id != null ? 1 : 0
+  name                       = "SecurityLogs"
+  target_resource_id         = azurerm_container_registry.this.id
+  log_analytics_workspace_id = var.sec_log_analytics_workspace_id
+  storage_account_id         = var.sec_storage_id
+
+  log {
+    category = "ContainerRegistryRepositoryEvents"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  log {
+    category = "ContainerRegistryLoginEvents"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 365
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = false
+
+    retention_policy {
+      days    = 0
+      enabled = false
+    }
+  }
+}
