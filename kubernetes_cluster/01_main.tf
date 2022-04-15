@@ -89,13 +89,13 @@ resource "azurerm_kubernetes_cluster" "this" {
     admin_group_object_ids = var.aad_admin_group_ids
   }
 
-  dynamic "key_vault_secrets_provider" {
-    for_each = var.addon_key_vault_secrets_provider_enabled ? ["dummy"] : []
+  # dynamic "key_vault_secrets_provider" {
+  #   for_each = var.addon_key_vault_secrets_provider_enabled ? ["dummy"] : []
 
-    content {
-      secret_rotation_enabled = true
-    }
-  }
+  #   content {
+  #     secret_rotation_enabled = true
+  #   }
+  # }
 
   #
   # Addons
@@ -107,6 +107,10 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
     azure_policy {
       enabled = var.addon_azure_policy_enabled
+    }
+    azure_keyvault_secrets_provider {
+      enabled                 = var.enable_azure_keyvault_secrets_provider
+      secret_rotation_enabled = true
     }
     aci_connector_linux {
       enabled = false
