@@ -82,7 +82,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
-  role_based_access_control {
+  role_based_access_control_enabled = true
+  azure_active_directory_role_based_access_control {
     enabled = var.rbac_enabled
     azure_active_directory {
       managed                = true
