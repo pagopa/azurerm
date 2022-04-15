@@ -109,7 +109,7 @@ resource "azurerm_kubernetes_cluster" "this" {
       enabled = var.addon_azure_policy_enabled
     }
     azure_keyvault_secrets_provider {
-      enabled                 = var.enable_azure_keyvault_secrets_provider
+      enabled                 = var.addon_azure_key_vault_secrets_provider_enabled
       secret_rotation_enabled = true
     }
     aci_connector_linux {
