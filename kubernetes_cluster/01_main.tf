@@ -84,11 +84,9 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   role_based_access_control_enabled = true
   azure_active_directory_role_based_access_control {
-    enabled = var.rbac_enabled
-    azure_active_directory {
-      managed                = true
-      admin_group_object_ids = var.aad_admin_group_ids
-    }
+    managed                = true
+    azure_rbac_enabled     = true
+    admin_group_object_ids = var.aad_admin_group_ids
   }
 
   dynamic "key_vault_secrets_provider" {
