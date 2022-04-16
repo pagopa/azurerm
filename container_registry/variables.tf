@@ -56,6 +56,26 @@ variable "georeplications" {
   default     = []
 }
 
+variable "network_rule_set" {
+  type = list(object({
+    default_action = string
+    ip_rule = list(object({
+      action   = string
+      ip_range = string
+    }))
+    virtual_network = list(object({
+      action    = string
+      subnet_id = string
+    }))
+  }))
+  description = "A list of network rule set defined at https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry#network_rule_set"
+  default = [{
+    default_action  = "Deny"
+    ip_rule         = []
+    virtual_network = []
+  }]
+}
+
 variable "private_endpoint" {
   type = object({
     enabled              = bool
@@ -79,6 +99,18 @@ variable "private_endpoint" {
 #   description = "(Required) Enable private endpoint with required params"
 #   default = []
 # }
+
+variable "sec_log_analytics_workspace_id" {
+  type        = string
+  default     = null
+  description = "Log analytics workspace security (it should be in a different subscription)."
+}
+
+variable "sec_storage_id" {
+  type        = string
+  default     = null
+  description = "Storage Account security (it should be in a different subscription)."
+}
 
 variable "tags" {
   type = map(any)
