@@ -2,7 +2,7 @@
 # Monitor Metrics
 #
 resource "azurerm_monitor_metric_alert" "this" {
-  for_each = var.metric_alerts
+  for_each = local.metric_alerts
 
   enabled             = var.alerts_enabled
   name                = "${var.name}-${upper(each.key)}"
