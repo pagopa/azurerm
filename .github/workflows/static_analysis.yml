@@ -17,7 +17,7 @@ jobs:
       - name: run_test
         run: |
           TAG=v1.68.0
-          docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a
+          docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a -v
 
       - name: show_precommit_logs
         if: always()
