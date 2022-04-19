@@ -20,5 +20,6 @@ jobs:
           docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a
 
       - name: show_precommit_logs
+        if: always()
         run: |
           cat /root/.cache/pre-commit/pre-commit.log
