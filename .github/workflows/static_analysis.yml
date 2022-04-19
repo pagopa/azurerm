@@ -22,4 +22,4 @@ jobs:
       - name: show_precommit_logs
         if: always()
         run: |
-          cat /root/.cache/pre-commit/pre-commit.log
+          sudo cat /root/.cache/pre-commit/pre-commit.log
