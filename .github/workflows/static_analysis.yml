@@ -22,10 +22,5 @@ jobs:
         run: |
           ls -la
           git branch
-          TAG=v1.65.0
+          TAG=v1.64.0
           docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a -v
-
-      - name: show_precommit_logs
-        if: always()
-        run: |
-          sudo cat /root/.cache/pre-commit/pre-commit.log
