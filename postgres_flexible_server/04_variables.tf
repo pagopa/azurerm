@@ -192,7 +192,7 @@ variable "default_metric_alerts" {
       metric_name      = "cpu_percent"
       operator         = "GreaterThan"
       threshold        = 80
-      severity = 2
+      severity         = 2
     },
     memory_percent = {
       frequency        = "PT5M"
@@ -202,7 +202,7 @@ variable "default_metric_alerts" {
       metric_name      = "memory_percent"
       operator         = "GreaterThan"
       threshold        = 80
-      severity = 2
+      severity         = 2
     },
     storage_percent = {
       frequency        = "PT5M"
@@ -212,7 +212,7 @@ variable "default_metric_alerts" {
       metric_name      = "storage_percent"
       operator         = "GreaterThan"
       threshold        = 80
-      severity = 2
+      severity         = 2
     },
     active_connections = {
       frequency        = "PT5M"
@@ -222,7 +222,7 @@ variable "default_metric_alerts" {
       metric_name      = "active_connections"
       operator         = "GreaterThan"
       threshold        = 80
-      severity = 2
+      severity         = 2
     },
     connections_failed = {
       frequency        = "PT5M"
@@ -232,7 +232,7 @@ variable "default_metric_alerts" {
       metric_name      = "connections_failed"
       operator         = "GreaterThan"
       threshold        = 80
-      severity = 2
+      severity         = 2
     }
   }
 }
@@ -278,5 +278,5 @@ variable "tags" {
 
 locals {
   high_availability_zone = var.zone != null && var.zone == 2 ? 3 : 1
-  metric_alerts = var.custom_metric_alerts != null ? var.custom_metric_alerts : var.default_metric_alerts
+  metric_alerts          = var.custom_metric_alerts != null ? var.custom_metric_alerts : var.default_metric_alerts
 }
