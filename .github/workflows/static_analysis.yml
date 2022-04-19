@@ -12,6 +12,10 @@ jobs:
 
       - name: run_init
         run: |
+          ls -la
+
+      - name: run_init
+        run: |
           bash .utils/terraform_run_all.sh init docker
 
       - name: run_test
