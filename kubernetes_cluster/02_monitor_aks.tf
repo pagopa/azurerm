@@ -2,9 +2,9 @@
 # Monitor Metrics
 #
 resource "azurerm_monitor_metric_alert" "this" {
-  for_each = var.metric_alerts
+  for_each = local.metric_alerts
 
-  name                = format("%s-%s", azurerm_kubernetes_cluster.this.name, upper(each.key))
+  name                = "${azurerm_kubernetes_cluster.this.name}-${upper(each.key)}"
   resource_group_name = var.resource_group_name
   scopes              = [azurerm_kubernetes_cluster.this.id]
   frequency           = each.value.frequency
