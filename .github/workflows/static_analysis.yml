@@ -12,7 +12,7 @@ jobs:
 
       - name: run_init
         run: |
-          bash .utils/terraform_run_all_parallel_only_local.sh init docker
+          bash .utils/terraform_run_all.sh init docker
 
       - name: run_test
         run: |
