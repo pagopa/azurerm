@@ -59,12 +59,12 @@ No modules.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the Kubernetes cluster. | `string` | n/a | yes |
 | <a name="input_identity_name"></a> [identity\_name](#input\_identity\_name) | Name to use for the identity. | `string` | n/a | yes |
 | <a name="input_key_permissions"></a> [key\_permissions](#input\_key\_permissions) | API permissions of the identity to access keys | `list(string)` | `[]` | no |
-| <a name="input_key_vault"></a> [key\_vault](#input\_key\_vault) | KeyVault azurerm resource where the identity will connect to. | `any` | n/a | yes |
+| <a name="input_key_vault"></a> [key\_vault](#input\_key\_vault) | KeyVault azurerm resource where the identity will connect to. | `any` | `{}` | no |
 | <a name="input_location"></a> [location](#input\_location) | Location of the Kubernetes cluster. | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace. | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource group of the Kubernetes cluster. | `string` | n/a | yes |
 | <a name="input_secret_permissions"></a> [secret\_permissions](#input\_secret\_permissions) | API permissions of the identity to access secrets | `list(string)` | `[]` | no |
-| <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | Azure tenant id of the given KeyVault. | `string` | n/a | yes |
+| <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | Azure tenant id of the given KeyVault. | `string` | `""` | no |
 
 ## Outputs
 
