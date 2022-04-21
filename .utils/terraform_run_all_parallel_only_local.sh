@@ -18,6 +18,17 @@ TAG=$(cat .terraform-version)
 ACTION="$1"
 MODE="$2"
 
+case "${MODE}" in
+  docker*)
+    docker pull "hashicorp/terraform:$TAG"
+  ;;
+  local*)
+    terraform -version
+  ;;
+  *)
+  exit 1
+esac
+
 function terraform_init(){
   folder="$1"
 
