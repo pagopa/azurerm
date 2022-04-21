@@ -11,11 +11,13 @@ variable "location" {
 variable "key_vault" {
   type        = any
   description = "KeyVault azurerm resource where the identity will connect to."
+  default     = null
 }
 
 variable "tenant_id" {
   type        = string
   description = "Azure tenant id of the given KeyVault."
+  default     = ""
 }
 
 variable "cluster_name" {

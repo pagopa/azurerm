@@ -5,7 +5,7 @@ resource "azurerm_user_assigned_identity" "this" {
 }
 
 resource "azurerm_key_vault_access_policy" "this" {
-  count = length(var.certificate_permissions) == 0 && length(var.key_permissions) == 0 && length(var.secret_permissions) == 0 ? 0 : 1
+  count = var.key_vault == null ? 0 : 1
 
   key_vault_id = var.key_vault.id
   tenant_id    = var.tenant_id
