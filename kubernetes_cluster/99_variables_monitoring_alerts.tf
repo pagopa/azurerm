@@ -228,6 +228,8 @@ variable "custom_metric_alerts" {
   Map of name = criteria objects
   EOD
 
+  default = {}
+
   type = map(object({
     # criteria.*.aggregation to be one of [Average Count Minimum Maximum Total]
     aggregation = string
