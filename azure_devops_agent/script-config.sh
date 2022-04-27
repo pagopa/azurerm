@@ -54,3 +54,7 @@ echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sour
 
 apt-get -y update
 apt-get -y install helm
+
+# install zip unzip
+apt-get -y update
+apt-get -y install zip unzip
