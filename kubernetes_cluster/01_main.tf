@@ -82,6 +82,29 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
+  maintenance_window {
+    allowed {
+      day   = "Sunday"
+      hours = [23, 0, 1, 2, 3, 4]
+    }
+    allowed {
+      day   = "Monday"
+      hours = [23, 0, 1, 2, 3, 4]
+    }
+    allowed {
+      day   = "Tuesday"
+      hours = [23, 0, 1, 2, 3, 4]
+    }
+    allowed {
+      day   = "Wednesday"
+      hours = [23, 0, 1, 2, 3, 4]
+    }
+    allowed {
+      day   = "Thursday"
+      hours = [23, 0, 1, 2, 3, 4]
+    }
+  }
+
   role_based_access_control_enabled = true
   azure_active_directory_role_based_access_control {
     managed                = true
