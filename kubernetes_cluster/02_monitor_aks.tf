@@ -2,9 +2,9 @@
 # Monitor Metrics
 #
 resource "azurerm_monitor_metric_alert" "this" {
-  for_each = var.metric_alerts
+  for_each = local.metric_alerts
 
-  name                = format("%s-%s", azurerm_kubernetes_cluster.this.name, upper(each.key))
+  name                = "${azurerm_kubernetes_cluster.this.name}-${upper(each.key)}"
   resource_group_name = var.resource_group_name
   scopes              = [azurerm_kubernetes_cluster.this.id]
   frequency           = each.value.frequency
@@ -63,6 +63,96 @@ resource "azurerm_monitor_diagnostic_setting" "aks" {
     retention_policy {
       enabled = true
       days    = 365
+    }
+  }
+
+  log {
+    category = "cloud-controller-manager"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "cluster-autoscaler"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "csi-azuredisk-controller"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "csi-azurefile-controller"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "csi-snapshot-controller"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "guard"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "kube-apiserver"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "kube-controller-manager"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
+
+  log {
+    category = "kube-scheduler"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+      days    = 0
     }
   }
 
