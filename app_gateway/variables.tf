@@ -21,6 +21,12 @@ variable "sku_tier" {
   description = "SKU tier of the App GW"
 }
 
+variable "zones" {
+  type = list
+  default = null
+  description = "(Optional) Specifies a list of Availability Zones in which this Application Gateway should be located. Changing this forces a new Application Gateway to be created."
+}
+
 # Networkig
 
 variable "subnet_id" {
