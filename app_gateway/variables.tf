@@ -123,6 +123,8 @@ variable "url_path_map" {
       rewrite_rule_set_name = string # The Name of the Rewrite Rule Set which should be used for this URL Path Map
     }))
   }))
+  default = {}
+  description = "To configure the mapping between path and backend"
 }
 
 variable "rewrite_rule_sets" {
