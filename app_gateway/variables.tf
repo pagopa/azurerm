@@ -21,6 +21,12 @@ variable "sku_tier" {
   description = "SKU tier of the App GW"
 }
 
+variable "zones" {
+  type        = list(any)
+  default     = null
+  description = "(Optional) Specifies a list of Availability Zones in which this Application Gateway should be located. Changing this forces a new Application Gateway to be created."
+}
+
 # Networkig
 
 variable "subnet_id" {
@@ -117,6 +123,8 @@ variable "url_path_map" {
       rewrite_rule_set_name = string # The Name of the Rewrite Rule Set which should be used for this URL Path Map
     }))
   }))
+  default     = {}
+  description = "To configure the mapping between path and backend"
 }
 
 variable "rewrite_rule_sets" {
