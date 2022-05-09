@@ -22,8 +22,8 @@ variable "sku_tier" {
 }
 
 variable "zones" {
-  type = list
-  default = null
+  type        = list(any)
+  default     = null
   description = "(Optional) Specifies a list of Availability Zones in which this Application Gateway should be located. Changing this forces a new Application Gateway to be created."
 }
 
@@ -123,7 +123,7 @@ variable "url_path_map" {
       rewrite_rule_set_name = string # The Name of the Rewrite Rule Set which should be used for this URL Path Map
     }))
   }))
-  default = {}
+  default     = {}
   description = "To configure the mapping between path and backend"
 }
 
