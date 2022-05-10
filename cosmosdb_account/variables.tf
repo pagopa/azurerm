@@ -1,17 +1,17 @@
 # General Variables
 variable "location" {
-  type = string
+  type        = string
   description = "Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created."
 }
 
 variable "name" {
-  type = string
+  type        = string
   description = "(Required) Specifies the name of the CosmosDB Account. Changing this forces a new resource to be created."
 }
 
 // Resource Group
 variable "resource_group_name" {
-  type = string
+  type        = string
   description = "(Required) The name of the resource group in which the CosmosDB Account is created. Changing this forces a new resource to be created."
 }
 
@@ -28,14 +28,14 @@ variable "kind" {
 
 // CosmosDB specific variables
 variable "enable_free_tier" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
   description = "Enable Free Tier pricing option for this Cosmos DB account. Defaults to false. Changing this forces a new resource to be created."
 }
 
 variable "enable_automatic_failover" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
   description = "Enable automatic fail over for this Cosmos DB account."
 }
 
@@ -52,7 +52,7 @@ variable "mongo_server_version" {
 }
 
 variable "main_geo_location_location" {
-  type = string
+  type        = string
   description = "(Required) The name of the Azure region to host replicated data."
 }
 
@@ -65,9 +65,9 @@ variable "additional_geo_locations" {
   type = list(object({
     location          = string # The name of the Azure region to host replicated data.
     failover_priority = number # Required) The failover priority of the region. A failover priority of 0 indicates a write region. The maximum value for a failover priority = (total number of regions - 1). Failover priority values must be unique for each of the regions in which the database account exists. Changing this causes the location to be re-provisioned and cannot be changed for the location with failover priority 0.
-    zone_redundant    = bool # Should zone redundancy be enabled for this region? Defaults to false.
+    zone_redundant    = bool   # Should zone redundancy be enabled for this region? Defaults to false.
   }))
-  default = []
+  default     = []
   description = "Specifies a list of additional geo_location resources, used to define where data should be replicated with the failover_priority 0 specifying the primary location."
 }
 
