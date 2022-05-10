@@ -47,5 +47,5 @@ variable "autoscale_settings" {
     max_throughput = number
   })
   default = null
-
+  description = "Autoscale settings for collection"
 }
