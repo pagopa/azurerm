@@ -46,6 +46,6 @@ variable "autoscale_settings" {
   type = object({
     max_throughput = number
   })
-  default = null
-
+  default     = null
+  description = "Autoscale settings for collection"
 }

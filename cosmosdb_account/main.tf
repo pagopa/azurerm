@@ -82,6 +82,9 @@ resource "azurerm_cosmosdb_account" "this" {
   tags = var.tags
 }
 
+#
+# Private endpoints
+#
 resource "azurerm_private_endpoint" "sql" {
   count = var.private_endpoint_enabled && length(var.capabilities) == 0 ? 1 : 0
 
@@ -154,6 +157,9 @@ resource "azurerm_private_endpoint" "cassandra" {
   }
 }
 
+#
+# Locks
+#
 resource "azurerm_management_lock" "this" {
   count      = var.lock_enable ? 1 : 0
   name       = format("%s-lock", azurerm_cosmosdb_account.this.name)
