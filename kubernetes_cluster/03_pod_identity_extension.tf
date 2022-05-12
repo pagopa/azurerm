@@ -13,7 +13,7 @@ resource "null_resource" "enable_pod_identity" {
     command = <<EOT
       if az extension list-available | grep aks-preview > /dev/null
       then
-        az extension add --name aks-preview
+        az extension add --name aks-preview || true
 
         az aks update \
           -g ${self.triggers.resource_group_name} \
