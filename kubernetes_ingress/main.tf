@@ -5,7 +5,7 @@ resource "kubernetes_ingress_v1" "this" {
     annotations = {
       "kubernetes.io/ingress.class"                    = "nginx"
       "nginx.ingress.kubernetes.io/rewrite-target"     = "/$1"
-      "nginx.ingress.kubernetes.io/force-ssl-redirect" = "true"
+      "nginx.ingress.kubernetes.io/force-ssl-redirect" = "${var.force_ssl_redirect}"
       "nginx.ingress.kubernetes.io/use-regex"          = "true"
     }
   }
