@@ -70,6 +70,7 @@ module "helm-template-ingress" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the Kubernetes cluster. | `string` | n/a | yes |
+| <a name="input_force_ssl_redirect"></a> [force\_ssl\_redirect](#input\_force\_ssl\_redirect) | Force ssl redirect. | `bool` | n/a | yes |
 | <a name="input_host"></a> [host](#input\_host) | Ingress host, it supports only one host per ingress. | `string` | n/a | yes |
 | <a name="input_key_vault"></a> [key\_vault](#input\_key\_vault) | KeyVault azurerm resource. | `any` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Location of the Kubernetes cluster. | `string` | n/a | yes |
