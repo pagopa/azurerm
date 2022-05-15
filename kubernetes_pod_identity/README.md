@@ -1,6 +1,10 @@
 # kubernetes\_ingress
 
-Module that allows the creation of a pod identity. Check https://docs.microsoft.com/en-us/azure/aks/use-azure-ad-pod-identity#create-an-aks-cluster-with-kubenet-network-plugin for more.
+Module that allows the creation of a pod identity. Check <https://docs.microsoft.com/en-us/azure/aks/use-azure-ad-pod-identity#create-an-aks-cluster-with-kubenet-network-plugin> or <https://docs.microsoft.com/en-us/azure/aks/use-azure-ad-pod-identity#run-a-sample-application> for more information.
+
+## Architecture
+
+![architecture](./docs/module-arch.drawio.png)
 
 ## How to use it
 
@@ -11,7 +15,7 @@ module "ingress_pod_identity" {
   resource_group_name = "dvopla-d-aks-rg"
   location            = "northeurope"
   identity_name       = "helm-template-pod-identity"
-  key_vault           = data.azurerm_key_vault.kv
+  key_vault_id        = data.azurerm_key_vault.kv.id
   tenant_id           = "c767fb1d-a665-4714-9a1a-323a7818b016"
   cluster_name        = "dvopla-d-aks"
   namespace           = "helm-template"

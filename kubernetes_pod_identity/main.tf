@@ -1,14 +1,17 @@
 resource "azurerm_user_assigned_identity" "this" {
   resource_group_name = var.resource_group_name
   location            = var.location
+
   name                = var.identity_name
 }
 
 resource "azurerm_key_vault_access_policy" "this" {
   count = var.key_vault == null ? 0 : 1
 
-  key_vault_id = var.key_vault.id
+  key_vault_id = var.key_vault_id
   tenant_id    = var.tenant_id
+
+  # The object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault.
   object_id    = azurerm_user_assigned_identity.this.principal_id
 
   certificate_permissions = var.certificate_permissions
