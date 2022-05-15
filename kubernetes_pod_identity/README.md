@@ -59,16 +59,16 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_certificate_permissions"></a> [certificate\_permissions](#input\_certificate\_permissions) | API permissions of the identity to access certificates | `list(string)` | `[]` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the Kubernetes cluster. | `string` | n/a | yes |
-| <a name="input_identity_name"></a> [identity\_name](#input\_identity\_name) | Name to use for the identity. | `string` | n/a | yes |
-| <a name="input_key_permissions"></a> [key\_permissions](#input\_key\_permissions) | API permissions of the identity to access keys | `list(string)` | `[]` | no |
-| <a name="input_key_vault"></a> [key\_vault](#input\_key\_vault) | KeyVault azurerm resource where the identity will connect to. | `any` | `null` | no |
-| <a name="input_location"></a> [location](#input\_location) | Location of the Kubernetes cluster. | `string` | n/a | yes |
-| <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace. | `string` | n/a | yes |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource group of the Kubernetes cluster. | `string` | n/a | yes |
-| <a name="input_secret_permissions"></a> [secret\_permissions](#input\_secret\_permissions) | API permissions of the identity to access secrets | `list(string)` | `[]` | no |
-| <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | Azure tenant id of the given KeyVault. | `string` | `""` | no |
+| <a name="input_certificate_permissions"></a> [certificate\_permissions](#input\_certificate\_permissions) | (Optional) API permissions of the identity to access certificates, must be one or more from the following: Backup, Create, Delete, DeleteIssuers, Get, GetIssuers, Import, List, ListIssuers, ManageContacts, ManageIssuers, Purge, Recover, Restore, SetIssuers and Update. | `list(string)` | `[]` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | (Required) Name of the Kubernetes cluster. | `string` | n/a | yes |
+| <a name="input_identity_name"></a> [identity\_name](#input\_identity\_name) | (Required) The name of the user assigned identity and POD identity. Changing this forces a new identity to be created. | `string` | n/a | yes |
+| <a name="input_key_permissions"></a> [key\_permissions](#input\_key\_permissions) | (Optional) API permissions of the identity to access keys, must be one or more from the following: Backup, Create, Decrypt, Delete, Encrypt, Get, Import, List, Purge, Recover, Restore, Sign, UnwrapKey, Update, Verify and WrapKey. | `list(string)` | `[]` | no |
+| <a name="input_key_vault_id"></a> [key\_vault\_id](#input\_key\_vault\_id) | (Required) Specifies the id of the Key Vault resource. Changing this forces a new resource to be created. | `any` | `null` | no |
+| <a name="input_location"></a> [location](#input\_location) | (Required) Location of the Kubernetes cluster. | `string` | n/a | yes |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | (Required) Kubernetes namespace where the pod identity will be create. | `string` | n/a | yes |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | (Required) Resource group of the Kubernetes cluster. | `string` | n/a | yes |
+| <a name="input_secret_permissions"></a> [secret\_permissions](#input\_secret\_permissions) | (Optional) API permissions of the identity to access secrets, must be one or more from the following: Backup, Delete, Get, List, Purge, Recover, Restore and Set. | `list(string)` | `[]` | no |
+| <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | (Required) The Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Changing this forces a new resource to be created. | `string` | n/a | yes |
 
 ## Outputs
 
