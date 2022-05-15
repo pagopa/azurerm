@@ -47,6 +47,11 @@ variable "key_vault" {
   description = "KeyVault azurerm resource."
 }
 
+variable "force_ssl_redirect" {
+  type        = bool
+  description = "Force ssl redirect."
+}
+
 locals {
   secret_name   = replace(var.host, ".", "-")
   identity_name = "${var.namespace}-ingress-pod-identity"
