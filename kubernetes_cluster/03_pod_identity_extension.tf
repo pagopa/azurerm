@@ -16,8 +16,8 @@ resource "null_resource" "enable_pod_identity" {
         az extension add --name aks-preview || true
 
         az aks update \
-          -g ${self.triggers.resource_group_name} \
-          -n ${self.triggers.cluster_name} \
+          --resource-group ${self.triggers.resource_group_name} \
+          --name ${self.triggers.cluster_name} \
           --enable-pod-identity \
           --no-wait \
           --yes
@@ -43,5 +43,9 @@ resource "null_resource" "enable_pod_identity" {
   #     fi
   #   EOT
   # }
+
+  depends_on = [
+    azurerm_kubernetes_cluster.this
+  ]
 }
 
