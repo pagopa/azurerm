@@ -37,6 +37,10 @@ resource "azurerm_monitor_metric_alert" "this" {
       }
     }
   }
+
+  depends_on = [
+    azurerm_kubernetes_cluster.this
+  ]
 }
 
 resource "azurerm_monitor_diagnostic_setting" "aks" {
@@ -165,4 +169,9 @@ resource "azurerm_monitor_diagnostic_setting" "aks" {
       enabled = false
     }
   }
+
+
+  depends_on = [
+    azurerm_kubernetes_cluster.this
+  ]
 }
