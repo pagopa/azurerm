@@ -112,37 +112,22 @@ resource "azurerm_kubernetes_cluster" "this" {
     admin_group_object_ids = var.aad_admin_group_ids
   }
 
-  # dynamic "key_vault_secrets_provider" {
-  #   for_each = var.addon_key_vault_secrets_provider_enabled ? ["dummy"] : []
+  http_application_routing_enabled = false
+  azure_policy_enabled             = var.addon_azure_policy_enabled
 
-  #   content {
-  #     secret_rotation_enabled = true
-  #   }
-  # }
+  dynamic "key_vault_secrets_provider" {
+    for_each = var.addon_azure_key_vault_secrets_provider_enabled ? [true] : []
 
-  #
-  # Addons
-  #
-  addon_profile {
-    oms_agent {
-      enabled                    = var.log_analytics_workspace_id != null ? true : false #tfsec:ignore:AZU009
-      log_analytics_workspace_id = var.log_analytics_workspace_id
+    content {
+      secret_rotation_enabled = key_vault_secrets_provider.value
     }
-    azure_policy {
-      enabled = var.addon_azure_policy_enabled
-    }
-    azure_keyvault_secrets_provider {
-      enabled                 = var.addon_azure_key_vault_secrets_provider_enabled
-      secret_rotation_enabled = true
-    }
-    aci_connector_linux {
-      enabled = false
-    }
-    http_application_routing {
-      enabled = false
-    }
-    kube_dashboard {
-      enabled = false
+  }
+
+  dynamic "oms_agent" {
+    for_each = var.log_analytics_workspace_id != null ? [var.log_analytics_workspace_id] : []
+
+    content {
+      log_analytics_workspace_id = oms_agent.value
     }
   }
 
