@@ -123,6 +123,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
+  #tfsec:ignore:azure-container-logging addon_profile is deprecated, false positive
   dynamic "oms_agent" {
     for_each = var.log_analytics_workspace_id != null ? [var.log_analytics_workspace_id] : []
 
