@@ -9,6 +9,7 @@ resource "null_resource" "b_series_not_ephemeral_user_check" {
 
 
 #tfsec:ignore:AZU008
+#tfsec:ignore:azure-container-logging addon_profile is deprecated, false positive
 resource "azurerm_kubernetes_cluster" "this" {
   name                = var.name
   location            = var.location
@@ -123,7 +124,6 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
-  #tfsec:ignore:azure-container-logging addon_profile is deprecated, false positive
   dynamic "oms_agent" {
     for_each = var.log_analytics_workspace_id != null ? [var.log_analytics_workspace_id] : []
 
