@@ -10,6 +10,7 @@ resource "azurerm_storage_account" "this" {
   enable_https_traffic_only = var.enable_https_traffic_only
   min_tls_version           = var.min_tls_version
   allow_blob_public_access  = var.allow_blob_public_access
+  is_hns_enabled            = var.is_hns_enabled
 
   dynamic "blob_properties" {
     for_each = var.blob_properties_delete_retention_policy_days == null ? [] : ["dummy"]
