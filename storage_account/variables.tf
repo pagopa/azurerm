@@ -50,13 +50,19 @@ variable "enable_https_traffic_only" {
   description = "Boolean flag which forces HTTPS if enabled, see here for more information. Defaults to true"
 }
 
+variable "is_hns_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable Hierarchical Namespace enabled (Azure Data Lake Storage Gen 2). Changing this forces a new resource to be created."
+}
+
 variable "allow_blob_public_access" {
   type        = bool
   default     = false
   description = "Allow or disallow public access to all blobs or containers in the storage account."
 }
 
-# Note: If specifying network_rules, 
+# Note: If specifying network_rules,
 # one of either ip_rules or virtual_network_subnet_ids must be specified
 # and default_action must be set to Deny.
 
