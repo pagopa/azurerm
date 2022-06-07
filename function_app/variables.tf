@@ -93,6 +93,12 @@ variable "use_32_bit_worker_process" {
   default     = false
 }
 
+variable "linux_fx_version" {
+  type        = string
+  description = "(Optional) Linux App Framework and version for the AppService, e.g. DOCKER|(golang:latest)."
+  default     = null
+}
+
 variable "application_insights_instrumentation_key" {
   type        = string
   description = "Application insights instrumentation key"
@@ -149,7 +155,7 @@ variable "internal_storage" {
     private_dns_zone_queue_ids = list(string)
     private_dns_zone_table_ids = list(string)
     queues                     = list(string) # Queues names
-    containers                 = list(string) # Containers names 
+    containers                 = list(string) # Containers names
     blobs_retention_days       = number
   })
 

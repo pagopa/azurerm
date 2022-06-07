@@ -48,6 +48,12 @@ variable "use_32_bit_worker_process" {
   default     = false
 }
 
+variable "linux_fx_version" {
+  type        = string
+  description = "(Optional) Linux App Framework and version for the AppService, e.g. DOCKER|(golang:latest)."
+  default     = null
+}
+
 variable "application_insights_instrumentation_key" {
   type = string
 }
