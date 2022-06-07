@@ -24,6 +24,7 @@ resource "azurerm_function_app_slot" "this" {
     pre_warmed_instance_count = var.pre_warmed_instance_count
     vnet_route_all_enabled    = var.subnet_id == null ? false : true
     use_32_bit_worker_process = var.use_32_bit_worker_process
+    linux_fx_version          = var.linux_fx_version
 
     dynamic "ip_restriction" {
       for_each = local.ip_restrictions
