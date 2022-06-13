@@ -128,7 +128,7 @@ resource "azurerm_private_endpoint" "eventhub" {
 }
 
 resource "azurerm_private_dns_a_record" "private_dns_a_record_eventhub" {
-  count = var.sku != "Basic" ? 1 : 0
+  count = (var.sku != "Basic" && var.private_dns_zone_record_A_name != null) ? 1 : 0
 
   name                = var.private_dns_zone_record_A_name
   zone_name           = length(var.private_dns_zones.id) > 0 ? var.private_dns_zones.name[0] : azurerm_private_dns_zone.eventhub[0].name
