@@ -44,6 +44,7 @@ No modules.
 | <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | Path which will be checked for this function app health. | `string` | `null` | no |
 | <a name="input_https_only"></a> [https\_only](#input\_https\_only) | (Required) n the Function App only be accessed via HTTPS? Defaults to true. | `bool` | `true` | no |
 | <a name="input_internal_storage_connection_string"></a> [internal\_storage\_connection\_string](#input\_internal\_storage\_connection\_string) | Storage account connection string for durable functions. Null in case of standard function | `string` | `null` | no |
+| <a name="input_linux_fx_version"></a> [linux\_fx\_version](#input\_linux\_fx\_version) | (Optional) Linux App Framework and version for the AppService, e.g. DOCKER\|(golang:latest). | `string` | `null` | no |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_os_type"></a> [os\_type](#input\_os\_type) | (Optional) A string indicating the Operating System type for this function app. This value will be linux for Linux derivatives, or an empty string for Windows (default). When set to linux you must also set azurerm\_app\_service\_plan arguments as kind = Linux and reserved = true | `string` | `null` | no |
