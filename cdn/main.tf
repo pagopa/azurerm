@@ -565,7 +565,7 @@ resource "azurerm_dns_a_record" "hostname_a" {
   # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
   count = length(split(var.dns_zone_name, var.hostname))>1 ? 1 : 0
 
-  name                = trimsuffix(var.hostname, var.dns_zone_name)
+  name                = trimsuffix(trimsuffix(var.hostname, var.dns_zone_name), ".")
   zone_name           = var.dns_zone_name
   resource_group_name = var.dns_zone_resource_group_name
   ttl                 = 3600
