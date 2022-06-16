@@ -561,7 +561,7 @@ resource "azurerm_dns_a_record" "hostname" {
 }
 
 # record A
-resource "azurerm_dns_a_record" "hostname" {
+resource "azurerm_dns_a_record" "hostname_a" {
   # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
   count = length(split(var.dns_zone_name, var.hostname))>1 ? 1 : 0
 
