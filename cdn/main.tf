@@ -560,6 +560,20 @@ resource "azurerm_dns_a_record" "hostname" {
   tags = var.tags
 }
 
+# record A
+resource "azurerm_dns_a_record" "hostname" {
+  # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
+  count = length(split(var.dns_zone_name, var.hostname))>1 ? 1 : 0
+
+  name                = trimsuffix(var.hostname, var.dns_zone_name)
+  zone_name           = var.dns_zone_name
+  resource_group_name = var.dns_zone_resource_group_name
+  ttl                 = 3600
+  target_resource_id  = azurerm_cdn_endpoint.this.id
+
+  tags = var.tags
+}
+
 # https://docs.microsoft.com/en-us/azure/dns/dns-custom-domain#azure-cdn
 resource "azurerm_dns_cname_record" "cdnverify" {
   count = var.dns_zone_name == var.hostname ? 1 : 0
