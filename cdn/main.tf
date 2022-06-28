@@ -563,7 +563,8 @@ resource "azurerm_dns_a_record" "hostname" {
 # record A
 resource "azurerm_dns_a_record" "hostname_a" {
   # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
-  count = length(split(var.dns_zone_name, var.hostname))>1 ? 1 : 0
+  # true if ex: dns_zone_name = dev.pagopa.it, hostname = west.dev.pagopa.it
+  count = length(split(var.dns_zone_name, var.hostname)) > 1 ? 1 : 0
 
   name                = trimsuffix(trimsuffix(var.hostname, var.dns_zone_name), ".")
   zone_name           = var.dns_zone_name
