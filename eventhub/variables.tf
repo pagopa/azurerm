@@ -152,6 +152,13 @@ variable "private_dns_zone_record_A_name" {
 
 }
 
+variable "private_dns_zone_resource_group" {
+  description = "Name of the resource group record in the private dns zone"
+  type        = string
+  default     = null
+
+}
+
 variable "tags" {
   type = map(any)
 }

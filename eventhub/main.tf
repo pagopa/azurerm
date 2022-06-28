@@ -132,7 +132,7 @@ resource "azurerm_private_dns_a_record" "private_dns_a_record_eventhub" {
 
   name                = var.private_dns_zone_record_A_name
   zone_name           = length(var.private_dns_zones.id) > 0 ? var.private_dns_zones.name[0] : azurerm_private_dns_zone.eventhub[0].name
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.private_dns_zone_resource_group ? var.private_dns_zone_resource_group : var.resource_group_name
   ttl                 = 300
   records             = azurerm_private_endpoint.eventhub[0].private_service_connection.*.private_ip_address
 }
