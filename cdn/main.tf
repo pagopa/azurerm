@@ -520,12 +520,7 @@ resource "null_resource" "custom_domain" {
         --endpoint-name ${self.triggers.endpoint_name} \
         --profile-name ${self.triggers.profile_name} \
         --name ${replace(self.triggers.name, ".", "-")} \
-        --min-tls-version "1.2" \
-        --user-cert-protocol-type sni \
-        --user-cert-group-name ${self.triggers.keyvault_resource_group_name} \
-        --user-cert-vault-name ${self.triggers.keyvault_vault_name} \
-        --user-cert-secret-name ${replace(self.triggers.name, ".", "-")} \
-        --user-cert-subscription-id  ${self.triggers.keyvault_subscription_id}
+        --min-tls-version "1.2" 
     EOT
   }
   # https://docs.microsoft.com/it-it/cli/azure/cdn/custom-domain?view=azure-cli-latest
@@ -560,20 +555,6 @@ resource "azurerm_dns_a_record" "hostname" {
   tags = var.tags
 }
 
-# record A
-resource "azurerm_dns_a_record" "hostname_a" {
-  # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
-  # true if ex: dns_zone_name = dev.pagopa.it, hostname = west.dev.pagopa.it
-  count = length(split(var.dns_zone_name, var.hostname)) > 1 ? 1 : 0
-
-  name                = trimsuffix(trimsuffix(var.hostname, var.dns_zone_name), ".")
-  zone_name           = var.dns_zone_name
-  resource_group_name = var.dns_zone_resource_group_name
-  ttl                 = 3600
-  target_resource_id  = azurerm_cdn_endpoint.this.id
-
-  tags = var.tags
-}
 
 # https://docs.microsoft.com/en-us/azure/dns/dns-custom-domain#azure-cdn
 resource "azurerm_dns_cname_record" "cdnverify" {
