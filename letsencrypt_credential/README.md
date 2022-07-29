@@ -1,4 +1,4 @@
-# app service
+# Let's Encrypt account
 
 This module allow the creation of an let's encrypt credentials
 
