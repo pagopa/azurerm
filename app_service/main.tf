@@ -11,6 +11,10 @@ resource "azurerm_app_service_plan" "this" {
     size = var.plan_sku_size
   }
 
+  
+  
+  
+  
   maximum_elastic_worker_count = var.plan_maximum_elastic_worker_count
   reserved                     = var.plan_reserved
   per_site_scaling             = var.plan_per_site_scaling
