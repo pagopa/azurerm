@@ -12,7 +12,7 @@ resource "null_resource" "this" {
     command = <<EOT
       container_name="le${self.triggers.prefix}${self.triggers.env}"
 
-      docker run --name $container_name certbot/certbot register --agree-tos --email "${self.triggers.email}" -n
+      docker run --name $container_name certbot/certbot:${var.certbot_version} register --agree-tos --email "${self.triggers.email}" -n
 
       mkdir -p ./accounts/${self.triggers.prefix}${self.triggers.env}
       docker cp $container_name:/etc/letsencrypt/accounts/ ./accounts/${self.triggers.prefix}${self.triggers.env}
