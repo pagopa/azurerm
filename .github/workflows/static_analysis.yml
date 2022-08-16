@@ -16,5 +16,5 @@ jobs:
 
       - name: run_test
         run: |
-          TAG=nightly
+          TAG=v1.74.1
           docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a
