@@ -33,7 +33,7 @@ resource "azurerm_monitor_metric_alert" "alert_this" {
   severity            = 0
   frequency           = "PT5M"
   auto_mitigate       = false
-  enabled = var.alert_enabled
+  enabled             = var.alert_enabled
 
   criteria {
     metric_namespace = "microsoft.insights/components"
