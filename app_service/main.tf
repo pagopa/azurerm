@@ -24,7 +24,7 @@ resource "azurerm_app_service" "this" {
   resource_group_name = var.resource_group_name
 
   app_service_plan_id = var.plan_type == "internal" ? azurerm_app_service_plan.this[0].id : var.plan_id
-  https_only          = true
+  https_only          = var.https_only
   #tfsec:ignore:azure-appservice-require-client-cert
   client_cert_enabled = var.client_cert_enabled
 

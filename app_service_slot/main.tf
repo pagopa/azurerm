@@ -5,7 +5,7 @@ resource "azurerm_app_service_slot" "this" {
 
   app_service_plan_id = var.app_service_plan_id
   app_service_name    = var.app_service_name
-  https_only          = true
+  https_only          = var.https_only
 
   app_settings = var.app_settings
 

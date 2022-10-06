@@ -79,6 +79,12 @@ variable "name" {
   description = "(Required) Specifies the name of the App Service. Changing this forces a new resource to be created."
 }
 
+variable "https_only" {
+  type        = bool
+  description = "(Optional) Can the App Service only be accessed via HTTPS? Defaults to true."
+  default     = true
+}
+
 variable "client_cert_enabled" {
   type        = bool
   description = "(Optional) Does the App Service require client certificates for incoming requests? Defaults to false."
