@@ -26,6 +26,12 @@ variable "app_service_name" {
   description = "(Required) The name of the App Service within which to create the App Service Slot. Changing this forces a new resource to be created."
 }
 
+variable "https_only" {
+  type        = bool
+  description = "(Optional) Can the App Service only be accessed via HTTPS? Defaults to true."
+  default     = true
+}
+
 ## App service slot
 
 variable "name" {
