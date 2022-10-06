@@ -485,15 +485,15 @@ resource "azurerm_cdn_endpoint" "this" {
 /*
 * Custom Domain
 */
-resource "null_resource" "custom_domain" {
+resource "null_resource" "apex_custom_hostname" {
+  count = var.dns_zone_name == var.hostname ? 1 : 0
+
   depends_on = [
-    azurerm_dns_a_record.hostname[0],
-    azurerm_dns_cname_record.cdnverify[0],
-    azurerm_dns_cname_record.custom_subdomain[0],
+    azurerm_dns_a_record.apex_hostname[0],
+    azurerm_dns_cname_record.apex_cdnverify[0],
     azurerm_cdn_endpoint.this,
   ]
-  # needs az cli > 2.0.81
-  # see https://github.com/Azure/azure-cli/issues/12152
+
   triggers = {
     resource_group_name = var.resource_group_name
     endpoint_name       = azurerm_cdn_endpoint.this.name
@@ -520,7 +520,63 @@ resource "null_resource" "custom_domain" {
         --endpoint-name ${self.triggers.endpoint_name} \
         --profile-name ${self.triggers.profile_name} \
         --name ${replace(self.triggers.name, ".", "-")} \
-        --min-tls-version "1.2" 
+        --min-tls-version "1.2" \
+        --user-cert-protocol-type sni \
+        --user-cert-group-name ${self.triggers.keyvault_resource_group_name} \
+        --user-cert-vault-name ${self.triggers.keyvault_vault_name} \
+        --user-cert-secret-name ${replace(self.triggers.name, ".", "-")} \
+        --user-cert-subscription-id  ${self.triggers.keyvault_subscription_id}
+    EOT
+  }
+  # https://docs.microsoft.com/it-it/cli/azure/cdn/custom-domain?view=azure-cli-latest
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOT
+      az cdn custom-domain disable-https \
+        --resource-group ${self.triggers.resource_group_name} \
+        --endpoint-name ${self.triggers.endpoint_name} \
+        --profile-name ${self.triggers.profile_name} \
+        --name ${replace(self.triggers.name, ".", "-")} && \
+      az cdn custom-domain delete \
+        --resource-group ${self.triggers.resource_group_name} \
+        --endpoint-name ${self.triggers.endpoint_name} \
+        --profile-name ${self.triggers.profile_name} \
+        --name ${replace(self.triggers.name, ".", "-")}
+    EOT
+  }
+}
+
+resource "null_resource" "custom_hostname" {
+  count = var.dns_zone_name != var.hostname ? 1 : 0
+
+  depends_on = [
+    azurerm_dns_cname_record.hostname[0],
+    azurerm_cdn_endpoint.this,
+  ]
+
+  triggers = {
+    resource_group_name = var.resource_group_name
+    endpoint_name       = azurerm_cdn_endpoint.this.name
+    profile_name        = azurerm_cdn_profile.this.name
+    name                = var.hostname
+    hostname            = var.hostname
+  }
+
+  # https://docs.microsoft.com/it-it/cli/azure/cdn/custom-domain?view=azure-cli-latest
+  provisioner "local-exec" {
+    command = <<EOT
+      az cdn custom-domain create \
+        --resource-group ${self.triggers.resource_group_name} \
+        --endpoint-name ${self.triggers.endpoint_name} \
+        --profile-name ${self.triggers.profile_name} \
+        --name ${replace(self.triggers.name, ".", "-")} \
+        --hostname ${self.triggers.hostname} && \
+      az cdn custom-domain enable-https \
+        --resource-group ${self.triggers.resource_group_name} \
+        --endpoint-name ${self.triggers.endpoint_name} \
+        --profile-name ${self.triggers.profile_name} \
+        --name ${replace(self.triggers.name, ".", "-")} \
+        --min-tls-version "1.2"
     EOT
   }
   # https://docs.microsoft.com/it-it/cli/azure/cdn/custom-domain?view=azure-cli-latest
@@ -542,7 +598,7 @@ resource "null_resource" "custom_domain" {
 }
 
 # record APEX https://docs.microsoft.com/it-it/azure/dns/dns-zones-records#record-names
-resource "azurerm_dns_a_record" "hostname" {
+resource "azurerm_dns_a_record" "apex_hostname" {
   # create this iff DNS zone name equal to HOST NAME azurerm_cdn_endpoint.this.host_name
   count = var.dns_zone_name == var.hostname ? 1 : 0
 
@@ -555,9 +611,8 @@ resource "azurerm_dns_a_record" "hostname" {
   tags = var.tags
 }
 
-
 # https://docs.microsoft.com/en-us/azure/dns/dns-custom-domain#azure-cdn
-resource "azurerm_dns_cname_record" "cdnverify" {
+resource "azurerm_dns_cname_record" "apex_cdnverify" {
   count = var.dns_zone_name == var.hostname ? 1 : 0
 
   name                = "cdnverify"
@@ -569,10 +624,9 @@ resource "azurerm_dns_cname_record" "cdnverify" {
   tags = var.tags
 }
 
-resource "azurerm_dns_cname_record" "custom_subdomain" {
+resource "azurerm_dns_cname_record" "hostname" {
   count = var.dns_zone_name != var.hostname ? 1 : 0
 
-  # name                = var.cname_record_name
   name                = trimsuffix(replace(var.hostname, var.dns_zone_name, ""), ".")
   zone_name           = var.dns_zone_name
   resource_group_name = var.dns_zone_resource_group_name
