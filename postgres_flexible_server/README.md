@@ -18,6 +18,11 @@ Module that allows the creation of a postgres flexible.
 
 * **HA** and **pg bouncer** is not avaible for B series machines
 
+## SKU
+How to retrieve possible SKU values?
+1. use `az postgres flexible-server list-skus -l westeurope`
+2. choose from json response your instance sku using tier and server version.
+
 ## Metrics
 
 By default the module has his own metrics, but if you want to override it you can use the parameter `custom_metric_alerts` with this example structure:
