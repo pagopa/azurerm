@@ -32,6 +32,12 @@ variable "https_only" {
   default     = true
 }
 
+variable "client_affinity_enabled" {
+  type        = bool
+  description = "(Optional) Should the App Service send session affinity cookies, which route client requests in the same session to the same instance? Defaults to false."
+  default     = false
+}
+
 ## App service slot
 
 variable "name" {
