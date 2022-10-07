@@ -87,6 +87,12 @@ variable "subnet_id" {
   description = "The ID of the subnet the app service will be associated to (the subnet must have a service_delegation configured for Microsoft.Web/serverFarms)"
 }
 
+variable "vnet_integration" {
+  type        = bool
+  description = "(optional) Enable vnet integration. Wheter it's true the subnet_id should not be null."
+  default     = true
+}
+
 variable "os_type" {
   type        = string
   description = "(Optional) A string indicating the Operating System type for this function app. This value will be linux for Linux derivatives, or an empty string for Windows (default). When set to linux you must also set azurerm_app_service_plan arguments as kind = Linux and reserved = true"

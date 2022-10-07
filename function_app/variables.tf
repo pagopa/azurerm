@@ -44,6 +44,7 @@ variable "storage_account_info" {
   })
 
   default = {
+    account_kind                      = "Storage"
     account_tier                      = "Standard"
     account_replication_type          = "LRS"
     access_tier                       = "Hot"
@@ -141,10 +142,15 @@ variable "cors" {
   default = null
 }
 
-
 variable "subnet_id" {
   type        = string
   description = "The ID of the subnet the app service will be associated to (the subnet must have a service_delegation configured for Microsoft.Web/serverFarms)"
+}
+
+variable "vnet_integration" {
+  type        = bool
+  description = "(optional) Enable vnet integration. Wheter it's true the subnet_id should not be null."
+  default     = true
 }
 
 variable "internal_storage" {
