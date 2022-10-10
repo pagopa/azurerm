@@ -6,7 +6,7 @@ module "storage_account" {
   account_kind               = var.storage_account_info.account_kind
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
-  access_tier                = var.storage_account_info.access_tier
+  access_tier                = var.storage_account_info.account_kind != "Storage" ? var.storage_account_info.access_tier : null
   resource_group_name        = var.resource_group_name
   location                   = var.location
   advanced_threat_protection = var.storage_account_info.advanced_threat_protection_enable
@@ -24,7 +24,7 @@ module "storage_account_durable_function" {
   account_kind               = var.storage_account_info.account_kind
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
-  access_tier                = var.storage_account_info.access_tier
+  access_tier                = var.storage_account_info.account_kind != "Storage" ? var.storage_account_info.access_tier : null
   resource_group_name        = var.resource_group_name
   location                   = var.location
   advanced_threat_protection = false
