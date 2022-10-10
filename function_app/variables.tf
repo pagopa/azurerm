@@ -47,7 +47,7 @@ variable "storage_account_info" {
   default = {
     account_kind                      = "Storage"
     account_tier                      = "Standard"
-    account_replication_type          = "LRS"
+    account_replication_type          = "ZRS"
     access_tier                       = "Hot"
     advanced_threat_protection_enable = true
   }
