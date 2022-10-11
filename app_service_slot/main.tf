@@ -16,7 +16,7 @@ resource "azurerm_app_service_slot" "this" {
     app_command_line       = var.app_command_line
     min_tls_version        = "1.2"
     ftps_state             = var.ftps_state
-    vnet_route_all_enabled = var.subnet_id == null ? false : var.vnet_route_all_enabled
+    vnet_route_all_enabled = var.subnet_id == null ? false : true
 
     health_check_path = var.health_check_path != null ? var.health_check_path : null
 

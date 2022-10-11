@@ -3,10 +3,10 @@ module "storage_account" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.7.0"
 
   name                       = coalesce(var.storage_account_name, format("%sst", replace(var.name, "-", "")))
-  account_kind               = "StorageV2"
+  account_kind               = var.storage_account_info.account_kind
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
-  access_tier                = var.storage_account_info.access_tier
+  access_tier                = var.storage_account_info.account_kind != "Storage" ? var.storage_account_info.access_tier : null
   resource_group_name        = var.resource_group_name
   location                   = var.location
   advanced_threat_protection = var.storage_account_info.advanced_threat_protection_enable
@@ -21,10 +21,10 @@ module "storage_account_durable_function" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.7.0"
 
   name                       = coalesce(var.storage_account_durable_name, format("%ssdt", replace(var.name, "-", "")))
-  account_kind               = "StorageV2"
+  account_kind               = var.storage_account_info.account_kind
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
-  access_tier                = var.storage_account_info.access_tier
+  access_tier                = var.storage_account_info.account_kind != "Storage" ? var.storage_account_info.access_tier : null
   resource_group_name        = var.resource_group_name
   location                   = var.location
   advanced_threat_protection = false
@@ -277,6 +277,8 @@ data "azurerm_function_app_host_keys" "this" {
 
 # Manages an App Service Virtual Network Association
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {
+  count = var.vnet_integration ? 1 : 0
+
   app_service_id = azurerm_function_app.this.id
   subnet_id      = var.subnet_id
 }
