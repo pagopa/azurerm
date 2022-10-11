@@ -157,13 +157,6 @@ variable "subnet_id" {
   default     = null
 }
 
-
-variable "vnet_route_all_enabled" {
-  type        = bool
-  description = "Should all outbound traffic to have Virtual Network Security Groups and User Defined Routes applied?"
-  default     = true
-}
-
 variable "tags" {
   type = map(any)
 }
