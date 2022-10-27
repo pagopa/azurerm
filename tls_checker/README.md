@@ -31,8 +31,7 @@ module "tls_checker" {
   application_insights_connection_string     = data.azurerm_application_insights.application_insights.connection_string
   application_insights_resource_group        = data.azurerm_resource_group.monitor_rg.name
   application_insights_id                    = data.azurerm_application_insights.application_insights.id
-  application_insights_action_group_slack_id = data.azurerm_monitor_action_group.slack.id
-  application_insights_action_group_email_id = data.azurerm_monitor_action_group.email.id
+  application_insights_action_group_ids      = [data.azurerm_monitor_action_group.slack.id, data.azurerm_monitor_action_group.email.id]
 }
 ```
 
