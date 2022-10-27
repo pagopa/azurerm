@@ -31,8 +31,7 @@ module "tls_checker" {
   application_insights_connection_string     = data.azurerm_application_insights.application_insights.connection_string
   application_insights_resource_group        = data.azurerm_resource_group.monitor_rg.name
   application_insights_id                    = data.azurerm_application_insights.application_insights.id
-  application_insights_action_group_slack_id = data.azurerm_monitor_action_group.slack.id
-  application_insights_action_group_email_id = data.azurerm_monitor_action_group.email.id
+  application_insights_action_group_ids      = [data.azurerm_monitor_action_group.slack.id, data.azurerm_monitor_action_group.email.id]
 }
 ```
 
@@ -44,14 +43,14 @@ module "tls_checker" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.80.0, <= 2.99.0 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | <= 2.6.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | <= 2.7.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.99.0 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | 2.6.0 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | 2.7.1 |
 
 ## Modules
 
@@ -70,8 +69,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_alert_enabled"></a> [alert\_enabled](#input\_alert\_enabled) | (Optional) Is this alert enabled? | `bool` | `true` | no |
 | <a name="input_alert_name"></a> [alert\_name](#input\_alert\_name) | (Optional) Alert name | `string` | `null` | no |
-| <a name="input_application_insights_action_group_email_id"></a> [application\_insights\_action\_group\_email\_id](#input\_application\_insights\_action\_group\_email\_id) | (Required) Application insights action group id for email | `string` | n/a | yes |
-| <a name="input_application_insights_action_group_slack_id"></a> [application\_insights\_action\_group\_slack\_id](#input\_application\_insights\_action\_group\_slack\_id) | (Required) Application insights action group id for slack | `string` | n/a | yes |
+| <a name="input_application_insights_action_group_ids"></a> [application\_insights\_action\_group\_ids](#input\_application\_insights\_action\_group\_ids) | (Required) Application insights action group ids | `list(string)` | n/a | yes |
 | <a name="input_application_insights_connection_string"></a> [application\_insights\_connection\_string](#input\_application\_insights\_connection\_string) | (Required) Application Insights connection string | `string` | n/a | yes |
 | <a name="input_application_insights_id"></a> [application\_insights\_id](#input\_application\_insights\_id) | (Required) Application Insights id | `string` | n/a | yes |
 | <a name="input_application_insights_resource_group"></a> [application\_insights\_resource\_group](#input\_application\_insights\_resource\_group) | (Required) Application Insights resource group | `string` | n/a | yes |

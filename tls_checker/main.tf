@@ -49,12 +49,12 @@ resource "azurerm_monitor_metric_alert" "alert_this" {
     }
   }
 
-  action {
-    action_group_id = var.application_insights_action_group_slack_id
-  }
+  dynamic "action" {
+    for_each = var.application_insights_action_group_ids
 
-  action {
-    action_group_id = var.application_insights_action_group_email_id
+    content {
+      action_group_id = action.value
+    }
   }
 
   depends_on = [

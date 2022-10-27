@@ -55,14 +55,9 @@ variable "application_insights_id" {
   description = "(Required) Application Insights id"
 }
 
-variable "application_insights_action_group_slack_id" {
-  type        = string
-  description = "(Required) Application insights action group id for slack"
-}
-
-variable "application_insights_action_group_email_id" {
-  type        = string
-  description = "(Required) Application insights action group id for email"
+variable "application_insights_action_group_ids" {
+  type        = list(string)
+  description = "(Required) Application insights action group ids"
 }
 
 variable "alert_name" {
