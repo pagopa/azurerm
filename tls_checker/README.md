@@ -49,8 +49,8 @@ module "tls_checker" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.22.0 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | 2.6.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.28.0 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | 2.7.1 |
 
 ## Modules
 
