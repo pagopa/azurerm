@@ -1,6 +1,10 @@
 # MongoDB Collection
 
-This module allow the creation of a collection inside a MongoDB database
+This module allow the creation of a collection inside a MongoDB database.
+
+## Limits
+
+`autoscale_settings` are ignored in lifecycle to allow a external configuration to be done
 
 ## Architecture
 
