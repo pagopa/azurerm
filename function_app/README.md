@@ -9,7 +9,18 @@ Module that allows the creation of an Azure function app.
 ## How to use it
 
 ```ts
+module "io_sign_issuer_func" {
+  source = "git::https://github.com/pagopa/azurerm.git//function_app?ref=v3.2.6"
 
+  name                                     = format("%s-func", local.project)
+  location                                 = azurerm_resource_group.backend_rg.location
+  resource_group_name                      = azurerm_resource_group.backend_rg.name
+  subnet_id                                = module.subnet.id
+  application_insights_instrumentation_key = data.azurerm_application_insights.monitor.instrumentation_key
+  system_identity                          = true
+
+  tags = var.tags
+}
 ```
 
 <!-- markdownlint-disable -->
