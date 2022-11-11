@@ -264,7 +264,7 @@ resource "azurerm_function_app" "this" {
   enable_builtin_logging = false
 
   dynamic "identity" {
-    for_each = var.system_identity ? [1] : []
+    for_each = var.system_identity_enabled ? [1] : []
     content {
       type = "SystemAssigned"
     }

@@ -200,7 +200,8 @@ variable "tags" {
   type = map(any)
 }
 
-variable "system_identity" {
-  type    = bool
-  default = false
+variable "system_identity_enabled" {
+  type        = bool
+  description = "Enable the System Identity and create relative Service Principal."
+  default     = false
 }
