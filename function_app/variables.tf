@@ -199,3 +199,8 @@ variable "export_keys" {
 variable "tags" {
   type = map(any)
 }
+
+variable "system_identity" {
+  type    = bool
+  default = false
+}

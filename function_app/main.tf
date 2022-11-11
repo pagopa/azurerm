@@ -263,6 +263,13 @@ resource "azurerm_function_app" "this" {
 
   enable_builtin_logging = false
 
+  dynamic "identity" {
+    for_each = var.system_identity ? [1] : []
+    content {
+      type = "SystemAssigned"
+    }
+  }
+
   tags = var.tags
 }
 
