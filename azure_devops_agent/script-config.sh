@@ -67,6 +67,12 @@ wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${YQ_BINARY
 apt-get -y update
 apt-get -y install zip unzip
 
+# install SOPS from https://github.com/mozilla/sops
+SOPS_VERSION="v3.7.3"
+SOPS_BINARY="3.7.3_amd64.deb"
+
+wget https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops_${SOPS_BINARY} |apt install -y $PWD/sops_${SOPS_BINARY}
+
 # prepare machine for k6 large load test
 
 sysctl -w net.ipv4.ip_local_port_range="1024 65535"
