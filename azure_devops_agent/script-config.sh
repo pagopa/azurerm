@@ -73,6 +73,11 @@ SOPS_BINARY="3.7.3_amd64.deb"
 
 wget https://github.com/mozilla/sops/releases/download/${SOPS_VERSION}/sops_${SOPS_BINARY} |apt install -y $PWD/sops_${SOPS_BINARY}
 
+# install jq
+
+apt-get -y update
+apt-get -y install jq
+
 # prepare machine for k6 large load test
 
 sysctl -w net.ipv4.ip_local_port_range="1024 65535"
