@@ -60,7 +60,7 @@ resource "azurerm_storage_container" "internal_container" {
 
 module "storage_account_durable_function_management_policy" {
   count  = length(local.internal_containers) == 0 ? 0 : 1
-  source = "git::https://github.com/pagopa/azurerm.git//storage_management_policy?ref=fix-fn-module-container"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_management_policy?ref=v3.6.1"
 
   storage_account_id = module.storage_account_durable_function[0].id
 
