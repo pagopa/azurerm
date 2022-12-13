@@ -7,6 +7,12 @@ variable "name" {
   description = "(Required) Specifies the name of the Function App. Changing this forces a new resource to be created."
 }
 
+variable "domain" {
+  type        = string
+  description = "Specifies the domain of the Function App. If null it will be 'n/a'"
+  default     = "n/a"
+}
+
 variable "storage_account_name" {
   type        = string
   description = "Storage account name. If null it will be 'computed'"
@@ -203,4 +209,15 @@ variable "system_identity_enabled" {
   type        = bool
   description = "Enable the System Identity and create relative Service Principal."
   default     = false
+}
+
+variable "action" {
+  description = "The ID of the Action Group and optional map of custom string properties to include with the post webhook operation."
+  type = set(object(
+    {
+      action_group_id    = string
+      webhook_properties = map(string)
+    }
+  ))
+  default = []
 }

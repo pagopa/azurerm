@@ -289,3 +289,32 @@ resource "azurerm_app_service_virtual_network_swift_connection" "this" {
   app_service_id = azurerm_function_app.this.id
   subnet_id      = var.subnet_id
 }
+
+
+
+resource "azurerm_monitor_metric_alert" "function_app_health_check" {
+  name                = "[${var.domain ? var.domain : "-"} | ${azurerm_function_app.this.name}] Health Check Failed"
+  resource_group_name = var.resource_group_name
+  scopes              = [azurerm_function_app.this.id]
+  description         = "Function availability is under threshold level"
+  severity            = 1
+  frequency           = "PT5M"
+  auto_mitigate       = false
+  enabled             = true
+
+  criteria {
+    metric_namespace = "Microsoft.Web/sites"
+    metric_name      = "HealthCheckStatus"
+    aggregation      = "Average"
+    operator         = "LessThan"
+    threshold        = 50
+  }
+
+  dynamic "action" {
+    for_each = var.action
+    content {
+      action_group_id    = action.value["action_group_id"]
+      webhook_properties = action.value["webhook_properties"]
+    }
+  }
+}
