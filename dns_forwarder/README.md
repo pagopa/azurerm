@@ -12,8 +12,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 2.99.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.2.3 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 2.80.0, <= 2.99.0 |
+| <a name="provider_local"></a> [local](#provider\_local) | >= 2.2.2 |
 
 ## Modules
 
