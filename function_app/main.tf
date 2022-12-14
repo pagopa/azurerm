@@ -293,7 +293,10 @@ resource "azurerm_app_service_virtual_network_swift_connection" "this" {
 
 
 resource "azurerm_monitor_metric_alert" "function_app_health_check" {
-  name                = "[${var.domain} | ${azurerm_function_app.this.name}] Health Check Failed"
+
+  for_each = var.enable_healthcheck ? [1] : []
+
+  name                = "[${var.domain != null ? "${var.domain} |" : ""} ${azurerm_function_app.this.name}] Health Check Failed"
   resource_group_name = var.resource_group_name
   scopes              = [azurerm_function_app.this.id]
   description         = "Function availability is under threshold level. Runbook: -"
@@ -307,7 +310,7 @@ resource "azurerm_monitor_metric_alert" "function_app_health_check" {
     metric_name      = "HealthCheckStatus"
     aggregation      = "Average"
     operator         = "LessThan"
-    threshold        = 50
+    threshold        = var.healthcheck_threshold
   }
 
   dynamic "action" {

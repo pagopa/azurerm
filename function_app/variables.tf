@@ -9,8 +9,8 @@ variable "name" {
 
 variable "domain" {
   type        = string
-  description = "Specifies the domain of the Function App. If null it will be 'n/a'"
-  default     = "n/a"
+  description = "Specifies the domain of the Function App."
+  default     = null
 }
 
 variable "storage_account_name" {
@@ -209,6 +209,22 @@ variable "system_identity_enabled" {
   type        = bool
   description = "Enable the System Identity and create relative Service Principal."
   default     = false
+}
+
+# -------------------
+# Alerts variables
+# -------------------
+
+variable "enable_healthcheck" {
+  type        = bool
+  description = "Enable the healthcheck alert. Default is true"
+  default     = true
+}
+
+variable "healthcheck_threshold" {
+  type        = number
+  description = "The healthcheck threshold. If metric average is under this value, the alert will be triggered. Default is 50"
+  default     = 50
 }
 
 variable "action" {
