@@ -104,7 +104,7 @@ resource "azurerm_management_lock" "management_lock" {
 # -----------------------------------------------
 
 resource "azurerm_monitor_metric_alert" "storage_account_low_availability" {
-  count = var.enable_healthcheck ? 1 : 0
+  count = var.enable_low_availability_alert ? 1 : 0
 
   name                = "[${var.domain != null ? "${var.domain} | " : ""}${azurerm_storage_account.this.name}] Low Availability"
   resource_group_name = var.resource_group_name
