@@ -98,3 +98,41 @@ resource "azurerm_management_lock" "management_lock" {
   lock_level = var.lock_level
   notes      = var.lock_notes
 }
+
+# -----------------------------------------------
+# Alerts
+# -----------------------------------------------
+
+resource "azurerm_monitor_metric_alert" "storage_account_low_availability" {
+  count = var.enable_healthcheck ? 1 : 0
+
+  name                = "[${var.domain != null ? "${var.domain} | " : ""}${azurerm_storage_account.this.name}] Low Availability"
+  resource_group_name = var.resource_group_name
+  scopes              = [azurerm_storage_account.this.id]
+  description         = "The average availability is less than 99.8%. Runbook: not needed."
+  severity            = 0
+  window_size         = "PT5M"
+  frequency           = "PT5M"
+  auto_mitigate       = false
+
+  # Metric info
+  # https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/metrics-supported#microsoftclassicstoragestorageaccountsblobservices
+  criteria {
+    metric_namespace       = "Microsoft.ClassicStorage/storageAccounts"
+    metric_name            = "Availability"
+    aggregation            = "Average"
+    operator               = "LessThan"
+    threshold              = var.low_availability_threshold
+    skip_metric_validation = false
+  }
+
+  dynamic "action" {
+    for_each = var.action
+    content {
+      action_group_id    = action.value["action_group_id"]
+      webhook_properties = action.value["webhook_properties"]
+    }
+  }
+
+  tags = var.tags
+}
