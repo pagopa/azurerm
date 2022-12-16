@@ -6,6 +6,12 @@ variable "name" {
   type = string
 }
 
+variable "domain" {
+  type        = string
+  description = "(Optional) Specifies the domain of the Storage Account."
+  default     = null
+}
+
 variable "resource_group_name" {
   type = string
 }
@@ -135,4 +141,32 @@ variable "error_404_document" {
   type        = string
   default     = null
   description = "The absolute path to a custom webpage that should be used when a request is made which does not correspond to an existing file."
+}
+
+
+# -------------------
+# Alerts variables
+# -------------------
+
+variable "enable_low_availability_alert" {
+  type        = bool
+  description = "Enable the Low Availability alert. Default is true"
+  default     = true
+}
+
+variable "low_availability_threshold" {
+  type        = number
+  description = "The Low Availability threshold. If metric average is under this value, the alert will be triggered. Default is 99.8"
+  default     = 99.8
+}
+
+variable "action" {
+  description = "The ID of the Action Group and optional map of custom string properties to include with the post webhook operation."
+  type = set(object(
+    {
+      action_group_id    = string
+      webhook_properties = map(string)
+    }
+  ))
+  default = []
 }
