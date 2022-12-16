@@ -177,10 +177,10 @@ resource "azurerm_management_lock" "this" {
 resource "azurerm_monitor_metric_alert" "cosmos_db_provisioned_throughput_exceeded" {
   count = var.enable_provisioned_throughput_exceeded_alert ? 1 : 0
 
-  name                = "[${var.domain != null ? "${var.domain} | " : ""}${azurerm_cosmosdb_account.this.name}] Low Availability"
+  name                = "[${var.domain != null ? "${var.domain} | " : ""}${azurerm_cosmosdb_account.this.name}] Provisioned Throughput Exceeded"
   resource_group_name = var.resource_group_name
   scopes              = [azurerm_cosmosdb_account.this.id]
-  description         = "A collection throughput (RU/s) exceed provisioned throughput. Please, consider to increase RU. Runbook: not needed."
+  description         = "A collection throughput (RU/s) exceed provisioned throughput, and it's raising 429 errors. Please, consider to increase RU. Runbook: not needed."
   severity            = 0
   window_size         = "PT5M"
   frequency           = "PT5M"
