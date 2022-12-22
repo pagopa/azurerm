@@ -200,7 +200,7 @@ resource "azurerm_monitor_metric_alert" "cosmos_db_provisioned_throughput_exceed
     dimension {
       name     = "Region"
       operator = "Include"
-      values   = ["West Europe"]
+      values   = [var.main_geo_location_location]
     }
     dimension {
       name     = "StatusCode"
