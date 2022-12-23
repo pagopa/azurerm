@@ -33,7 +33,7 @@ resource "azurerm_function_app_slot" "this" {
       content {
         ip_address                = ip.value.ip_address
         virtual_network_subnet_id = ip.value.virtual_network_subnet_id
-        name                      = ""
+        name                      = "rule"
       }
     }
 
