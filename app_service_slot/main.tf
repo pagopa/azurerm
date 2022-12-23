@@ -31,6 +31,7 @@ resource "azurerm_app_service_slot" "this" {
       content {
         ip_address                = null
         virtual_network_subnet_id = subnet.value
+        name                      = ""
       }
     }
 
@@ -41,6 +42,7 @@ resource "azurerm_app_service_slot" "this" {
       content {
         ip_address                = ip.value
         virtual_network_subnet_id = null
+        name                      = ""
       }
     }
   }
