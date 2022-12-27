@@ -9,8 +9,13 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'false'
     nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
+  tls:
+    - hosts:
+        - ${kibana_internal_hostname}
+      secretName: ${secret_name}
   rules:
-    - http:
+    - host: ${kibana_internal_hostname}
+      http:
         paths:
           - path: /kibana(/|$)(.*)
             pathType: Prefix

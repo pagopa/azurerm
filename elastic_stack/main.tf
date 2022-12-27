@@ -34,7 +34,10 @@ resource "kubernetes_manifest" "kibana_manifest" {
 }
 
 resource "kubernetes_manifest" "ingress_manifest" {
-  manifest = yamldecode(file("${path.module}/yaml/ingress.yaml"))
+  manifest = yamldecode(templatefile("${path.module}/yaml/ingress.yaml", {
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
 }
 
 resource "kubernetes_manifest" "apm_manifest" {

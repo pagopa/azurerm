@@ -97,3 +97,8 @@ variable "keyvault_name" {
   description = "Keyvault name"
   type        = string
 }
+
+variable "kibana_internal_hostname" {
+  description = "Kibana internal hostname"
+  type        = string
+}
