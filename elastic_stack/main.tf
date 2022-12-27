@@ -15,10 +15,10 @@ resource "kubernetes_manifest" "elastic_manifest" {
     storage_size_warm      = var.warm_storage_size
     storage_size_cold      = var.cold_storage_size
     storage_class_balancer = var.balancer_storage_class
-    storage_class_master   = var.master_storage_size
-    storage_class_hot      = var.hot_storage_size
-    storage_class_warm     = var.warm_storage_size
-    storage_class_cold     = var.cold_storage_size
+    storage_class_master   = var.master_storage_class
+    storage_class_hot      = var.hot_storage_class
+    storage_class_warm     = var.warm_storage_class
+    storage_class_cold     = var.cold_storage_class
   }))
 }
 
