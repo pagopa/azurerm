@@ -15,10 +15,10 @@ resource "kubernetes_manifest" "elastic_manifest" {
     storage_size_warm      = var.warm_storage_size
     storage_size_cold      = var.cold_storage_size
     storage_class_balancer = var.balancer_storage_class
-    storage_class_master   = var.master_storage_size
-    storage_class_hot      = var.hot_storage_size
-    storage_class_warm     = var.warm_storage_size
-    storage_class_cold     = var.cold_storage_size
+    storage_class_master   = var.master_storage_class
+    storage_class_hot      = var.hot_storage_class
+    storage_class_warm     = var.warm_storage_class
+    storage_class_cold     = var.cold_storage_class
   }))
 }
 
@@ -34,7 +34,10 @@ resource "kubernetes_manifest" "kibana_manifest" {
 }
 
 resource "kubernetes_manifest" "ingress_manifest" {
-  manifest = yamldecode(file("${path.module}/yaml/ingress.yaml"))
+  manifest = yamldecode(templatefile("${path.module}/yaml/ingress.yaml", {
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
 }
 
 resource "kubernetes_manifest" "apm_manifest" {
@@ -50,5 +53,8 @@ resource "kubernetes_manifest" "secret_manifest" {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest        = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {}))
+  manifest = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {
+    secret_name   = var.secret_name
+    keyvault_name = var.keyvault_name
+  }))
 }
