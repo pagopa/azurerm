@@ -87,3 +87,13 @@ variable "kibana_external_domain" {
   description = "Kibana external domain"
   type        = string
 }
+
+variable "secret_name" {
+  description = "Secret certificate name"
+  type        = string
+}
+
+variable "keyvault_name" {
+  description = "Keyvault name"
+  type        = string
+}
