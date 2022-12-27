@@ -3,7 +3,7 @@ resource "kubernetes_manifest" "elastic_manifest" {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/elk/elastic.yaml", {
+  manifest = yamldecode(templatefile("${path.module}/yaml/elastic.yaml", {
     num_node_balancer      = var.balancer_node_number
     num_node_master        = var.master_node_number
     num_node_hot           = var.hot_node_number
@@ -27,14 +27,14 @@ resource "kubernetes_manifest" "kibana_manifest" {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/elk/kibana.yaml", {
+  manifest = yamldecode(templatefile("${path.module}/yaml/kibana.yaml", {
     external_domain = var.kibana_external_domain
 
   }))
 }
 
 resource "kubernetes_manifest" "ingress_manifest" {
-  manifest = yamldecode(file("${path.module}/elk/ingress.yaml"))
+  manifest = yamldecode(file("${path.module}/yaml/ingress.yaml"))
 }
 
 resource "kubernetes_manifest" "apm_manifest" {
@@ -42,7 +42,7 @@ resource "kubernetes_manifest" "apm_manifest" {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest        = yamldecode(file("${path.module}/elk/apm.yaml"))
+  manifest        = yamldecode(file("${path.module}/yaml/apm.yaml"))
 }
 
 resource "kubernetes_manifest" "secret_manifest" {
@@ -50,5 +50,5 @@ resource "kubernetes_manifest" "secret_manifest" {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest        = yamldecode(templatefile("${path.module}/elk/SecretProvider.yaml", {}))
+  manifest        = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {}))
 }
