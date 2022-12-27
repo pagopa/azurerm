@@ -4,21 +4,21 @@ resource "kubernetes_manifest" "elastic_manifest" {
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
   manifest = yamldecode(templatefile("${path.module}/elk/elastic.yaml", {
-    num_node_balancer      = var.num_node_balancer
-    num_node_master        = var.num_node_master
-    num_node_hot           = var.num_node_hot
-    num_node_warm          = var.num_node_warm
-    num_node_cold          = var.num_node_cold
-    storage_size_balancer  = var.storage_size_balancer
-    storage_size_master    = var.storage_size_master
-    storage_size_hot       = var.storage_size_hot
-    storage_size_warm      = var.storage_size_warm
-    storage_size_cold      = var.storage_size_cold
-    storage_class_balancer = var.storage_class_balancer
-    storage_class_master   = var.storage_class_master
-    storage_class_hot      = var.storage_class_hot
-    storage_class_warm     = var.storage_class_warm
-    storage_class_cold     = var.storage_class_cold
+    num_node_balancer      = var.balancer_node_number
+    num_node_master        = var.master_node_number
+    num_node_hot           = var.hot_node_number
+    num_node_warm          = var.warm_node_number
+    num_node_cold          = var.cold_node_number
+    storage_size_balancer  = var.balancer_storage_size
+    storage_size_master    = var.master_storage_size
+    storage_size_hot       = var.hot_storage_size
+    storage_size_warm      = var.warm_storage_size
+    storage_size_cold      = var.cold_storage_size
+    storage_class_balancer = var.balancer_storage_class
+    storage_class_master   = var.master_storage_size
+    storage_class_hot      = var.hot_storage_size
+    storage_class_warm     = var.warm_storage_size
+    storage_class_cold     = var.cold_storage_size
   }))
 }
 

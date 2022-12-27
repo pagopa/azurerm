@@ -58,6 +58,31 @@ variable "cold_storage_size" {
   default     = "0"
 }
 
+variable "balancer_storage_class" {
+  description = "Storage class of balancer node in GB"
+  type        = string
+}
+
+variable "master_storage_class" {
+  description = "Storage class of master node in GB"
+  type        = string
+}
+
+variable "hot_storage_class" {
+  description = "Storage class of hot node in GB"
+  type        = string
+}
+
+variable "warm_storage_class" {
+  description = "Storage class of warm node in GB"
+  type        = string
+}
+
+variable "cold_storage_class" {
+  description = "Storage class of cold node in GB"
+  type        = string
+}
+
 variable "kibana_external_domain" {
   description = "Kibana external domain"
   type        = string
