@@ -50,5 +50,5 @@ resource "kubernetes_manifest" "secret_manifest" {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/elk/SecretProvider.yaml", {}))
+  manifest        = yamldecode(templatefile("${path.module}/elk/SecretProvider.yaml", {}))
 }
