@@ -1,10 +1,10 @@
 variable "location" {
-  type = string
+  type        = string
   description = "(Required) Specifies the location where this module will create the resources."
 }
 
 variable "resource_group_name" {
-  type = string
+  type        = string
   description = "(Required) Specifies the resource group where this module will create the resources."
 }
 
@@ -25,19 +25,19 @@ variable "storage_account_durable_name" {
 }
 
 variable "internal_queues" {
-  type        = list(string) 
+  type        = list(string)
   description = "(Optional) a list of queue names. For each name will be craeted a queue in the storage."
   default     = []
 }
 
 variable "internal_containers" {
-  type        = list(string) 
+  type        = list(string)
   description = "(Optional) a list of container names. For each name will be craeted a container in the storage."
   default     = []
 }
 
 variable "internal_tables" {
-  type        = list(string) 
+  type        = list(string)
   description = "(Optional) a list of table names. For each name will be craeted a table in the storage."
   default     = []
 }
@@ -49,24 +49,24 @@ variable "blobs_retention_days" {
 }
 
 variable "private_dns_zone_blob_ids" {
-  type        = list(string) 
+  type        = list(string)
   description = "(Optional) A list of private dns zone ids for blobs"
   default     = []
 }
 
 variable "private_dns_zone_table_ids" {
-  type        = list(string) 
+  type        = list(string)
   description = "(Optional) A list of private dns zone ids for tables"
   default     = []
 }
 
 variable "private_dns_zone_queue_ids" {
-  type        = list(string) 
+  type        = list(string)
   description = "(Optional) A list of private dns zone ids for queues"
   default     = []
 }
 
 variable "tags" {
-  type = map(any)
+  type        = map(any)
   description = "(Optional) Set the specified tags to all the resources created by this module."
 }
