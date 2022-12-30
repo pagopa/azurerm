@@ -3,7 +3,7 @@
 module "storage_account_durable_function" {
   source = "git::https://github.com/pagopa/azurerm.git//storage_account?ref=v2.7.0"
 
-  name                       = coalesce(var.storage_account_durable_name, format("%ssdt", replace(var.name, "-", "")))
+  name                       = var.name
   account_kind               = var.storage_account_info.account_kind
   account_tier               = var.storage_account_info.account_tier
   account_replication_type   = var.storage_account_info.account_replication_type
