@@ -141,7 +141,7 @@ module "function_app_staging_slot" {
 ## Beta slot
 module "storage_account_for_beta" {
   count  = var.internal_storage.enable ? 1 : 0
-  source = "../storage_account_for_function"
+  source = "git::https://github.com/pagopa/azurerm.git//storage_account_for_function?ref=70e0b77d672e9c8939bab8897ea7f72ca0880ce0"
 
   location                   = var.location
   resource_group_name        = azurerm_resource_group.function_app_rg[count.index].name
