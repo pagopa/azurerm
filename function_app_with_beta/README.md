@@ -44,9 +44,9 @@ module "io_sign_issuer_func" {
 |------|--------|---------|
 | <a name="module_app_snet"></a> [app\_snet](#module\_app\_snet) | git::https://github.com/pagopa/azurerm.git//subnet | v3.12.0 |
 | <a name="module_function_app"></a> [function\_app](#module\_function\_app) | git::https://github.com/pagopa/azurerm.git//function_app | v3.12.0 |
-| <a name="module_function_app_beta_slot"></a> [function\_app\_beta\_slot](#module\_function\_app\_beta\_slot) | ../function_app_slot | n/a |
+| <a name="module_function_app_beta_slot"></a> [function\_app\_beta\_slot](#module\_function\_app\_beta\_slot) | git::https://github.com/pagopa/azurerm.git//function_app_slot | v3.12.0 |
 | <a name="module_function_app_staging_slot"></a> [function\_app\_staging\_slot](#module\_function\_app\_staging\_slot) | git::https://github.com/pagopa/azurerm.git//function_app_slot | v3.12.0 |
-| <a name="module_storage_account_for_beta"></a> [storage\_account\_for\_beta](#module\_storage\_account\_for\_beta) | ../storage_account_for_function | n/a |
+| <a name="module_storage_account_for_beta"></a> [storage\_account\_for\_beta](#module\_storage\_account\_for\_beta) | git::https://github.com/pagopa/azurerm.git//storage_account_for_function | 70e0b77d672e9c8939bab8897ea7f72ca0880ce0 |
 
 ## Resources
 
