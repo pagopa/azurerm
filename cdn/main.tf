@@ -490,12 +490,17 @@ resource "azurerm_cdn_endpoint_custom_domain" "this" {
 
   name            = var.hostname
   cdn_endpoint_id = azurerm_cdn_endpoint.this.id
-  host_name       = var.hostname
+  host_name       = join(".", [var.hostname, var.dns_zone_name])
   cdn_managed_https {
     certificate_type = "Dedicated"
     protocol_type    = "ServerNameIndication"
     tls_version      = "TLS12"
   }
+
+  depends_on = [
+    azurerm_dns_a_record.apex_hostname,
+    azurerm_dns_cname_record.hostname,
+  ]
 }
 
 
