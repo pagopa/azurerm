@@ -58,3 +58,13 @@ resource "kubernetes_manifest" "secret_manifest" {
     keyvault_name = var.keyvault_name
   }))
 }
+
+resource "kubernetes_manifest" "mounter_manifest" {
+  field_manager {
+    force_conflicts = true
+  }
+  computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
+  manifest = yamldecode(templatefile("${path.module}/yaml/mounter.yaml", {
+    secret_name = var.secret_name
+  }))
+}
