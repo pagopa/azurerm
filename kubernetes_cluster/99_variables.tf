@@ -94,9 +94,9 @@ variable "system_node_pool_ultra_ssd_enabled" {
 }
 
 variable "system_node_pool_availability_zones" {
-  type = list(string)
+  type        = list(string)
   description = "(Optional) List of availability zones for system node pool"
-  default = ["1", "2", "3"]
+  default     = ["1", "2", "3"]
 }
 
 variable "system_node_pool_tags" {
@@ -189,9 +189,9 @@ variable "user_node_pool_ultra_ssd_enabled" {
 }
 
 variable "user_node_pool_availability_zones" {
-  type = list(string)
+  type        = list(string)
   description = "(Optional) List of availability zones for user node pool"
-  default = ["1", "2", "3"]
+  default     = ["1", "2", "3"]
 }
 
 variable "user_node_pool_tags" {
