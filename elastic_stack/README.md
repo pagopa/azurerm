@@ -65,5 +65,7 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_namespace_id"></a> [namespace\_id](#output\_namespace\_id) | Id of Event Hub Namespace. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
