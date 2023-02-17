@@ -1,17 +1,17 @@
 resource "kubernetes_manifest" "crds_manifest" {
   manifest = yamldecode(file("${path.module}/yaml/crds.yaml"))
 }
-resource "kubernetes_manifest" "operator_manifest" {
-  depends_on = [
-    kubernetes_manifest.crds_manifest
-  ]
-  manifest = yamldecode(file("${path.module}/yaml/operator.yaml"))
-  wait {
-    fields = {
-      "status.phase" = "Running"
-    }
-  }
-}
+# resource "kubernetes_manifest" "operator_manifest" {
+#   depends_on = [
+#     kubernetes_manifest.crds_manifest
+#   ]
+#   manifest = yamldecode(file("${path.module}/yaml/operator.yaml"))
+#   wait {
+#     fields = {
+#       "status.phase" = "Running"
+#     }
+#   }
+# }
 
 # resource "kubernetes_manifest" "operator_manifest" {
 #   depends_on = [
