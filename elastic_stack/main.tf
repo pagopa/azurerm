@@ -1,4 +1,22 @@
-resource "kubernetes_manifest" "elastic_manifest" {
+resource "kubernetes_manifest" "crds_manifest" {
+  manifest = yamldecode(file("${path.module}/yaml/crds.yaml"))
+}
+resource "kubernetes_manifest" "operator_manifest" {
+  depends_on = [
+    kubernetes_manifest.crds_manifest
+  ]
+  manifest = yamldecode(file("${path.module}/yaml/operator.yaml"))
+  wait {
+    fields = {
+      "status.phase" = "Running"
+    }
+  }
+}
+
+resource "kubernetes_manifest" "operator_manifest" {
+  depends_on = [
+    kubernetes_manifest.crds_manifest
+  ]
   field_manager {
     force_conflicts = true
   }
@@ -22,49 +40,49 @@ resource "kubernetes_manifest" "elastic_manifest" {
   }))
 }
 
-resource "kubernetes_manifest" "kibana_manifest" {
-  field_manager {
-    force_conflicts = true
-  }
-  computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/yaml/kibana.yaml", {
-    external_domain = var.kibana_external_domain
+# resource "kubernetes_manifest" "kibana_manifest" {
+#   field_manager {
+#     force_conflicts = true
+#   }
+#   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
+#   manifest = yamldecode(templatefile("${path.module}/yaml/kibana.yaml", {
+#     external_domain = var.kibana_external_domain
 
-  }))
-}
+#   }))
+# }
 
-resource "kubernetes_manifest" "ingress_manifest" {
-  manifest = yamldecode(templatefile("${path.module}/yaml/ingress.yaml", {
-    kibana_internal_hostname = var.kibana_internal_hostname
-    secret_name              = var.secret_name
-  }))
-}
+# resource "kubernetes_manifest" "ingress_manifest" {
+#   manifest = yamldecode(templatefile("${path.module}/yaml/ingress.yaml", {
+#     kibana_internal_hostname = var.kibana_internal_hostname
+#     secret_name              = var.secret_name
+#   }))
+# }
 
-resource "kubernetes_manifest" "apm_manifest" {
-  field_manager {
-    force_conflicts = true
-  }
-  computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest        = yamldecode(file("${path.module}/yaml/apm.yaml"))
-}
+# resource "kubernetes_manifest" "apm_manifest" {
+#   field_manager {
+#     force_conflicts = true
+#   }
+#   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
+#   manifest        = yamldecode(file("${path.module}/yaml/apm.yaml"))
+# }
 
-resource "kubernetes_manifest" "secret_manifest" {
-  field_manager {
-    force_conflicts = true
-  }
-  computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {
-    secret_name   = var.secret_name
-    keyvault_name = var.keyvault_name
-  }))
-}
+# resource "kubernetes_manifest" "secret_manifest" {
+#   field_manager {
+#     force_conflicts = true
+#   }
+#   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
+#   manifest = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {
+#     secret_name   = var.secret_name
+#     keyvault_name = var.keyvault_name
+#   }))
+# }
 
-resource "kubernetes_manifest" "mounter_manifest" {
-  field_manager {
-    force_conflicts = true
-  }
-  computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/yaml/mounter.yaml", {
-    secret_name = var.secret_name
-  }))
-}
+# resource "kubernetes_manifest" "mounter_manifest" {
+#   field_manager {
+#     force_conflicts = true
+#   }
+#   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
+#   manifest = yamldecode(templatefile("${path.module}/yaml/mounter.yaml", {
+#     secret_name = var.secret_name
+#   }))
+# }
