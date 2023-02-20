@@ -1,0 +1,366 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agent-node-datastreams
+  namespace: kube-system
+  labels:
+    k8s-app: elastic-agent
+data:
+  agent.yml: |-
+    outputs:
+      default:
+        type: elasticsearch
+        hosts:
+          - '$${ES_HOST}'
+        username: '$${ES_USERNAME}'
+        password: '$${ES_PASSWORD}'
+        ssl.verification_mode: none
+    revision: 1
+    agent:
+      monitoring:
+        namespace: agent_monitor
+        use_output: default
+        enabled: true
+        logs: true
+        metrics: true
+    inputs:
+      %{~ for k, v in agent_config_container_logs ~}
+      - id: filestream-container-logs-${v.id}
+        revision: 1
+        name: kubernetes-${k}
+        type: filestream
+        data_stream:
+          namespace: ${v.data_stream_namespace}
+        use_output: default
+        streams:
+          - id: >-
+              filestream-kubernetes.container_logs-${v.id}
+            data_stream:
+              type: logs
+              dataset: kubernetes.container_logs
+            paths:
+              - '/var/log/containers/*_${k}_*$${kubernetes.container.id}.log'
+            prospector.scanner.symlinks: true
+            parsers:
+              - container:
+                  stream: all
+                  format: auto
+        meta:
+          package:
+            name: kubernetes
+            version: 1.17.3
+      %{~ endfor ~}
+    output_permissions:
+      default:
+        _elastic_agent_monitoring:
+          indices:
+            - names:
+                - logs-elastic_agent.apm_server-agent_monitor
+              privileges: &ref_0
+                - auto_configure
+                - create_doc
+            - names:
+                - metrics-elastic_agent.apm_server-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.auditbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.auditbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.cloudbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.cloudbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.elastic_agent-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.endpoint_security-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.endpoint_security-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.filebeat_input-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.filebeat_input-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.filebeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.filebeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.fleet_server-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.fleet_server-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.heartbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.heartbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.metricbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.metricbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.osquerybeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.osquerybeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - logs-elastic_agent.packetbeat-agent_monitor
+              privileges: *ref_0
+            - names:
+                - metrics-elastic_agent.packetbeat-agent_monitor
+              privileges: *ref_0
+        _elastic_agent_checks:
+          cluster:
+            - monitor
+        %{~ for k, v in agent_config_container_logs ~}
+        kubernetes-${k}:
+          indices:
+            - names:
+                - logs-kubernetes.container_logs-${v.data_stream_namespace}
+              privileges: *ref_0
+        %{~ endfor ~}
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: elastic-agent
+  namespace: kube-system
+  labels:
+    app: elastic-agent
+spec:
+  selector:
+    matchLabels:
+      app: elastic-agent
+  template:
+    metadata:
+      labels:
+        app: elastic-agent
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - operator: Exists
+          effect: NoExecute
+        - operator: Exists
+          effect: NoSchedule
+      serviceAccountName: elastic-agent
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: elastic-agent
+          image: docker.elastic.co/beats/elastic-agent:8.1.2
+          args: [
+            "-c", "/etc/agent.yml",
+            "-e",
+            "-d", "'*'",
+          ]
+          env:
+            - name: ES_HOST
+              value: "https://quickstart-es-http.elastic-system.svc.cluster.local:9200"
+            - name: ES_USERNAME
+              value: "elastic"
+            - name: ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: elastic
+                  name: quickstart-es-elastic-user
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          securityContext:
+            runAsUser: 0
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 1Gi
+          volumeMounts:
+            - name: datastreams
+              mountPath: /etc/agent.yml
+              readOnly: true
+              subPath: agent.yml
+            - name: proc
+              mountPath: /hostfs/proc
+              readOnly: true
+            - name: cgroup
+              mountPath: /hostfs/sys/fs/cgroup
+              readOnly: true
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+      volumes:
+        - name: datastreams
+          configMap:
+            defaultMode: 0640
+            name: agent-node-datastreams
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: varlog
+          hostPath:
+            path: /var/log
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: elastic-agent
+subjects:
+  - kind: ServiceAccount
+    name: elastic-agent
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: elastic-agent
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: kube-system
+  name: elastic-agent
+subjects:
+  - kind: ServiceAccount
+    name: elastic-agent
+    namespace: kube-system
+roleRef:
+  kind: Role
+  name: elastic-agent
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: elastic-agent-kubeadm-config
+  namespace: kube-system
+subjects:
+  - kind: ServiceAccount
+    name: elastic-agent
+    namespace: kube-system
+roleRef:
+  kind: Role
+  name: elastic-agent-kubeadm-config
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: elastic-agent
+  labels:
+    k8s-app: elastic-agent
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - namespaces
+      - events
+      - pods
+      - services
+      - configmaps
+    verbs: ["get", "list", "watch"]
+  # Enable this rule only if planing to use kubernetes_secrets provider
+  #- apiGroups: [""]
+  #  resources:
+  #  - secrets
+  #  verbs: ["get"]
+  - apiGroups: ["extensions"]
+    resources:
+      - replicasets
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - statefulsets
+      - deployments
+      - replicasets
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+    verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/stats
+    verbs:
+      - get
+  # required for apiserver
+  - nonResourceURLs:
+      - "/metrics"
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: elastic-agent
+  # should be the namespace where elastic-agent is running
+  namespace: kube-system
+  labels:
+    k8s-app: elastic-agent
+rules:
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs: ["get", "create", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: elastic-agent-kubeadm-config
+  namespace: kube-system
+  labels:
+    k8s-app: elastic-agent
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+    resourceNames:
+      - kubeadm-config
+    verbs: ["get"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: elastic-agent
+  namespace: kube-system
+  labels:
+    k8s-app: elastic-agent
+---

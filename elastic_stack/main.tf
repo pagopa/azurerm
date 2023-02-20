@@ -11,6 +11,16 @@ locals {
   orig_operator_yaml = file("${path.module}/yaml/operator.yaml")
   operator_yaml_set_namespace = replace(local.orig_operator_yaml, "namespace: elastic-system", "namespace: ${var.namespace}")
   operator_yaml = local.operator_yaml_set_namespace
+
+  agent_yaml = templatefile("${path.module}/yaml/agent.yaml", {
+    agent_config_container_logs      = var.agent_config_container_logs
+  })
+
+  kibana_yaml = templatefile("${path.module}/yaml/kibana.yaml", {
+    external_domain = var.kibana_external_domain
+    agent_config_container_logs      = var.agent_config_container_logs
+  })
+  
 }
 
 resource "kubernetes_manifest" "crd" {
@@ -47,6 +57,7 @@ resource "kubernetes_manifest" "operator" {
   provisioner "local-exec" {
     when    = destroy
     command = "kubectl get namespaces --no-headers -o custom-columns=:metadata.name | xargs -n1 kubectl delete elastic --all -n"
+    interpreter = ["/bin/bash", "-c"]
   }
 
   # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
@@ -140,6 +151,23 @@ resource "null_resource" "get_elastic_credential" {
   }
 }
 
+resource "null_resource" "copy_elastic_credential_to_namespace_kube_system" {
+  depends_on = [
+    null_resource.get_elastic_credential
+  ]
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "kubectl -n kube-system delete secret quickstart-es-elastic-user"
+    interpreter = ["/bin/bash", "-c"]
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o yaml| yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.labels)' | kubectl apply --namespace kube-system -f -"
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
 #############
 # Install Kibana
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-kibana.html
@@ -201,9 +229,7 @@ resource "kubectl_manifest" "kibana_manifest" {
 
   force_conflicts = true
  
-  yaml_body = templatefile("${path.module}/yaml/kibana.yaml", {
-    external_domain = var.kibana_external_domain
-  })
+  yaml_body = local.kibana_yaml
 }
 
 ## Create ingress for kibana
@@ -249,3 +275,78 @@ resource "kubectl_manifest" "apm_manifest" {
 
 
 }
+
+
+#############
+# Install Elastic Agent
+#############
+
+data "kubectl_file_documents" "elastic_agent" {
+    content = local.agent_yaml
+}
+resource "kubectl_manifest" "elastic_agent" {
+    depends_on = [
+      null_resource.wait_elasticsearch_cluster
+    ]
+    for_each  = data.kubectl_file_documents.elastic_agent.manifests
+    yaml_body = each.value
+
+    force_conflicts = true
+    wait = true
+}
+
+# resource "kubectl_manifest" "init_elastic_agent" {
+#   # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
+#   # Each element is a separate kubernetes resource.
+#   # Must use \n---\n to avoid splitting on strings and comments containing "---".
+#   # YAML allows "---" to be the first and last line of a file, so make sure
+#   # raw yaml begins and ends with a newline.
+#   # The "---" can be followed by spaces, so need to remove those too.
+#   # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
+#   for_each = {
+#     for value in [
+#       for yaml in split(
+#         "\n---\n",
+#         "\n${replace(local.agent_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
+#       ) :
+#       yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
+#       if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
+#     ] : "${value["kind"]}--${value["metadata"]["name"]}" => value if value["kind"] != "DaemonSet"
+#   }
+#   yaml_body = yamlencode(each.value)
+
+#   depends_on = [
+#     null_resource.wait_elasticsearch_cluster
+#   ]
+
+#   force_conflicts = true
+
+# }
+
+# resource "kubectl_manifest" "elastic_agent" {
+#   # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
+#   # Each element is a separate kubernetes resource.
+#   # Must use \n---\n to avoid splitting on strings and comments containing "---".
+#   # YAML allows "---" to be the first and last line of a file, so make sure
+#   # raw yaml begins and ends with a newline.
+#   # The "---" can be followed by spaces, so need to remove those too.
+#   # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
+#   for_each = {
+#     for value in [
+#       for yaml in split(
+#         "\n---\n",
+#         "\n${replace(local.agent_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
+#       ) :
+#       yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
+#       if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
+#     ] : "${value["kind"]}--${value["metadata"]["name"]}" => value if value["kind"] == "DaemonSet"
+#   }
+#   yaml_body = yamlencode(each.value)
+
+#   depends_on = [
+#     kubectl_manifest.init_elastic_agent
+#   ]
+
+#   force_conflicts = true
+
+# }
