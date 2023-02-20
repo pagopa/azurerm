@@ -4,8 +4,13 @@
 # version 2.1.0
 #############
 locals {
-  crd_yaml = file("${path.module}/yaml/crds.yaml")
-  operator_yaml = replace(file("${path.module}/yaml/operator.yaml"), "namespace: elastic-system", "namespace: ${var.namespace}")
+  orig_crd_yaml = file("${path.module}/yaml/crds.yaml")
+  crd_yaml_del_time = replace(local.orig_crd_yaml, "\n  creationTimestamp: null", "")
+  crd_yaml = local.crd_yaml_del_time
+  
+  orig_operator_yaml = file("${path.module}/yaml/operator.yaml")
+  operator_yaml_set_namespace = replace(local.orig_operator_yaml, "namespace: elastic-system", "namespace: ${var.namespace}")
+  operator_yaml = local.operator_yaml_set_namespace
 }
 
 resource "kubernetes_manifest" "crd" {
@@ -14,7 +19,6 @@ resource "kubernetes_manifest" "crd" {
   # Must use \n---\n to avoid splitting on strings and comments containing "---".
   # YAML allows "---" to be the first and last line of a file, so make sure
   # raw yaml begins and ends with a newline.
-  # REPLACE status key from resources
   # The "---" can be followed by spaces, so need to remove those too.
   # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
   for_each = {
@@ -50,7 +54,6 @@ resource "kubernetes_manifest" "operator" {
   # Must use \n---\n to avoid splitting on strings and comments containing "---".
   # YAML allows "---" to be the first and last line of a file, so make sure
   # raw yaml begins and ends with a newline.
-  # REPLACE status key from resources
   # The "---" can be followed by spaces, so need to remove those too.
   # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
   for_each = {
@@ -76,15 +79,16 @@ resource "kubernetes_manifest" "operator" {
   ]
 }
 
-####################
-## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
-####################
+
 #############
 # Install Elasticsearch cluster
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-elasticsearch.html
 # version 8.6.2 > 8.1.2
 #############
 
+####################
+## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
+####################
 # resource "kubernetes_manifest" "elasticsearch_cluster" {
 #   depends_on = [
 #     kubernetes_manifest.operator
@@ -97,7 +101,6 @@ resource "kubernetes_manifest" "operator" {
 #     nodeset_config      = var.nodeset_config
 #   }))
 # }
-
 resource "kubectl_manifest" "elasticsearch_cluster" {
   depends_on = [
     kubernetes_manifest.operator
@@ -108,8 +111,33 @@ resource "kubectl_manifest" "elasticsearch_cluster" {
   yaml_body = templatefile("${path.module}/yaml/elastic.yaml", {
     nodeset_config      = var.nodeset_config
   })
+  
+}
 
-  wait_for_rollout = true
+resource "null_resource" "wait_elasticsearch_cluster" {
+  depends_on = [
+    kubectl_manifest.elasticsearch_cluster
+  ]
+
+  provisioner "local-exec" {
+    command = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"SUCCEEDED\" ; break ; else echo \"INPROGRESS\"; sleep 3; fi ; done"
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
+resource "null_resource" "get_elastic_credential" {
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+
+  #############
+  # Username: elastic
+  # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
+  #############
+  provisioner "local-exec" {
+    command = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
+    interpreter = ["/bin/bash", "-c"]
+  }
 }
 
 #############
@@ -120,6 +148,11 @@ resource "kubectl_manifest" "elasticsearch_cluster" {
 
 # create secret-provider for mounter
 resource "kubernetes_manifest" "secret_manifest" {
+
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+
   field_manager {
     force_conflicts = true
   }
@@ -144,6 +177,9 @@ resource "kubernetes_manifest" "mounter_manifest" {
   }))
 }
 
+####################
+## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
+####################
 # resource "kubernetes_manifest" "kibana_manifest" {
 #   depends_on = [
 #     kubernetes_manifest.operator,
@@ -158,10 +194,8 @@ resource "kubernetes_manifest" "mounter_manifest" {
 
 #   }))
 # }
-
 resource "kubectl_manifest" "kibana_manifest" {
   depends_on = [
-    kubernetes_manifest.operator,
     kubernetes_manifest.mounter_manifest
   ]
 
@@ -185,17 +219,14 @@ resource "kubernetes_manifest" "ingress_manifest" {
 
 
 #############
-# Username: elastic
-# Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
-#############
-
-
-#############
 # Install APM Server
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-apm-eck-managed-es.html
 # version 8.6.2 > 8.1.2
 #############
 
+####################
+## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
+####################
 # resource "kubernetes_manifest" "apm_manifest" {
 #   depends_on = [
 #     kubernetes_manifest.operator
@@ -209,11 +240,12 @@ resource "kubernetes_manifest" "ingress_manifest" {
 
 resource "kubectl_manifest" "apm_manifest" {
   depends_on = [
-    kubernetes_manifest.operator
+    null_resource.wait_elasticsearch_cluster
   ]
 
   force_conflicts = true
  
   yaml_body = file("${path.module}/yaml/apm.yaml")
+
 
 }
