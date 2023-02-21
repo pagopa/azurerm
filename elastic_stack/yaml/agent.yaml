@@ -18,7 +18,7 @@ data:
     revision: 1
     agent:
       monitoring:
-        namespace: agent_monitor
+        namespace: eck_agent
         use_output: default
         enabled: true
         logs: true
@@ -55,78 +55,78 @@ data:
         _elastic_agent_monitoring:
           indices:
             - names:
-                - logs-elastic_agent.apm_server-agent_monitor
+                - logs-elastic_agent.apm_server-eck_agent
               privileges: &ref_0
                 - auto_configure
                 - create_doc
             - names:
-                - metrics-elastic_agent.apm_server-agent_monitor
+                - metrics-elastic_agent.apm_server-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.auditbeat-agent_monitor
+                - logs-elastic_agent.auditbeat-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.auditbeat-agent_monitor
+                - metrics-elastic_agent.auditbeat-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.cloudbeat-agent_monitor
+                - logs-elastic_agent.cloudbeat-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.cloudbeat-agent_monitor
+                - metrics-elastic_agent.cloudbeat-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent-agent_monitor
+                - logs-elastic_agent-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.elastic_agent-agent_monitor
+                - metrics-elastic_agent.elastic_agent-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.endpoint_security-agent_monitor
+                - metrics-elastic_agent.endpoint_security-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.endpoint_security-agent_monitor
+                - logs-elastic_agent.endpoint_security-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.filebeat_input-agent_monitor
+                - logs-elastic_agent.filebeat_input-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.filebeat_input-agent_monitor
+                - metrics-elastic_agent.filebeat_input-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.filebeat-agent_monitor
+                - logs-elastic_agent.filebeat-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.filebeat-agent_monitor
+                - metrics-elastic_agent.filebeat-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.fleet_server-agent_monitor
+                - logs-elastic_agent.fleet_server-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.fleet_server-agent_monitor
+                - metrics-elastic_agent.fleet_server-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.heartbeat-agent_monitor
+                - logs-elastic_agent.heartbeat-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.heartbeat-agent_monitor
+                - metrics-elastic_agent.heartbeat-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.metricbeat-agent_monitor
+                - logs-elastic_agent.metricbeat-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.metricbeat-agent_monitor
+                - metrics-elastic_agent.metricbeat-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.osquerybeat-agent_monitor
+                - logs-elastic_agent.osquerybeat-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.osquerybeat-agent_monitor
+                - metrics-elastic_agent.osquerybeat-eck_agent
               privileges: *ref_0
             - names:
-                - logs-elastic_agent.packetbeat-agent_monitor
+                - logs-elastic_agent.packetbeat-eck_agent
               privileges: *ref_0
             - names:
-                - metrics-elastic_agent.packetbeat-agent_monitor
+                - metrics-elastic_agent.packetbeat-eck_agent
               privileges: *ref_0
         _elastic_agent_checks:
           cluster:
