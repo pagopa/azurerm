@@ -160,10 +160,10 @@ resource "null_resource" "copy_elastic_credential_to_namespace_kube_system" {
     interpreter = ["/bin/bash", "-c"]
   }
 
-  provisioner "local-exec" {
-    command     = "kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o yaml| yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.labels)' | kubectl apply --namespace kube-system -f -"
-    interpreter = ["/bin/bash", "-c"]
-  }
+  # provisioner "local-exec" {
+  #   command     = "kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o yaml| yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.labels)' | kubectl apply --namespace kube-system -f -"
+  #   interpreter = ["/bin/bash", "-c"]
+  # }
 }
 
 #############
