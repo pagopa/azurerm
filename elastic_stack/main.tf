@@ -16,7 +16,6 @@ locals {
 
   kibana_yaml = templatefile("${path.module}/yaml/kibana.yaml", {
     external_domain = var.kibana_external_domain
-    #agent_config_container_logs      = var.agent_config_container_logs
   })
 
 }
