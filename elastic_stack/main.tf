@@ -12,13 +12,11 @@ locals {
   operator_yaml_set_namespace = replace(local.orig_operator_yaml, "namespace: elastic-system", "namespace: ${var.namespace}")
   operator_yaml = local.operator_yaml_set_namespace
 
-  agent_yaml = templatefile("${path.module}/yaml/agent.yaml", {
-    agent_config_container_logs      = var.agent_config_container_logs
-  })
+  agent_yaml = file("${path.module}/yaml/agent.yaml")
 
   kibana_yaml = templatefile("${path.module}/yaml/kibana.yaml", {
     external_domain = var.kibana_external_domain
-    agent_config_container_logs      = var.agent_config_container_logs
+    #agent_config_container_logs      = var.agent_config_container_logs
   })
   
 }
@@ -284,6 +282,7 @@ resource "kubectl_manifest" "apm_manifest" {
 data "kubectl_file_documents" "elastic_agent" {
     content = local.agent_yaml
 }
+
 resource "kubectl_manifest" "elastic_agent" {
     depends_on = [
       null_resource.wait_elasticsearch_cluster

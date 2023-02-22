@@ -4,7 +4,7 @@ metadata:
   name: quickstart
   namespace: elastic-system
 spec:
-  version: 8.1.2
+  version: 8.6.2
   count: 1
   elasticsearchRef:
     name: quickstart
@@ -23,62 +23,43 @@ spec:
     server.name: "kibana"
     csp.strict: false
     xpack.fleet.agents.elasticsearch.hosts: ["https://elasticsearch-quickstart-es-http.default.svc:9200"]
-    xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-quickstart-agent-http.default.svc:8220"]
+    #xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-quickstart-agent-http.default.svc:8220"]
     xpack.fleet.packages:
-      - name: system
-        version: latest
-      - name: elastic_agent
-        version: latest
-      - name: fleet_server
-        version: latest
-      - name: kubernetes
-        version: latest
-      - name: apm
-        version: latest
+    - name: system
+      version: latest
+    - name: elastic_agent
+      version: latest
+    - name: fleet_server
+      version: latest
+    - name: kubernetes
+      version: latest
+    - name: apm
+      version: latest
     xpack.fleet.agentPolicies:
-      # - name: Fleet Server on ECK policy
-      #   id: eck-fleet-server
-      #   is_default_fleet_server: true
-      #   namespace: fleet_agent
-      #   monitoring_enabled:
-      #     - logs
-      #     - metrics
-      #   unenroll_timeout: 900
-      #   package_policies:
-      #   - name: fleet_server-1
-      #     id: fleet_server-1
-      #     package:
-      #       name: fleet_server
-      - name: Elastic Agent on ECK policy
-        id: eck-agent
-        namespace: eck_agent
-        monitoring_enabled:
-          - logs
-          - metrics
-        unenroll_timeout: 900
-        is_default: true
-        package_policies:
-        # - name: system-1
-        #   package:
-        #     name: system
-        %{~ for k, v in agent_config_container_logs ~}
-        - id: kubernetes-${k}
-          name: kubernetes-${k}
-          namespace: ${v.data_stream_namespace}
-          package:
-            name: kubernetes
-        %{~ endfor ~}
-        - id: apm-1
-          name: apm-1
-          namespace: apm
-          package:
-            name: apm
-          inputs:
-          - type: apm
-            enabled: true
-            vars:
-            - name: host
-              value: 0.0.0.0:8200    
+    - name: Elastic Agent on ECK policy
+      id: eck-agent
+      namespace: default
+      monitoring_enabled:
+      - logs
+      - metrics
+      unenroll_timeout: 900
+      is_default: true
+      package_policies:
+      - package:
+          name: system
+        name: system-1
+      - package:
+          name: kubernetes
+        name: kubernetes-1
+      - package:
+          name: apm
+        name: apm-1
+        inputs:
+        - type: apm
+          enabled: true
+          vars:
+          - name: host
+            value: 0.0.0.0:8200
     #xpack:
     #  security:
     #    authc:
