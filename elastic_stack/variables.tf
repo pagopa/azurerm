@@ -22,22 +22,22 @@ variable "kibana_internal_hostname" {
 variable "namespace" {
   description = "Namespace for ECK Operator"
   type        = string
-  default = "elastic-system"
+  default     = "elastic-system"
 }
 
 
 variable "nodeset_config" {
   type = map(object({
-    count = string
-    roles  = list(string)
-    storage = string
-    storageClassName= string
+    count            = string
+    roles            = list(string)
+    storage          = string
+    storageClassName = string
   }))
   default = {
     default = {
-      count = 1
-      roles = ["master", "data", "data_content", "data_hot", "data_warm", "data_cold", "data_frozen", "ingest", "ml", "remote_cluster_client", "transform"]
-      storage = "5Gi"
+      count            = 1
+      roles            = ["master", "data", "data_content", "data_hot", "data_warm", "data_cold", "data_frozen", "ingest", "ml", "remote_cluster_client", "transform"]
+      storage          = "5Gi"
       storageClassName = "standard"
     }
   }
@@ -46,11 +46,11 @@ variable "nodeset_config" {
 variable "agent_config_container_logs" {
   type = map(object({
     data_stream_namespace = string
-    id = string
+    id                    = string
   }))
   default = {
     default = {
-      id = "1" 
+      id                    = "1"
       data_stream_namespace = "default"
     }
   }

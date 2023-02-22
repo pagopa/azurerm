@@ -1,16 +1,16 @@
 #############
 # Install CRDs and Operator
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-eck.html
-# version 2.1.0
+# version 2.6.1
 #############
 locals {
-  orig_crd_yaml = file("${path.module}/yaml/crds.yaml")
+  orig_crd_yaml     = file("${path.module}/yaml/crds.yaml")
   crd_yaml_del_time = replace(local.orig_crd_yaml, "\n  creationTimestamp: null", "")
-  crd_yaml = local.crd_yaml_del_time
-  
-  orig_operator_yaml = file("${path.module}/yaml/operator.yaml")
+  crd_yaml          = local.crd_yaml_del_time
+
+  orig_operator_yaml          = file("${path.module}/yaml/operator.yaml")
   operator_yaml_set_namespace = replace(local.orig_operator_yaml, "namespace: elastic-system", "namespace: ${var.namespace}")
-  operator_yaml = local.operator_yaml_set_namespace
+  operator_yaml               = local.operator_yaml_set_namespace
 
   agent_yaml = file("${path.module}/yaml/agent.yaml")
 
@@ -18,7 +18,7 @@ locals {
     external_domain = var.kibana_external_domain
     #agent_config_container_logs      = var.agent_config_container_logs
   })
-  
+
 }
 
 resource "kubernetes_manifest" "crd" {
@@ -53,8 +53,8 @@ resource "kubernetes_manifest" "crd" {
 
 resource "kubernetes_manifest" "operator" {
   provisioner "local-exec" {
-    when    = destroy
-    command = "kubectl get namespaces --no-headers -o custom-columns=:metadata.name | xargs -n1 kubectl delete elastic --all -n"
+    when        = destroy
+    command     = "kubectl get namespaces --no-headers -o custom-columns=:metadata.name | xargs -n1 kubectl delete elastic --all -n"
     interpreter = ["/bin/bash", "-c"]
   }
 
@@ -89,10 +89,11 @@ resource "kubernetes_manifest" "operator" {
 }
 
 
+
 #############
 # Install Elasticsearch cluster
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-elasticsearch.html
-# version 8.6.2 > 8.1.2
+# version 8.6.2 
 #############
 
 ####################
@@ -118,9 +119,9 @@ resource "kubectl_manifest" "elasticsearch_cluster" {
   force_conflicts = true
 
   yaml_body = templatefile("${path.module}/yaml/elastic.yaml", {
-    nodeset_config      = var.nodeset_config
+    nodeset_config = var.nodeset_config
   })
-  
+
 }
 
 resource "null_resource" "wait_elasticsearch_cluster" {
@@ -129,7 +130,7 @@ resource "null_resource" "wait_elasticsearch_cluster" {
   ]
 
   provisioner "local-exec" {
-    command = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"SUCCEEDED\" ; break ; else echo \"INPROGRESS\"; sleep 3; fi ; done"
+    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"SUCCEEDED\" ; break ; else echo \"INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
   }
 }
@@ -144,7 +145,7 @@ resource "null_resource" "get_elastic_credential" {
   # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
   #############
   provisioner "local-exec" {
-    command = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
+    command     = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
     interpreter = ["/bin/bash", "-c"]
   }
 }
@@ -155,13 +156,13 @@ resource "null_resource" "copy_elastic_credential_to_namespace_kube_system" {
   ]
 
   provisioner "local-exec" {
-    when    = destroy
-    command = "kubectl -n kube-system delete secret quickstart-es-elastic-user"
+    when        = destroy
+    command     = "kubectl -n kube-system delete secret quickstart-es-elastic-user"
     interpreter = ["/bin/bash", "-c"]
   }
 
   provisioner "local-exec" {
-    command = "kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o yaml| yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.labels)' | kubectl apply --namespace kube-system -f -"
+    command     = "kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o yaml| yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.labels)' | kubectl apply --namespace kube-system -f -"
     interpreter = ["/bin/bash", "-c"]
   }
 }
@@ -169,7 +170,7 @@ resource "null_resource" "copy_elastic_credential_to_namespace_kube_system" {
 #############
 # Install Kibana
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-kibana.html
-# version 8.6.2 > 8.1.2
+# version 8.6.2 
 #############
 
 # create secret-provider for mounter
@@ -226,7 +227,7 @@ resource "kubectl_manifest" "kibana_manifest" {
   ]
 
   force_conflicts = true
- 
+
   yaml_body = local.kibana_yaml
 }
 
@@ -245,7 +246,7 @@ resource "kubernetes_manifest" "ingress_manifest" {
 #############
 # Install APM Server
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-apm-eck-managed-es.html
-# version 8.6.2 > 8.1.2
+# version 8.6.2 
 #############
 
 ####################
@@ -268,7 +269,7 @@ resource "kubectl_manifest" "apm_manifest" {
   ]
 
   force_conflicts = true
- 
+
   yaml_body = file("${path.module}/yaml/apm.yaml")
 
 
@@ -280,18 +281,18 @@ resource "kubectl_manifest" "apm_manifest" {
 #############
 
 data "kubectl_file_documents" "elastic_agent" {
-    content = local.agent_yaml
+  content = local.agent_yaml
 }
 
 resource "kubectl_manifest" "elastic_agent" {
-    depends_on = [
-      null_resource.wait_elasticsearch_cluster
-    ]
-    for_each  = data.kubectl_file_documents.elastic_agent.manifests
-    yaml_body = each.value
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+  for_each  = data.kubectl_file_documents.elastic_agent.manifests
+  yaml_body = each.value
 
-    force_conflicts = true
-    wait = true
+  force_conflicts = true
+  wait            = true
 }
 
 # resource "kubectl_manifest" "init_elastic_agent" {
