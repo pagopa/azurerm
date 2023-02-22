@@ -42,16 +42,3 @@ variable "nodeset_config" {
     }
   }
 }
-
-variable "agent_config_container_logs" {
-  type = map(object({
-    data_stream_namespace = string
-    id                    = string
-  }))
-  default = {
-    default = {
-      id                    = "1"
-      data_stream_namespace = "default"
-    }
-  }
-}

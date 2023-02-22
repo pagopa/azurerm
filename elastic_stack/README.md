@@ -53,7 +53,6 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_agent_config_container_logs"></a> [agent\_config\_container\_logs](#input\_agent\_config\_container\_logs) | n/a | <pre>map(object({<br>    data_stream_namespace = string<br>    id                    = string<br>  }))</pre> | <pre>{<br>  "default": {<br>    "data_stream_namespace": "default",<br>    "id": "1"<br>  }<br>}</pre> | no |
 | <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | Keyvault name | `string` | n/a | yes |
 | <a name="input_kibana_external_domain"></a> [kibana\_external\_domain](#input\_kibana\_external\_domain) | Kibana external domain | `string` | n/a | yes |
 | <a name="input_kibana_internal_hostname"></a> [kibana\_internal\_hostname](#input\_kibana\_internal\_hostname) | Kibana internal hostname | `string` | n/a | yes |
