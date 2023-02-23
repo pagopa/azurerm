@@ -10,8 +10,24 @@ spec:
     name: quickstart
   podTemplate:
     spec:
-      nodeSelector:
-        elastic: eck
+      containers:
+        - name: kibana
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 1
+            limits:
+              memory: 2Gi
+              cpu: 2
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: elastic
+                operator: In
+                values:
+                  - eck
   http:
     tls:
       selfSignedCertificate:

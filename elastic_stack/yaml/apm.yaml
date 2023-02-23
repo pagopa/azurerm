@@ -10,8 +10,15 @@ spec:
     name: quickstart
   podTemplate:
     spec:
-      nodeSelector:
-        elastic: eck
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: elastic
+                operator: In
+                values:
+                  - eck
   http:
     tls:
       selfSignedCertificate:

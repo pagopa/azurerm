@@ -38,3 +38,12 @@ spec:
           readOnly: true
           volumeAttributes:
             secretProviderClass: ${secret_name}-kibana
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: elastic
+                operator: In
+                values:
+                  - eck

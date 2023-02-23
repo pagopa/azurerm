@@ -922,11 +922,8 @@ spec:
           effect: NoSchedule
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
-        - key: CriticalAddonsOnly
+        - key: dedicated
           operator: Exists
-        - operator: Exists
-          effect: NoExecute
-        - operator: Exists
           effect: NoSchedule
       serviceAccountName: elastic-agent
       hostNetwork: true
@@ -963,10 +960,11 @@ spec:
             runAsUser: 0
           resources:
             limits:
-              memory: 700Mi
+              cpu: 1500m
+              memory: 2Gi
             requests:
-              cpu: 100m
-              memory: 400Mi
+              cpu: 1000m
+              memory: 1Gi
           volumeMounts:
             - name: datastreams
               mountPath: /etc/agent.yml
