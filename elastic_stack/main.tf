@@ -9,14 +9,42 @@ locals {
   crd_yaml          = local.crd_yaml_del_time
 
   orig_operator_yaml          = file("${path.module}/yaml/operator.yaml")
-  operator_yaml_set_namespace = replace(local.orig_operator_yaml, "namespace: elastic-system", "namespace: ${var.namespace}")
+  operator_yaml_set_namespace = replace(local.orig_operator_yaml, "namespace: elastic-system", "namespace: ${var.namespace}") #usato il replace per essere più comodi in un futuro cambio versione 
   operator_yaml               = local.operator_yaml_set_namespace
 
-  agent_yaml = file("${path.module}/yaml/agent.yaml")
+  elastic_yaml = templatefile("${path.module}/yaml/elastic.yaml", {
+    namespace      = var.namespace
+    nodeset_config = var.nodeset_config
+  })
+
+  kibana_secret_provider_yaml = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {
+    namespace     = var.namespace
+    secret_name   = var.secret_name
+    keyvault_name = var.keyvault_name
+  }))
+
+  kibana_mounter_yaml = yamldecode(templatefile("${path.module}/yaml/mounter.yaml", {
+    namespace   = var.namespace
+    secret_name = var.secret_name
+  }))
 
   kibana_yaml = templatefile("${path.module}/yaml/kibana.yaml", {
+    namespace       = var.namespace
     external_domain = var.kibana_external_domain
   })
+
+  kibana_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress.yaml", {
+    namespace                = var.namespace
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
+
+  apm_yaml = templatefile("${path.module}/yaml/apm.yaml", {
+    namespace = var.namespace
+  })
+
+  orig_agent_yaml = file("${path.module}/yaml/agent.yaml")
+  agent_yaml      = replace(local.orig_agent_yaml, "namespace: kube-system", "namespace: ${var.namespace}") #usato il replace per essere più comodi in un futuro cambio versione 
 
 }
 
@@ -47,8 +75,6 @@ resource "kubernetes_manifest" "crd" {
     "metadata.creationTimestamp",
   ]
 }
-
-
 
 resource "kubernetes_manifest" "operator" {
   provisioner "local-exec" {
@@ -88,39 +114,20 @@ resource "kubernetes_manifest" "operator" {
 }
 
 
-
 #############
 # Install Elasticsearch cluster
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-elasticsearch.html
 # version 8.6.2 
 #############
-
 ####################
 ## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
 ####################
-# resource "kubernetes_manifest" "elasticsearch_cluster" {
-#   depends_on = [
-#     kubernetes_manifest.operator
-#   ]
-#   field_manager {
-#     force_conflicts = true
-#   }
-#   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-#   manifest = yamldecode(templatefile("${path.module}/yaml/elastic.yaml", {
-#     nodeset_config      = var.nodeset_config
-#   }))
-# }
 resource "kubectl_manifest" "elasticsearch_cluster" {
   depends_on = [
     kubernetes_manifest.operator
   ]
-
   force_conflicts = true
-
-  yaml_body = templatefile("${path.module}/yaml/elastic.yaml", {
-    nodeset_config = var.nodeset_config
-  })
-
+  yaml_body       = local.elastic_yaml
 }
 
 resource "null_resource" "wait_elasticsearch_cluster" {
@@ -149,22 +156,6 @@ resource "null_resource" "get_elastic_credential" {
   }
 }
 
-resource "null_resource" "copy_elastic_credential_to_namespace_kube_system" {
-  depends_on = [
-    null_resource.get_elastic_credential
-  ]
-
-  provisioner "local-exec" {
-    when        = destroy
-    command     = "kubectl -n kube-system delete secret quickstart-es-elastic-user"
-    interpreter = ["/bin/bash", "-c"]
-  }
-
-  # provisioner "local-exec" {
-  #   command     = "kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o yaml| yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.labels)' | kubectl apply --namespace kube-system -f -"
-  #   interpreter = ["/bin/bash", "-c"]
-  # }
-}
 
 #############
 # Install Kibana
@@ -174,19 +165,14 @@ resource "null_resource" "copy_elastic_credential_to_namespace_kube_system" {
 
 # create secret-provider for mounter
 resource "kubernetes_manifest" "secret_manifest" {
-
   depends_on = [
     null_resource.wait_elasticsearch_cluster
   ]
-
   field_manager {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {
-    secret_name   = var.secret_name
-    keyvault_name = var.keyvault_name
-  }))
+  manifest        = local.kibana_secret_provider_yaml
 }
 
 # create fake mounter for load certs
@@ -198,44 +184,23 @@ resource "kubernetes_manifest" "mounter_manifest" {
     force_conflicts = true
   }
   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-  manifest = yamldecode(templatefile("${path.module}/yaml/mounter.yaml", {
-    secret_name = var.secret_name
-  }))
+  manifest        = local.kibana_mounter_yaml
 }
 
 ####################
 ## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
 ####################
-# resource "kubernetes_manifest" "kibana_manifest" {
-#   depends_on = [
-#     kubernetes_manifest.operator,
-#     kubernetes_manifest.mounter_manifest
-#   ]
-#   field_manager {
-#     force_conflicts = true
-#   }
-#   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-#   manifest = yamldecode(templatefile("${path.module}/yaml/kibana.yaml", {
-#     external_domain = var.kibana_external_domain
-
-#   }))
-# }
 resource "kubectl_manifest" "kibana_manifest" {
   depends_on = [
     kubernetes_manifest.mounter_manifest
   ]
-
   force_conflicts = true
-
-  yaml_body = local.kibana_yaml
+  yaml_body       = local.kibana_yaml
 }
 
 ## Create ingress for kibana
 resource "kubernetes_manifest" "ingress_manifest" {
-  manifest = yamldecode(templatefile("${path.module}/yaml/ingress.yaml", {
-    kibana_internal_hostname = var.kibana_internal_hostname
-    secret_name              = var.secret_name
-  }))
+  manifest = local.kibana_ingress_yaml
   depends_on = [
     kubectl_manifest.kibana_manifest
   ]
@@ -247,42 +212,24 @@ resource "kubernetes_manifest" "ingress_manifest" {
 # https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-apm-eck-managed-es.html
 # version 8.6.2 
 #############
-
 ####################
 ## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
 ####################
-# resource "kubernetes_manifest" "apm_manifest" {
-#   depends_on = [
-#     kubernetes_manifest.operator
-#   ]
-#   field_manager {
-#     force_conflicts = true
-#   }
-#   computed_fields = ["metadata.labels", "metadata.annotations", "spec", "status"]
-#   manifest        = yamldecode(file("${path.module}/yaml/apm.yaml"))
-# }
-
 resource "kubectl_manifest" "apm_manifest" {
   depends_on = [
     null_resource.wait_elasticsearch_cluster
   ]
-
   force_conflicts = true
-
-  yaml_body = file("${path.module}/yaml/apm.yaml")
-
-
+  yaml_body       = local.apm_yaml
 }
 
 
 #############
 # Install Elastic Agent
 #############
-
 data "kubectl_file_documents" "elastic_agent" {
   content = local.agent_yaml
 }
-
 resource "kubectl_manifest" "elastic_agent" {
   depends_on = [
     null_resource.wait_elasticsearch_cluster
@@ -293,59 +240,3 @@ resource "kubectl_manifest" "elastic_agent" {
   force_conflicts = true
   wait            = true
 }
-
-# resource "kubectl_manifest" "init_elastic_agent" {
-#   # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
-#   # Each element is a separate kubernetes resource.
-#   # Must use \n---\n to avoid splitting on strings and comments containing "---".
-#   # YAML allows "---" to be the first and last line of a file, so make sure
-#   # raw yaml begins and ends with a newline.
-#   # The "---" can be followed by spaces, so need to remove those too.
-#   # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
-#   for_each = {
-#     for value in [
-#       for yaml in split(
-#         "\n---\n",
-#         "\n${replace(local.agent_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
-#       ) :
-#       yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
-#       if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
-#     ] : "${value["kind"]}--${value["metadata"]["name"]}" => value if value["kind"] != "DaemonSet"
-#   }
-#   yaml_body = yamlencode(each.value)
-
-#   depends_on = [
-#     null_resource.wait_elasticsearch_cluster
-#   ]
-
-#   force_conflicts = true
-
-# }
-
-# resource "kubectl_manifest" "elastic_agent" {
-#   # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
-#   # Each element is a separate kubernetes resource.
-#   # Must use \n---\n to avoid splitting on strings and comments containing "---".
-#   # YAML allows "---" to be the first and last line of a file, so make sure
-#   # raw yaml begins and ends with a newline.
-#   # The "---" can be followed by spaces, so need to remove those too.
-#   # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
-#   for_each = {
-#     for value in [
-#       for yaml in split(
-#         "\n---\n",
-#         "\n${replace(local.agent_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
-#       ) :
-#       yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
-#       if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
-#     ] : "${value["kind"]}--${value["metadata"]["name"]}" => value if value["kind"] == "DaemonSet"
-#   }
-#   yaml_body = yamlencode(each.value)
-
-#   depends_on = [
-#     kubectl_manifest.init_elastic_agent
-#   ]
-
-#   force_conflicts = true
-
-# }

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: agent-node-datastreams
-  namespace: elastic-system
+  namespace: kube-system
   labels:
     k8s-app: elastic-agent
 data:
