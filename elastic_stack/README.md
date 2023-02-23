@@ -44,7 +44,6 @@ No modules.
 | [kubernetes_manifest.mounter_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.operator](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.secret_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
-| [null_resource.copy_elastic_credential_to_namespace_kube_system](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [null_resource.get_elastic_credential](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [null_resource.wait_elasticsearch_cluster](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [kubectl_file_documents.elastic_agent](https://registry.terraform.io/providers/gavinbunney/kubectl/1.14.0/docs/data-sources/file_documents) | data source |

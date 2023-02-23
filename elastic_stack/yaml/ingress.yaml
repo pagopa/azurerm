@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kibana
-  namespace: elastic-system
+  namespace: ${namespace}
   annotations:
     kubernetes.io/ingress.class: nginxelk
     nginx.ingress.kubernetes.io/rewrite-target: /$2

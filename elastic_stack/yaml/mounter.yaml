@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ${secret_name}-kibana-mounter
-  namespace: elastic-system
+  namespace: ${namespace}
   labels:
     app: ${secret_name}-kibana-mounter
 spec:

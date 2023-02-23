@@ -18,7 +18,6 @@ variable "kibana_internal_hostname" {
   type        = string
 }
 
-
 variable "namespace" {
   description = "Namespace for ECK Operator"
   type        = string
