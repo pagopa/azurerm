@@ -33,7 +33,7 @@ locals {
     external_domain = var.kibana_external_domain
   })
 
-  kibana_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress.yaml", {
+  kibana_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_kibana.yaml", {
     namespace                = var.namespace
     kibana_internal_hostname = var.kibana_internal_hostname
     secret_name              = var.secret_name
@@ -42,6 +42,12 @@ locals {
   apm_yaml = templatefile("${path.module}/yaml/apm.yaml", {
     namespace = var.namespace
   })
+
+  apm_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_apm.yaml", {
+    namespace                = var.namespace
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
 
   orig_agent_yaml = file("${path.module}/yaml/agent.yaml")
   agent_yaml      = replace(local.orig_agent_yaml, "namespace: kube-system", "namespace: ${var.namespace}") #usato il replace per essere più comodi in un futuro cambio versione 
@@ -156,11 +162,8 @@ resource "null_resource" "get_elastic_credential" {
   }
 }
 
-
 #############
-# Install Kibana
-# https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-kibana.html
-# version 8.6.2 
+# Create cert mounter
 #############
 
 # create secret-provider for mounter
@@ -187,6 +190,12 @@ resource "kubernetes_manifest" "mounter_manifest" {
   manifest        = local.kibana_mounter_yaml
 }
 
+
+#############
+# Install Kibana
+# https://www.elastic.co/guide/en/cloud-on-k8s/2.1/k8s-deploy-kibana.html
+# version 8.6.2 
+#############
 ####################
 ## USE trick for crd https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
 ####################
@@ -199,7 +208,7 @@ resource "kubectl_manifest" "kibana_manifest" {
 }
 
 ## Create ingress for kibana
-resource "kubernetes_manifest" "ingress_manifest" {
+resource "kubernetes_manifest" "ingress_kibana_manifest" {
   manifest = local.kibana_ingress_yaml
   depends_on = [
     kubectl_manifest.kibana_manifest
@@ -222,7 +231,12 @@ resource "kubectl_manifest" "apm_manifest" {
   force_conflicts = true
   yaml_body       = local.apm_yaml
 }
-
+resource "kubernetes_manifest" "ingress_apm_manifest" {
+  manifest = local.apm_ingress_yaml
+  depends_on = [
+    kubectl_manifest.apm_manifest
+  ]
+}
 
 #############
 # Install Elastic Agent
