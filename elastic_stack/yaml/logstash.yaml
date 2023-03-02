@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: ${namespace}
+  labels:
+    app.kubernetes.io/name: elasticsearch-logstash
+    app.kubernetes.io/component: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: elasticsearch-logstash
+      app.kubernetes.io/component: logstash
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: elasticsearch-logstash
+        app.kubernetes.io/component: logstash
+    spec:
+      containers:
+        - name: logstash
+          image: docker.elastic.co/logstash/logstash:8.6.2
+          ports:
+            - name: "tcp-beats"
+              containerPort: 5044
+            - name: "udp-gelfs"
+              containerPort: 12201
+              protocol: UDP
+          env:
+            - name: ES_HOST
+              value: "https://quickstart-es-http.elastic-system.svc.cluster.local:9200"
+            - name: ES_USERNAME
+              value: "elastic"
+            - name: ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: elastic
+                  name: quickstart-es-elastic-user
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/share/logstash/config
+            - name: pipeline-volume
+              mountPath: /usr/share/logstash/pipeline
+            - name: ca-certs
+              mountPath: /etc/logstash/certificates
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: logstash-config
+        - name: pipeline-volume
+          configMap:
+            name: logstash-pipeline
+        - name: ca-certs
+          secret:
+            secretName: quickstart-es-http-certs-public
+ 
+---
+ 
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: ${namespace}
+  labels:
+    app.kubernetes.io/name: elasticsearch-logstash
+    app.kubernetes.io/component: logstash
+spec:
+  ports:
+    - name: "tcp-beats"
+      port: 5044
+      targetPort: 5044
+    - name: "udp-gelfs"
+      port: 12201
+      targetPort: 12201
+      protocol: UDP
+  selector:
+    app.kubernetes.io/name: elasticsearch-logstash
+    app.kubernetes.io/component: logstash

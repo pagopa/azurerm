@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: ${namespace}
+  labels:
+    app.kubernetes.io/name: elasticsearch-logstash
+    app.kubernetes.io/component: logstash
+data:
+  logstash.yml: |
+    http.host: 0.0.0.0
+    pipeline.ecs_compatibility: disabled
+  pipelines.yml: |
+    - pipeline.id: logstash
+      path.config: "/usr/share/logstash/pipeline/logstash.conf"
+    - pipeline.id: gelf
+      path.config: "/usr/share/logstash/pipeline/gelf.conf"
+ 
+  log4j2.properties: |
+    logger.logstashpipeline.name = logstash.inputs.beats
+    logger.logstashpipeline.level = error
+ 
+---
+ 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-pipeline
+  namespace: ${namespace}
+  labels:
+    app.kubernetes.io/name: elasticsearch-logstash
+    app.kubernetes.io/component: logstash
+data:
+  logstash.conf: |
+    input {
+      beats {
+        port => 5044
+      }
+    }
+    filter {
+      json {
+        source => "message"
+      }
+      prune {
+        whitelist_names => [ "msg" ]
+      }
+      mutate {
+        rename => { "msg" => "message" }
+      }
+    }
+    output {
+      if [message]  =~ "admission" {
+        elasticsearch {
+          index => "logstashadmission-%%{+YYYY.MM.dd}"
+          hosts => [ "$${ES_HOST}" ]
+          user => "$${ES_USERNAME}"
+          password => "$${ES_PASSWORD}"
+          ssl => true
+          ssl_certificate_verification => false
+        }
+      }
+    }
+  
+  gelf.conf: |
+    input {
+      gelf {
+        port => 12201
+      }
+    }
+    output {
+      stdout {}
+      elasticsearch {
+        hosts => [ "$${ES_HOST}" ]
+        user => "$${ES_USERNAME}"
+        password => "$${ES_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+      }
+    }
+
+    

@@ -17,6 +17,12 @@ locals {
     nodeset_config = var.nodeset_config
   })
 
+  elastic_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_elastic.yaml", {
+    namespace                = var.namespace
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
+
   kibana_secret_provider_yaml = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {
     namespace     = var.namespace
     secret_name   = var.secret_name
@@ -52,6 +58,17 @@ locals {
   orig_agent_yaml = file("${path.module}/yaml/agent.yaml")
   agent_yaml      = replace(local.orig_agent_yaml, "namespace: kube-system", "namespace: ${var.namespace}") #usato il replace per essere più comodi in un futuro cambio versione 
 
+  logstash_config_yaml = templatefile("${path.module}/yaml/logstash_config.yaml", {
+    namespace = var.namespace
+  })
+  logstash_yaml = templatefile("${path.module}/yaml/logstash.yaml", {
+    namespace = var.namespace
+  })
+  logstash_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_logstash.yaml", {
+    namespace                = var.namespace
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
 }
 
 resource "kubernetes_manifest" "crd" {
@@ -162,6 +179,13 @@ resource "null_resource" "get_elastic_credential" {
   }
 }
 
+resource "kubernetes_manifest" "ingress_elastic_manifest" {
+  manifest = local.elastic_ingress_yaml
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+}
+
 #############
 # Create cert mounter
 #############
@@ -254,3 +278,43 @@ resource "kubectl_manifest" "elastic_agent" {
   force_conflicts = true
   wait            = true
 }
+
+#############
+# Install Logstash
+# Source: https://medium.com/kocsistem/elk-installation-with-eck-operator-56e8a0a501fa
+#############
+data "kubectl_file_documents" "logstash_config" {
+  content = local.logstash_config_yaml
+}
+resource "kubectl_manifest" "logstash_config" {
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+  for_each  = data.kubectl_file_documents.logstash_config.manifests
+  yaml_body = each.value
+
+  force_conflicts = true
+  wait            = true
+}
+
+data "kubectl_file_documents" "logstash" {
+  content = local.logstash_yaml
+}
+resource "kubectl_manifest" "logstash" {
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+  for_each  = data.kubectl_file_documents.logstash.manifests
+  yaml_body = each.value
+
+  force_conflicts = true
+  wait            = true
+}
+#resource "kubernetes_manifest" "ingress_logstash_manifest" {
+#  manifest = local.logstash_ingress_yaml
+#  depends_on = [
+#    kubectl_manifest.logstash
+#  ]
+#}
+
+
