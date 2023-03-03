@@ -164,20 +164,20 @@ resource "null_resource" "wait_elasticsearch_cluster" {
   }
 }
 
-resource "null_resource" "get_elastic_credential" {
-  depends_on = [
-    null_resource.wait_elasticsearch_cluster
-  ]
+# resource "null_resource" "get_elastic_credential" {
+#   depends_on = [
+#     null_resource.wait_elasticsearch_cluster
+#   ]
 
-  #############
-  # Username: elastic
-  # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
-  #############
-  provisioner "local-exec" {
-    command     = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
-    interpreter = ["/bin/bash", "-c"]
-  }
-}
+#   #############
+#   # Username: elastic
+#   # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
+#   #############
+#   provisioner "local-exec" {
+#     command     = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
+#     interpreter = ["/bin/bash", "-c"]
+#   }
+# }
 
 resource "kubernetes_manifest" "ingress_elastic_manifest" {
   manifest = local.elastic_ingress_yaml
@@ -187,9 +187,8 @@ resource "kubernetes_manifest" "ingress_elastic_manifest" {
 }
 
 #############
-# Create cert mounter
+# Create cert mounter for certs
 #############
-
 # create secret-provider for mounter
 resource "kubernetes_manifest" "secret_manifest" {
   depends_on = [
@@ -310,11 +309,11 @@ resource "kubectl_manifest" "logstash" {
   force_conflicts = true
   wait            = true
 }
-#resource "kubernetes_manifest" "ingress_logstash_manifest" {
-#  manifest = local.logstash_ingress_yaml
-#  depends_on = [
-#    kubectl_manifest.logstash
-#  ]
-#}
+resource "kubernetes_manifest" "ingress_logstash_manifest" {
+  manifest = local.logstash_ingress_yaml
+  depends_on = [
+    kubectl_manifest.logstash
+  ]
+}
 
 
