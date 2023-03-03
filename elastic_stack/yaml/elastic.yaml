@@ -16,13 +16,13 @@ spec:
       spec:
         containers:
         - name: elasticsearch
-          resources:
-            requests:
-              memory: 6Gi
-              cpu: 1
-            limits:
-              memory: 8Gi
-              cpu: 2
+          #resources:
+          #  requests:
+          #    memory: 6Gi
+          #    cpu: 1
+          #  limits:
+          #    memory: 8Gi
+          #    cpu: 2
         affinity:
           #podAntiAffinity:
           #  preferredDuringSchedulingIgnoredDuringExecution:
