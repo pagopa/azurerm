@@ -153,13 +153,23 @@ resource "kubectl_manifest" "elasticsearch_cluster" {
   yaml_body       = local.elastic_yaml
 }
 
-resource "null_resource" "wait_elasticsearch_cluster" {
+resource "kubernetes_manifest" "ingress_elastic_manifest" {
+  manifest = local.elastic_ingress_yaml
   depends_on = [
     kubectl_manifest.elasticsearch_cluster
   ]
+}
 
+resource "null_resource" "wait_elasticsearch_cluster" {
+  depends_on = [
+    kubernetes_manifest.ingress_elastic_manifest
+  ]
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
   provisioner "local-exec" {
-    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"SUCCEEDED\" ; break ; else echo \"INPROGRESS\"; sleep 3; fi ; done"
+    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"ELASTIC SUCCEEDED\" ; break ; else echo \"ELASTIC INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
   }
 }
@@ -179,12 +189,7 @@ resource "null_resource" "wait_elasticsearch_cluster" {
 #   }
 # }
 
-resource "kubernetes_manifest" "ingress_elastic_manifest" {
-  manifest = local.elastic_ingress_yaml
-  depends_on = [
-    null_resource.wait_elasticsearch_cluster
-  ]
-}
+
 
 #############
 # Create cert mounter for certs
@@ -238,6 +243,20 @@ resource "kubernetes_manifest" "ingress_kibana_manifest" {
   ]
 }
 
+resource "null_resource" "wait_kibana" {
+  depends_on = [
+    kubernetes_manifest.ingress_kibana_manifest
+  ]
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  provisioner "local-exec" {
+    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Kibana -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"KIBANA SUCCEEDED\" ; break ; else echo \"KIBANA INPROGRESS\"; sleep 3; fi ; done"
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
+
 
 #############
 # Install APM Server
@@ -249,7 +268,7 @@ resource "kubernetes_manifest" "ingress_kibana_manifest" {
 ####################
 resource "kubectl_manifest" "apm_manifest" {
   depends_on = [
-    null_resource.wait_elasticsearch_cluster
+    null_resource.wait_kibana
   ]
   force_conflicts = true
   yaml_body       = local.apm_yaml
@@ -259,6 +278,18 @@ resource "kubernetes_manifest" "ingress_apm_manifest" {
   depends_on = [
     kubectl_manifest.apm_manifest
   ]
+}
+resource "null_resource" "wait_apm" {
+  depends_on = [
+    kubernetes_manifest.ingress_apm_manifest
+  ]
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  provisioner "local-exec" {
+    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get ApmServer -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"APM SUCCEEDED\" ; break ; else echo \"APM INPROGRESS\"; sleep 3; fi ; done"
+    interpreter = ["/bin/bash", "-c"]
+  }
 }
 
 #############
@@ -282,38 +313,38 @@ resource "kubectl_manifest" "elastic_agent" {
 # Install Logstash
 # Source: https://medium.com/kocsistem/elk-installation-with-eck-operator-56e8a0a501fa
 #############
-data "kubectl_file_documents" "logstash_config" {
-  content = local.logstash_config_yaml
-}
-resource "kubectl_manifest" "logstash_config" {
-  depends_on = [
-    null_resource.wait_elasticsearch_cluster
-  ]
-  for_each  = data.kubectl_file_documents.logstash_config.manifests
-  yaml_body = each.value
+# data "kubectl_file_documents" "logstash_config" {
+#   content = local.logstash_config_yaml
+# }
+# resource "kubectl_manifest" "logstash_config" {
+#   depends_on = [
+#     null_resource.wait_elasticsearch_cluster
+#   ]
+#   for_each  = data.kubectl_file_documents.logstash_config.manifests
+#   yaml_body = each.value
 
-  force_conflicts = true
-  wait            = true
-}
+#   force_conflicts = true
+#   wait            = true
+# }
 
-data "kubectl_file_documents" "logstash" {
-  content = local.logstash_yaml
-}
-resource "kubectl_manifest" "logstash" {
-  depends_on = [
-    null_resource.wait_elasticsearch_cluster
-  ]
-  for_each  = data.kubectl_file_documents.logstash.manifests
-  yaml_body = each.value
+# data "kubectl_file_documents" "logstash" {
+#   content = local.logstash_yaml
+# }
+# resource "kubectl_manifest" "logstash" {
+#   depends_on = [
+#     null_resource.wait_elasticsearch_cluster
+#   ]
+#   for_each  = data.kubectl_file_documents.logstash.manifests
+#   yaml_body = each.value
 
-  force_conflicts = true
-  wait            = true
-}
-resource "kubernetes_manifest" "ingress_logstash_manifest" {
-  manifest = local.logstash_ingress_yaml
-  depends_on = [
-    kubectl_manifest.logstash
-  ]
-}
+#   force_conflicts = true
+#   wait            = true
+# }
+# resource "kubernetes_manifest" "ingress_logstash_manifest" {
+#   manifest = local.logstash_ingress_yaml
+#   depends_on = [
+#     kubectl_manifest.logstash
+#   ]
+# }
 
 
