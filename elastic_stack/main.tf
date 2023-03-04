@@ -17,6 +17,12 @@ locals {
     nodeset_config = var.nodeset_config
   })
 
+  elastic_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_elastic.yaml", {
+    namespace                = var.namespace
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
+
   kibana_secret_provider_yaml = yamldecode(templatefile("${path.module}/yaml/SecretProvider.yaml", {
     namespace     = var.namespace
     secret_name   = var.secret_name
@@ -52,6 +58,17 @@ locals {
   orig_agent_yaml = file("${path.module}/yaml/agent.yaml")
   agent_yaml      = replace(local.orig_agent_yaml, "namespace: kube-system", "namespace: ${var.namespace}") #usato il replace per essere più comodi in un futuro cambio versione 
 
+  logstash_config_yaml = templatefile("${path.module}/yaml/logstash_config.yaml", {
+    namespace = var.namespace
+  })
+  logstash_yaml = templatefile("${path.module}/yaml/logstash.yaml", {
+    namespace = var.namespace
+  })
+  logstash_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_logstash.yaml", {
+    namespace                = var.namespace
+    kibana_internal_hostname = var.kibana_internal_hostname
+    secret_name              = var.secret_name
+  }))
 }
 
 resource "kubernetes_manifest" "crd" {
@@ -136,36 +153,47 @@ resource "kubectl_manifest" "elasticsearch_cluster" {
   yaml_body       = local.elastic_yaml
 }
 
-resource "null_resource" "wait_elasticsearch_cluster" {
+resource "kubernetes_manifest" "ingress_elastic_manifest" {
+  manifest = local.elastic_ingress_yaml
   depends_on = [
     kubectl_manifest.elasticsearch_cluster
   ]
-
-  provisioner "local-exec" {
-    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"SUCCEEDED\" ; break ; else echo \"INPROGRESS\"; sleep 3; fi ; done"
-    interpreter = ["/bin/bash", "-c"]
-  }
 }
 
-resource "null_resource" "get_elastic_credential" {
+resource "null_resource" "wait_elasticsearch_cluster" {
   depends_on = [
-    null_resource.wait_elasticsearch_cluster
+    kubernetes_manifest.ingress_elastic_manifest
   ]
 
-  #############
-  # Username: elastic
-  # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
-  #############
+  triggers = {
+    always_run = "${timestamp()}"
+  }
   provisioner "local-exec" {
-    command     = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
+    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"ELASTIC SUCCEEDED\" ; break ; else echo \"ELASTIC INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
   }
 }
 
-#############
-# Create cert mounter
-#############
+# resource "null_resource" "get_elastic_credential" {
+#   depends_on = [
+#     null_resource.wait_elasticsearch_cluster
+#   ]
 
+#   #############
+#   # Username: elastic
+#   # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
+#   #############
+#   provisioner "local-exec" {
+#     command     = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
+#     interpreter = ["/bin/bash", "-c"]
+#   }
+# }
+
+
+
+#############
+# Create cert mounter for certs
+#############
 # create secret-provider for mounter
 resource "kubernetes_manifest" "secret_manifest" {
   depends_on = [
@@ -215,6 +243,20 @@ resource "kubernetes_manifest" "ingress_kibana_manifest" {
   ]
 }
 
+resource "null_resource" "wait_kibana" {
+  depends_on = [
+    kubernetes_manifest.ingress_kibana_manifest
+  ]
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  provisioner "local-exec" {
+    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Kibana -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"KIBANA SUCCEEDED\" ; break ; else echo \"KIBANA INPROGRESS\"; sleep 3; fi ; done"
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
+
 
 #############
 # Install APM Server
@@ -226,7 +268,7 @@ resource "kubernetes_manifest" "ingress_kibana_manifest" {
 ####################
 resource "kubectl_manifest" "apm_manifest" {
   depends_on = [
-    null_resource.wait_elasticsearch_cluster
+    null_resource.wait_kibana
   ]
   force_conflicts = true
   yaml_body       = local.apm_yaml
@@ -236,6 +278,18 @@ resource "kubernetes_manifest" "ingress_apm_manifest" {
   depends_on = [
     kubectl_manifest.apm_manifest
   ]
+}
+resource "null_resource" "wait_apm" {
+  depends_on = [
+    kubernetes_manifest.ingress_apm_manifest
+  ]
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  provisioner "local-exec" {
+    command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get ApmServer -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"APM SUCCEEDED\" ; break ; else echo \"APM INPROGRESS\"; sleep 3; fi ; done"
+    interpreter = ["/bin/bash", "-c"]
+  }
 }
 
 #############
@@ -254,3 +308,43 @@ resource "kubectl_manifest" "elastic_agent" {
   force_conflicts = true
   wait            = true
 }
+
+#############
+# Install Logstash
+# Source: https://medium.com/kocsistem/elk-installation-with-eck-operator-56e8a0a501fa
+#############
+# data "kubectl_file_documents" "logstash_config" {
+#   content = local.logstash_config_yaml
+# }
+# resource "kubectl_manifest" "logstash_config" {
+#   depends_on = [
+#     null_resource.wait_elasticsearch_cluster
+#   ]
+#   for_each  = data.kubectl_file_documents.logstash_config.manifests
+#   yaml_body = each.value
+
+#   force_conflicts = true
+#   wait            = true
+# }
+
+# data "kubectl_file_documents" "logstash" {
+#   content = local.logstash_yaml
+# }
+# resource "kubectl_manifest" "logstash" {
+#   depends_on = [
+#     null_resource.wait_elasticsearch_cluster
+#   ]
+#   for_each  = data.kubectl_file_documents.logstash.manifests
+#   yaml_body = each.value
+
+#   force_conflicts = true
+#   wait            = true
+# }
+# resource "kubernetes_manifest" "ingress_logstash_manifest" {
+#   manifest = local.logstash_ingress_yaml
+#   depends_on = [
+#     kubectl_manifest.logstash
+#   ]
+# }
+
+
