@@ -165,9 +165,9 @@ resource "null_resource" "wait_elasticsearch_cluster" {
     kubernetes_manifest.ingress_elastic_manifest
   ]
 
-  triggers = {
-    always_run = "${timestamp()}"
-  }
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"ELASTIC SUCCEEDED\" ; break ; else echo \"ELASTIC INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
@@ -247,9 +247,9 @@ resource "null_resource" "wait_kibana" {
   depends_on = [
     kubernetes_manifest.ingress_kibana_manifest
   ]
-  triggers = {
-    always_run = "${timestamp()}"
-  }
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Kibana -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"KIBANA SUCCEEDED\" ; break ; else echo \"KIBANA INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
@@ -283,9 +283,9 @@ resource "null_resource" "wait_apm" {
   depends_on = [
     kubernetes_manifest.ingress_apm_manifest
   ]
-  triggers = {
-    always_run = "${timestamp()}"
-  }
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get ApmServer -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"APM SUCCEEDED\" ; break ; else echo \"APM INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
@@ -313,37 +313,72 @@ resource "kubectl_manifest" "elastic_agent" {
 # Install Logstash
 # Source: https://medium.com/kocsistem/elk-installation-with-eck-operator-56e8a0a501fa
 #############
-# data "kubectl_file_documents" "logstash_config" {
-#   content = local.logstash_config_yaml
-# }
-# resource "kubectl_manifest" "logstash_config" {
-#   depends_on = [
-#     null_resource.wait_elasticsearch_cluster
-#   ]
-#   for_each  = data.kubectl_file_documents.logstash_config.manifests
-#   yaml_body = each.value
+resource "kubernetes_manifest" "logstash_config" {
+  # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
+  # Each element is a separate kubernetes resource.
+  # Must use \n---\n to avoid splitting on strings and comments containing "---".
+  # YAML allows "---" to be the first and last line of a file, so make sure
+  # raw yaml begins and ends with a newline.
+  # The "---" can be followed by spaces, so need to remove those too.
+  # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
+  for_each = {
+    for value in [
+      for yaml in split(
+        "\n---\n",
+        "\n${replace(local.logstash_config_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
+      ) :
+      yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
+      if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
+    ] : "${value["kind"]}--${value["metadata"]["name"]}" => value
+  }
+  manifest = each.value
+  field_manager {
+    force_conflicts = true
+  }
+  computed_fields = [
+    "metadata.labels", "metadata.annotations",
+    "metadata.creationTimestamp", "webhooks",
+  ]
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+}
 
-#   force_conflicts = true
-#   wait            = true
-# }
+resource "kubernetes_manifest" "logstash" {
+  # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
+  # Each element is a separate kubernetes resource.
+  # Must use \n---\n to avoid splitting on strings and comments containing "---".
+  # YAML allows "---" to be the first and last line of a file, so make sure
+  # raw yaml begins and ends with a newline.
+  # The "---" can be followed by spaces, so need to remove those too.
+  # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
+  for_each = {
+    for value in [
+      for yaml in split(
+        "\n---\n",
+        "\n${replace(local.logstash_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
+      ) :
+      yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
+      if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
+    ] : "${value["kind"]}--${value["metadata"]["name"]}" => value
+  }
+  manifest = each.value
+  field_manager {
+    force_conflicts = true
+  }
+  computed_fields = [
+    "metadata.labels", "metadata.annotations",
+    "metadata.creationTimestamp", "webhooks",
+  ]
+  depends_on = [
+    kubernetes_manifest.logstash_config
+  ]
+}
 
-# data "kubectl_file_documents" "logstash" {
-#   content = local.logstash_yaml
-# }
-# resource "kubectl_manifest" "logstash" {
-#   depends_on = [
-#     null_resource.wait_elasticsearch_cluster
-#   ]
-#   for_each  = data.kubectl_file_documents.logstash.manifests
-#   yaml_body = each.value
-
-#   force_conflicts = true
-#   wait            = true
-# }
 # resource "kubernetes_manifest" "ingress_logstash_manifest" {
 #   manifest = local.logstash_ingress_yaml
 #   depends_on = [
-#     kubectl_manifest.logstash
+#     kubernetes_manifest.logstash
 #   ]
 # }
 

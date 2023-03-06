@@ -15,7 +15,6 @@ data:
       path.config: "/usr/share/logstash/pipeline/logstash.conf"
     - pipeline.id: gelf
       path.config: "/usr/share/logstash/pipeline/gelf.conf"
- 
   log4j2.properties: |
     logger.logstashpipeline.name = logstash.inputs.beats
     logger.logstashpipeline.level = error
@@ -75,6 +74,10 @@ data:
         password => "$${ES_PASSWORD}"
         ssl => true
         ssl_certificate_verification => false
+        data_stream => "true"
+        data_stream_type => "logs"
+        data_stream_dataset => "ndp-log"
+        data_stream_namespace => "ndp"
       }
     }
 
