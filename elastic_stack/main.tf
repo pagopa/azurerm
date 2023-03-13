@@ -188,6 +188,16 @@ resource "null_resource" "wait_elasticsearch_cluster" {
 #     interpreter = ["/bin/bash", "-c"]
 #   }
 # }
+data "kubernetes_secret" "get_elastic_credential" {
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+
+  metadata {
+    name      = "quickstart-es-elastic-user"
+    namespace = var.namespace
+  }
+}
 
 
 
@@ -383,3 +393,102 @@ resource "kubernetes_manifest" "logstash" {
 # }
 
 
+#################################### [Generic LOG] ####################################
+
+locals {
+  kibana_url  = var.env_short == "p" ? "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.platform.pagopa.it/kibana" : "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.${var.env}.platform.pagopa.it/kibana"
+  elastic_url = var.env_short == "p" ? "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.platform.pagopa.it/elastic" : "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.${var.env}.platform.pagopa.it/elastic"
+
+  generic_ilm_policy         = { for filename in fileset(path.module, "logs-generic/ilm_policy_*.json") : replace(replace(basename(filename), "ilm_policy_", ""), ".json", "") => replace(trimsuffix(trimprefix(file("${path.module}/${filename}"), "\""), "\""), "'", "'\\''") }
+  generic_component_template = { for filename in fileset(path.module, "logs-generic/component_*.json") : replace(replace(basename(filename), "component_", ""), ".json", "") => replace(trimsuffix(trimprefix(file("${path.module}/${filename}"), "\""), "\""), "'", "'\\''") }
+  generic_index_template     = { for filename in fileset(path.module, "logs-generic/index_template_*.json") : replace(replace(basename(filename), "index_template_", ""), ".json", "") => replace(trimsuffix(trimprefix(file("${path.module}/${filename}"), "\""), "\""), "'", "'\\''") }
+  generic_kibana_data_view   = file("${path.module}/logs-generic/data_view.json")
+}
+
+resource "null_resource" "generic_ilm_policy" {
+  depends_on = [kubernetes_manifest.logstash]
+
+  for_each = local.generic_ilm_policy
+
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
+
+  provisioner "local-exec" {
+    command     = <<EOT
+      curl -k -X PUT "${local.elastic_url}/_ilm/policy/${each.key}" \
+      -H 'kbn-xsrf: true' \
+      -H 'Content-Type: application/json' \
+      -d '${each.value}'
+    EOT
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
+resource "null_resource" "generic_component_template" {
+  depends_on = [null_resource.generic_ilm_policy]
+
+  for_each = local.generic_component_template
+
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
+
+  provisioner "local-exec" {
+    command     = <<EOT
+      curl -k -X PUT "${local.elastic_url}/_component_template/${each.key}" \
+      -H 'kbn-xsrf: true' \
+      -H 'Content-Type: application/json' \
+      -d '${each.value}'
+    EOT
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
+resource "null_resource" "generic_index_template" {
+  depends_on = [null_resource.generic_component_template]
+
+  for_each = local.generic_index_template
+
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
+
+  provisioner "local-exec" {
+    command     = <<EOT
+      curl -k -X PUT "${local.elastic_url}/_index_template/${each.key}" \
+      -H 'kbn-xsrf: true' \
+      -H 'Content-Type: application/json' \
+      -d '${each.value}'
+    EOT
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
+resource "null_resource" "generic_kibana_data_view" {
+  depends_on = [null_resource.generic_index_template]
+
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
+
+  provisioner "local-exec" {
+    command     = <<EOT
+      data_view=$(curl -k -X POST "${local.kibana_url}/api/data_views/data_view" \
+        -H 'kbn-xsrf: true' \
+        -H 'Content-Type: application/json' \
+        -d '${local.generic_kibana_data_view}')
+      
+      data_view_id=$(echo $data_view | jq -r ".data_view.id")
+
+      curl -k -X POST "${local.kibana_url}/api/data_views/default" \
+        -H 'kbn-xsrf: true' \
+        -H 'Content-Type: application/json' \
+        -d '{
+              "data_view_id": "'$data_view_id'",
+              "force": true
+            }'
+    EOT
+    interpreter = ["/bin/bash", "-c"]
+  }
+}

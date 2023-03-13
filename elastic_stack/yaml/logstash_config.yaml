@@ -13,8 +13,8 @@ data:
   pipelines.yml: |
     - pipeline.id: logstash
       path.config: "/usr/share/logstash/pipeline/logstash.conf"
-    - pipeline.id: fdr
-      path.config: "/usr/share/logstash/pipeline/fdr.conf"
+    - pipeline.id: gelf
+      path.config: "/usr/share/logstash/pipeline/gelf.conf"
   log4j2.properties: |
     logger.logstashpipeline.name = logstash.inputs.beats
     logger.logstashpipeline.level = error
@@ -50,14 +50,31 @@ data:
       }
     }
   
-  fdr.conf: |
+  gelf.conf: |
     input {
       gelf {
         port => 12201
       }
     }
+
+    filter {
+      if ![app] or [app] == "" {
+        mutate {add_field => { "[data_stream][dataset]" => "generic" }}
+      } else {
+        mutate {add_field => { "[data_stream][dataset]" => "%%{app}" }}
+      }
+
+      if ![env] or [env] == "" {
+        mutate {add_field => { "[data_stream][namespace]" => "default" }}
+      } else {
+        mutate {add_field => { "[data_stream][namespace]" => "%%{env}" }}
+      }
+
+      mutate {lowercase => [ "[data_stream][dataset]", "[data_stream][namespace]" ]}
+    }
+
     output {
-      stdout {}
+      stdout { codec => rubydebug { metadata => true } }
       elasticsearch {
         hosts => [ "$${ES_HOST}" ]
         user => "$${ES_USERNAME}"
@@ -66,8 +83,6 @@ data:
         ssl_certificate_verification => false
         data_stream => "true"
         data_stream_type => "logs"
-        data_stream_dataset => "fdr-log"
-        data_stream_namespace => "default"
       }
     }
 
