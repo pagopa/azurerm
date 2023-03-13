@@ -64,11 +64,11 @@ locals {
   logstash_yaml = templatefile("${path.module}/yaml/logstash.yaml", {
     namespace = var.namespace
   })
-  logstash_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_logstash.yaml", {
-    namespace                = var.namespace
-    kibana_internal_hostname = var.kibana_internal_hostname
-    secret_name              = var.secret_name
-  }))
+  # logstash_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_logstash.yaml", {
+  #   namespace                = var.namespace
+  #   kibana_internal_hostname = var.kibana_internal_hostname
+  #   secret_name              = var.secret_name
+  # }))
 }
 
 resource "kubernetes_manifest" "crd" {

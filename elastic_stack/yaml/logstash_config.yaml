@@ -13,8 +13,8 @@ data:
   pipelines.yml: |
     - pipeline.id: logstash
       path.config: "/usr/share/logstash/pipeline/logstash.conf"
-    - pipeline.id: gelf
-      path.config: "/usr/share/logstash/pipeline/gelf.conf"
+    - pipeline.id: fdr
+      path.config: "/usr/share/logstash/pipeline/fdr.conf"
   log4j2.properties: |
     logger.logstashpipeline.name = logstash.inputs.beats
     logger.logstashpipeline.level = error
@@ -36,31 +36,21 @@ data:
         port => 5044
       }
     }
-    filter {
-      json {
-        source => "message"
-      }
-      prune {
-        whitelist_names => [ "msg" ]
-      }
-      mutate {
-        rename => { "msg" => "message" }
-      }
-    }
     output {
-      if [message]  =~ "admission" {
-        elasticsearch {
-          index => "logstashadmission-%%{+YYYY.MM.dd}"
-          hosts => [ "$${ES_HOST}" ]
-          user => "$${ES_USERNAME}"
-          password => "$${ES_PASSWORD}"
-          ssl => true
-          ssl_certificate_verification => false
-        }
+      elasticsearch {
+        hosts => [ "$${ES_HOST}" ]
+        user => "$${ES_USERNAME}"
+        password => "$${ES_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        data_stream => "true"
+        data_stream_type => "logs"
+        data_stream_dataset => "beats-log"
+        data_stream_namespace => "default"
       }
     }
   
-  gelf.conf: |
+  fdr.conf: |
     input {
       gelf {
         port => 12201
@@ -76,8 +66,8 @@ data:
         ssl_certificate_verification => false
         data_stream => "true"
         data_stream_type => "logs"
-        data_stream_dataset => "ndp-log"
-        data_stream_namespace => "ndp"
+        data_stream_dataset => "fdr-log"
+        data_stream_namespace => "default"
       }
     }
 
