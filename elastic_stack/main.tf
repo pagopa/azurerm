@@ -209,7 +209,7 @@ resource "kubernetes_secret" "eck_license" {
   }
 
   data = {
-    license = var.json_b64_eck_license
+    license = var.eck_license
   }
 
 }

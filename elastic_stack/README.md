@@ -63,9 +63,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_eck_license"></a> [eck\_license](#input\_eck\_license) | n/a | `string` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | n/a | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | n/a | `string` | n/a | yes |
-| <a name="input_json_b64_eck_license"></a> [json\_b64\_eck\_license](#input\_json\_b64\_eck\_license) | n/a | `string` | n/a | yes |
 | <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | Keyvault name | `string` | n/a | yes |
 | <a name="input_kibana_external_domain"></a> [kibana\_external\_domain](#input\_kibana\_external\_domain) | Kibana external domain | `string` | n/a | yes |
 | <a name="input_kibana_internal_hostname"></a> [kibana\_internal\_hostname](#input\_kibana\_internal\_hostname) | Kibana internal hostname | `string` | n/a | yes |

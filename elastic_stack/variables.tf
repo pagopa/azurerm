@@ -49,6 +49,6 @@ variable "env" {
   type = string
 }
 
-variable "json_b64_eck_license" {
+variable "eck_license" {
   type = string
 }
