@@ -324,26 +324,34 @@ resource "null_resource" "wait_apm" {
 #data "kubectl_file_documents" "elastic_agent" {
 #  content = local.agent_yaml
 #}
-resource "kubectl_manifest" "elastic_agent" {
-  depends_on = [
-    null_resource.wait_elasticsearch_cluster
-  ]
-  for_each = {
+locals {
+  elastic_agent_defaultMode_converted = {
     for value in [
       for yaml in split(
         "\n---\n",
         "\n${replace(local.agent_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
       ) :
-      yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
+      yamldecode(replace(replace(yaml, "/(?s:\nstatus:.*)$/", ""), "0640", "416")) #transform 'defaultMode' octal value (0640) to decimal value (416)
       if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
     ] : "${value["kind"]}--${value["metadata"]["name"]}" => value
   }
+}
+# output "test" {
+#   value = local.elastic_agent_defaultMode_converted
+# }
 
-  #for_each  = data.kubectl_file_documents.elastic_agent.manifests
-  yaml_body = yamlencode(each.value)
+resource "kubernetes_manifest" "elastic_agent" {
+  depends_on = [
+    null_resource.wait_elasticsearch_cluster
+  ]
+  for_each = local.elastic_agent_defaultMode_converted
 
-  force_conflicts = true
-  wait            = true
+  manifest = each.value
+
+  field_manager {
+    force_conflicts = true
+  }
+  computed_fields = ["spec.template.spec.containers[0].resources"]
 }
 
 #############
