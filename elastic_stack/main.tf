@@ -199,6 +199,22 @@ data "kubernetes_secret" "get_elastic_credential" {
   }
 }
 
+resource "kubernetes_secret" "eck_license" {
+  metadata {
+    name = "eck-license"
+    labels = {
+      "license.k8s.elastic.co/scope" = "operator"
+    }
+    namespace = var.namespace
+  }
+
+  data = {
+    license = var.json_b64_eck_license
+  }
+
+}
+
+
 
 
 #############

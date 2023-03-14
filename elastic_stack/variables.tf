@@ -48,3 +48,7 @@ variable "env_short" {
 variable "env" {
   type = string
 }
+
+variable "json_b64_eck_license" {
+  type = string
+}
