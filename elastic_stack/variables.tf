@@ -48,3 +48,7 @@ variable "env_short" {
 variable "env" {
   type = string
 }
+
+variable "eck_license" {
+  type = string
+}
