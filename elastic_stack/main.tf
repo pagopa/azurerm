@@ -321,15 +321,26 @@ resource "null_resource" "wait_apm" {
 #############
 # Install Elastic Agent
 #############
-data "kubectl_file_documents" "elastic_agent" {
-  content = local.agent_yaml
-}
+#data "kubectl_file_documents" "elastic_agent" {
+#  content = local.agent_yaml
+#}
 resource "kubectl_manifest" "elastic_agent" {
   depends_on = [
     null_resource.wait_elasticsearch_cluster
   ]
-  for_each  = data.kubectl_file_documents.elastic_agent.manifests
-  yaml_body = each.value
+  for_each = {
+    for value in [
+      for yaml in split(
+        "\n---\n",
+        "\n${replace(local.agent_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
+      ) :
+      yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
+      if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
+    ] : "${value["kind"]}--${value["metadata"]["name"]}" => value
+  }
+
+  #for_each  = data.kubectl_file_documents.elastic_agent.manifests
+  yaml_body = yamlencode(each.value)
 
   force_conflicts = true
   wait            = true
