@@ -41,3 +41,10 @@ variable "nodeset_config" {
     }
   }
 }
+
+variable "env_short" {
+  type = string
+}
+variable "env" {
+  type = string
+}

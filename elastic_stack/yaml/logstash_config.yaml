@@ -15,7 +15,6 @@ data:
       path.config: "/usr/share/logstash/pipeline/logstash.conf"
     - pipeline.id: gelf
       path.config: "/usr/share/logstash/pipeline/gelf.conf"
- 
   log4j2.properties: |
     logger.logstashpipeline.name = logstash.inputs.beats
     logger.logstashpipeline.level = error
@@ -37,27 +36,17 @@ data:
         port => 5044
       }
     }
-    filter {
-      json {
-        source => "message"
-      }
-      prune {
-        whitelist_names => [ "msg" ]
-      }
-      mutate {
-        rename => { "msg" => "message" }
-      }
-    }
     output {
-      if [message]  =~ "admission" {
-        elasticsearch {
-          index => "logstashadmission-%%{+YYYY.MM.dd}"
-          hosts => [ "$${ES_HOST}" ]
-          user => "$${ES_USERNAME}"
-          password => "$${ES_PASSWORD}"
-          ssl => true
-          ssl_certificate_verification => false
-        }
+      elasticsearch {
+        hosts => [ "$${ES_HOST}" ]
+        user => "$${ES_USERNAME}"
+        password => "$${ES_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        data_stream => "true"
+        data_stream_type => "logs"
+        data_stream_dataset => "beats-log"
+        data_stream_namespace => "default"
       }
     }
   
@@ -67,14 +56,33 @@ data:
         port => 12201
       }
     }
+
+    filter {
+      if ![app] or [app] == "" {
+        mutate {add_field => { "[data_stream][dataset]" => "generic" }}
+      } else {
+        mutate {add_field => { "[data_stream][dataset]" => "%%{app}" }}
+      }
+
+      if ![env] or [env] == "" {
+        mutate {add_field => { "[data_stream][namespace]" => "default" }}
+      } else {
+        mutate {add_field => { "[data_stream][namespace]" => "%%{env}" }}
+      }
+
+      mutate {lowercase => [ "[data_stream][dataset]", "[data_stream][namespace]" ]}
+    }
+
     output {
-      stdout {}
+      stdout { codec => rubydebug { metadata => true } }
       elasticsearch {
         hosts => [ "$${ES_HOST}" ]
         user => "$${ES_USERNAME}"
         password => "$${ES_PASSWORD}"
         ssl => true
         ssl_certificate_verification => false
+        data_stream => "true"
+        data_stream_type => "logs"
       }
     }
 
