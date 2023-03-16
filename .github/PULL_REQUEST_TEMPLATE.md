@@ -1,3 +1,5 @@
+### :warning: This repo is stale, all new features will be added on https://github.com/pagopa/terraform-azurerm-v3 :warning:
+
 <!--- Please always add a PR description as if nobody knows anything about the context these changes come from. -->
 <!--- Even if we are all from our internal team, we may not be on the same page. -->
 <!--- Write this PR as you were contributing to a public OSS project, where nobody knows you and you have to earn their trust. -->
