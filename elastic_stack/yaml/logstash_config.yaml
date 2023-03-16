@@ -9,7 +9,6 @@ metadata:
 data:
   logstash.yml: |
     http.host: 0.0.0.0
-    pipeline.ecs_compatibility: disabled
   pipelines.yml: |
     - pipeline.id: logstash
       path.config: "/usr/share/logstash/pipeline/logstash.conf"
@@ -45,7 +44,7 @@ data:
         ssl_certificate_verification => false
         data_stream => "true"
         data_stream_type => "logs"
-        data_stream_dataset => "beats-log"
+        data_stream_dataset => "generic"
         data_stream_namespace => "default"
       }
     }
