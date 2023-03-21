@@ -60,13 +60,13 @@ data:
       if ![app] or [app] == "" {
         mutate {add_field => { "[data_stream][dataset]" => "generic" }}
       } else {
-        mutate {add_field => { "[data_stream][dataset]" => "%%{app}" }}
+        mutate {add_field => { "[data_stream][dataset]" => "%%{app_name}" }}
       }
 
       if ![env] or [env] == "" {
         mutate {add_field => { "[data_stream][namespace]" => "default" }}
       } else {
-        mutate {add_field => { "[data_stream][namespace]" => "%%{env}" }}
+        mutate {add_field => { "[data_stream][namespace]" => "%%{app_environment}" }}
       }
 
       mutate {lowercase => [ "[data_stream][dataset]", "[data_stream][namespace]" ]}

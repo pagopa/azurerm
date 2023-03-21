@@ -165,29 +165,12 @@ resource "null_resource" "wait_elasticsearch_cluster" {
     kubernetes_manifest.ingress_elastic_manifest
   ]
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"ELASTIC SUCCEEDED\" ; break ; else echo \"ELASTIC INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
   }
 }
 
-# resource "null_resource" "get_elastic_credential" {
-#   depends_on = [
-#     null_resource.wait_elasticsearch_cluster
-#   ]
-
-#   #############
-#   # Username: elastic
-#   # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
-#   #############
-#   provisioner "local-exec" {
-#     command     = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
-#     interpreter = ["/bin/bash", "-c"]
-#   }
-# }
 data "kubernetes_secret" "get_elastic_credential" {
   depends_on = [
     null_resource.wait_elasticsearch_cluster
@@ -213,9 +196,6 @@ resource "kubernetes_secret" "eck_license" {
   }
 
 }
-
-
-
 
 #############
 # Create cert mounter for certs
@@ -273,9 +253,7 @@ resource "null_resource" "wait_kibana" {
   depends_on = [
     kubernetes_manifest.ingress_kibana_manifest
   ]
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Kibana -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"KIBANA SUCCEEDED\" ; break ; else echo \"KIBANA INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
@@ -309,9 +287,7 @@ resource "null_resource" "wait_apm" {
   depends_on = [
     kubernetes_manifest.ingress_apm_manifest
   ]
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get ApmServer -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"APM SUCCEEDED\" ; break ; else echo \"APM INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
@@ -420,12 +396,6 @@ resource "kubernetes_manifest" "logstash" {
   ]
 }
 
-# resource "kubernetes_manifest" "ingress_logstash_manifest" {
-#   manifest = local.logstash_ingress_yaml
-#   depends_on = [
-#     kubernetes_manifest.logstash
-#   ]
-# }
 
 
 #################################### [Generic LOG] ####################################
@@ -445,9 +415,9 @@ resource "null_resource" "generic_ilm_policy" {
 
   for_each = local.generic_ilm_policy
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
 
   provisioner "local-exec" {
     command     = <<EOT
@@ -465,9 +435,9 @@ resource "null_resource" "generic_component_template" {
 
   for_each = local.generic_component_template
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
 
   provisioner "local-exec" {
     command     = <<EOT
@@ -485,9 +455,9 @@ resource "null_resource" "generic_index_template" {
 
   for_each = local.generic_index_template
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
 
   provisioner "local-exec" {
     command     = <<EOT
@@ -503,9 +473,9 @@ resource "null_resource" "generic_index_template" {
 resource "null_resource" "generic_kibana_data_view" {
   depends_on = [null_resource.generic_index_template]
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
 
   provisioner "local-exec" {
     command     = <<EOT
