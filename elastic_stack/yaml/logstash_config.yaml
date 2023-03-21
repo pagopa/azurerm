@@ -57,13 +57,13 @@ data:
     }
 
     filter {
-      if ![app] or [app] == "" {
+      if ![app_name] or [app_name] == "" {
         mutate {add_field => { "[data_stream][dataset]" => "generic" }}
       } else {
         mutate {add_field => { "[data_stream][dataset]" => "%%{app_name}" }}
       }
 
-      if ![env] or [env] == "" {
+      if ![app_environment] or [app_environment] == "" {
         mutate {add_field => { "[data_stream][namespace]" => "default" }}
       } else {
         mutate {add_field => { "[data_stream][namespace]" => "%%{app_environment}" }}
