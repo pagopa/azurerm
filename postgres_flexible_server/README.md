@@ -19,7 +19,9 @@ Module that allows the creation of a postgres flexible.
 * **HA** and **pg bouncer** is not avaible for B series machines
 
 ## SKU
+
 How to retrieve possible SKU values?
+
 1. use `az postgres flexible-server list-skus -l westeurope`
 2. choose from json response your instance sku using tier and server version.
 
