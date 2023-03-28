@@ -21,6 +21,13 @@ resource "azurerm_storage_account" "this" {
     }
   }
 
+  dynamic "blob_properties" {
+    for_each = var.enable_versioning ? [] : ["dummy"]
+    content {
+      versioning_enabled = var.enable_versioning
+    }
+  }
+
   dynamic "network_rules" {
     for_each = var.network_rules == null ? [] : [var.network_rules]
 
@@ -80,7 +87,8 @@ resource "azurerm_template_deployment" "versioning" {
                 "storageAccount": {
                     "type": "string",
                     "metadata": {
-                        "description": "Storage Account Name"}
+                        "description": "Storage Account Name"
+                    }
                 }
             },
             "variables": {},
