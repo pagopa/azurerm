@@ -43,16 +43,10 @@ No modules.
 | [kubernetes_manifest.ingress_apm_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.ingress_elastic_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.ingress_kibana_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
-| [kubernetes_manifest.logstash](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
-| [kubernetes_manifest.logstash_config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.mounter_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.operator](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.secret_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_secret.eck_license](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
-| [null_resource.generic_component_template](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.generic_ilm_policy](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.generic_index_template](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.generic_kibana_data_view](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [null_resource.wait_apm](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [null_resource.wait_elasticsearch_cluster](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [null_resource.wait_kibana](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
@@ -63,6 +57,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_eck_license"></a> [eck\_license](#input\_eck\_license) | n/a | `string` | n/a | yes |
+| <a name="input_elastic_agent_custom_log_config"></a> [elastic\_agent\_custom\_log\_config](#input\_elastic\_agent\_custom\_log\_config) | n/a | <pre>map(object({<br>    data_stream_namespace = string<br>  }))</pre> | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | n/a | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | n/a | `string` | n/a | yes |
 | <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | Keyvault name | `string` | n/a | yes |
