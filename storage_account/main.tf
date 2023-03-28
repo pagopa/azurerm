@@ -12,7 +12,7 @@ resource "azurerm_storage_account" "this" {
   allow_blob_public_access  = var.allow_blob_public_access
   is_hns_enabled            = var.is_hns_enabled
 
-  dynamic "blob_properties"{
+  dynamic "blob_properties" {
     for_each = ["dummy"]
     content {
       dynamic "delete_retention_policy" {
