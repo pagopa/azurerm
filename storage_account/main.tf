@@ -12,18 +12,15 @@ resource "azurerm_storage_account" "this" {
   allow_blob_public_access  = var.allow_blob_public_access
   is_hns_enabled            = var.is_hns_enabled
 
-  dynamic "blob_properties" {
-    for_each = var.blob_properties_delete_retention_policy_days == null ? [] : ["dummy"]
-    content {
-      delete_retention_policy {
-        days = var.blob_properties_delete_retention_policy_days
-      }
-    }
-  }
-
-  dynamic "blob_properties" {
+  dynamic "blob_properties"{
     for_each = ["dummy"]
     content {
+      dynamic "delete_retention_policy" {
+        for_each = var.blob_properties_delete_retention_policy_days == null ? [] : ["dummy"]
+        content {
+          days = var.blob_properties_delete_retention_policy_days
+        }
+      }
       versioning_enabled = true
     }
   }
