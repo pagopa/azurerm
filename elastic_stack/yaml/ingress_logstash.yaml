@@ -1,0 +1,36 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: logstash
+#   namespace: ${namespace}
+#   annotations:
+#     kubernetes.io/ingress.class: nginxelk
+#     nginx.ingress.kubernetes.io/rewrite-target: /$2
+#     nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+#     nginx.ingress.kubernetes.io/use-regex: 'true'
+#     kubernetes.io/tls-acme: "true"
+#     nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
+#     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+# spec:
+#   tls:
+#     - hosts:
+#         - ${kibana_internal_hostname}
+#       secretName: ${secret_name}
+#   rules:
+#     - host: ${kibana_internal_hostname}
+#       http:
+#         paths:
+#           - path: /logstash-beat(/|$)(.*)
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: logstash
+#                 port:
+#                   number: 5044
+#           - path: /logstash-gelf(/|$)(.*)
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: logstash
+#                 port:
+#                   number: 12201

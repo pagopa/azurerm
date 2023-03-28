@@ -7,7 +7,7 @@ variable "location" {
   type = string
 }
 
-// Resource Group 
+// Resource Group
 variable "resource_group_name" {
   type = string
 }
@@ -65,7 +65,7 @@ variable "maximum_throughput_units" {
 
 variable "network_rulesets" {
   type = list(object({
-    default_action = string
+    default_action = string #The default action to take when a rule is not matched. Possible values are Allow and Deny.
     virtual_network_rule = list(object({
       subnet_id                                       = string
       ignore_missing_virtual_network_service_endpoint = bool
@@ -74,8 +74,10 @@ variable "network_rulesets" {
       ip_mask = string
       action  = string
     }))
+    trusted_service_access_enabled = bool #Whether Trusted Microsoft Services are allowed to bypass firewall.
   }))
-  default = []
+  default     = []
+  description = "Define the network rule sets for the namespace"
 }
 
 variable "zone_redundant" {

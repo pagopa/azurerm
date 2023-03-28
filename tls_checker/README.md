@@ -2,6 +2,12 @@
 
 This module allow the creation of the tls checker project as helm chart inside aks, and an alert reading custom metrics written by the tls checker that allows to trigger an alert
 
+## 🚀 Business Logic
+
+This alert will be trigger as critical if:
+
+> the expiry of the certificate is less than 7 days. Define with the default value of the variable `input_expiration_delta_in_days`
+
 ## How to use it
 
 ```ts
