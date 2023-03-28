@@ -24,6 +24,7 @@ apt-get -y install azure-cli
 # install python package index (pip)
 
 apt-get -y install python-pip
+apt-get -y install python3-pip
 
 # install docker from https://docs.docker.com/engine/install/ubuntu/
 
