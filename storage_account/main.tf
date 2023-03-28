@@ -22,9 +22,9 @@ resource "azurerm_storage_account" "this" {
   }
 
   dynamic "blob_properties" {
-    for_each = var.enable_versioning ? [] : ["dummy"]
+    for_each = ["dummy"]
     content {
-      versioning_enabled = var.enable_versioning
+      versioning_enabled = true
     }
   }
 
