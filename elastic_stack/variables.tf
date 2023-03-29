@@ -45,6 +45,7 @@ variable "nodeset_config" {
 variable "elastic_agent_custom_log_config" {
   type = map(object({
     data_stream_namespace = string
+    instance              = list(string)
   }))
 }
 

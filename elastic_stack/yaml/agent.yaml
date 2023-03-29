@@ -583,7 +583,8 @@ data:
             name: kubernetes
             version: 1.31.2
       %{~ for k, v in elastic_agent_custom_log_config ~}
-      - id: filestream-container-logs-${k}-${kubernetes_id}
+      %{~ for instance in v.instance ~}
+      - id: filestream-container-logs-${k}-${instance}-${kubernetes_id}
         revision: ${kubernetes_revision}
         name: ${kubernetes_name}
         type: filestream
@@ -596,7 +597,7 @@ data:
               kubernetes-container-logs-$${kubernetes.pod.name}-$${kubernetes.container.id}
             data_stream:
               type: logs
-              dataset: ${k}
+              dataset: ${k}-${instance}
             paths:
               - /var/log/containers/*$${kubernetes.container.id}.log
             prospector.scanner.symlinks: true
@@ -604,11 +605,12 @@ data:
               - container:
                   stream: all
                   format: auto
-            condition: $${kubernetes.labels.app.kubernetes.io/instance} == '${k}'
+            condition: $${kubernetes.labels.app.kubernetes.io/instance} == '${instance}'
         meta:
           package:
             name: kubernetes
             version: 1.31.2
+      %{~ endfor ~}
       %{~ endfor ~}
       - id: ${apm_id}
         revision: ${apm_revision}
