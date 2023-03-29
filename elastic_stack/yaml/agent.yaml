@@ -578,6 +578,7 @@ data:
               - container:
                   stream: all
                   format: auto
+            condition: ${not_general_log_condition}
         meta:
           package:
             name: kubernetes
@@ -899,9 +900,11 @@ data:
                 - logs-kubernetes.container_logs-default
               privileges: *ref_0
             %{~ for k, v in elastic_agent_custom_log_config ~}
+            %{~ for instance in v.instance ~}
             - names:
-                - logs-${k}-${v.data_stream_namespace}
+                - logs-${k}-${instance}-${v.data_stream_namespace}
               privileges: *ref_0
+            %{~ endfor ~}
             %{~ endfor ~}
         ${apm_id}:
           indices:

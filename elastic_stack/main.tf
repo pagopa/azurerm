@@ -55,9 +55,18 @@ locals {
     secret_name              = var.secret_name
   }))
 
+  instances = distinct(flatten([
+    for k, v in var.elastic_agent_custom_log_config : [
+      for instance in v.instance : "$${kubernetes.labels.app.kubernetes.io/instance} != '${instance}'"
+    ]
+  ]))
+  not_general_log_condition = join(" or ", local.instances)
+
+
   agent_yaml = templatefile("${path.module}/yaml/agent.yaml", {
     namespace                       = var.namespace
     elastic_agent_custom_log_config = var.elastic_agent_custom_log_config
+    not_general_log_condition       = local.not_general_log_condition
 
     system_name     = "system-1"
     system_id       = "b58bd4d8-3fa4-54a1-8776-a733732c8a3d"
