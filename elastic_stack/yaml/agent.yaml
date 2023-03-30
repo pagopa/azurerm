@@ -566,53 +566,40 @@ data:
         use_output: default
         package_policy_id: ${kubernetes_id}
         streams:
-          - id: >-
-              kubernetes-container-logs-$${kubernetes.pod.name}-$${kubernetes.container.id}
+          - id: kubernetes-container-logs-default
             data_stream:
               type: logs
               dataset: kubernetes.container_logs
             paths:
-              - '/var/log/containers/*$${kubernetes.container.id}.log'
+              - '/var/log/containers/*.log'
+            exclude_files:
+              %{~ for path in paths ~}
+              - ${path}
+              %{~ endfor ~}
             prospector.scanner.symlinks: true
             parsers:
               - container:
                   stream: all
                   format: auto
-            condition: ${not_general_log_condition}
-        meta:
-          package:
-            name: kubernetes
-            version: 1.31.2
-      %{~ for k, v in elastic_agent_custom_log_config ~}
-      %{~ for instance in v.instance ~}
-      - id: filestream-container-logs-${k}-${instance}-${kubernetes_id}
-        revision: ${kubernetes_revision}
-        name: ${kubernetes_name}
-        type: filestream
-        data_stream:
-          namespace: ${v.data_stream_namespace}
-        use_output: default
-        package_policy_id: ${kubernetes_id}
-        streams:
-          - id: >-
-              kubernetes-container-logs-$${kubernetes.pod.name}-$${kubernetes.container.id}
+          %{~ for k, v in elastic_agent_custom_log_config ~}
+          %{~ for instance in v.instance ~}
+          - id: kubernetes-container-logs-${k}-${instance}
             data_stream:
               type: logs
               dataset: ${k}-${instance}
             paths:
-              - /var/log/containers/*$${kubernetes.container.id}.log
+              - /var/log/containers/${instance}-*.log
             prospector.scanner.symlinks: true
             parsers:
               - container:
                   stream: all
                   format: auto
-            condition: $${kubernetes.labels.app.kubernetes.io/instance} == '${instance}'
+          %{~ endfor ~}
+          %{~ endfor ~}
         meta:
           package:
             name: kubernetes
             version: 1.31.2
-      %{~ endfor ~}
-      %{~ endfor ~}
       - id: ${apm_id}
         revision: ${apm_revision}
         name: ${apm_name}
@@ -902,7 +889,7 @@ data:
             %{~ for k, v in elastic_agent_custom_log_config ~}
             %{~ for instance in v.instance ~}
             - names:
-                - logs-${k}-${instance}-${v.data_stream_namespace}
+                - logs-${k}-${instance}-default
               privileges: *ref_0
             %{~ endfor ~}
             %{~ endfor ~}

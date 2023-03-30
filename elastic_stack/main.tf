@@ -55,29 +55,30 @@ locals {
     secret_name              = var.secret_name
   }))
 
-  instances = distinct(flatten([
+  paths = distinct(flatten([
     for k, v in var.elastic_agent_custom_log_config : [
-      for instance in v.instance : "$${kubernetes.labels.app.kubernetes.io/instance} != '${instance}'"
+      for instance in v.instance : "'/var/log/containers/${instance}-*.log'"
     ]
   ]))
-  not_general_log_condition = join(" or ", local.instances)
+  #paths_to_exclude = join(", ", local.paths)
 
 
   agent_yaml = templatefile("${path.module}/yaml/agent.yaml", {
     namespace                       = var.namespace
     elastic_agent_custom_log_config = var.elastic_agent_custom_log_config
-    not_general_log_condition       = local.not_general_log_condition
+    paths                           = local.paths
+    #paths_to_exclude       = local.paths_to_exclude
 
     system_name     = "system-1"
-    system_id       = "b58bd4d8-3fa4-54a1-8776-a733732c8a3d"
+    system_id       = "id_system_1"
     system_revision = 1
 
     kubernetes_name     = "kubernetes-1"
-    kubernetes_id       = "a3b718bd-efec-54f4-b513-7711c744a8ec"
+    kubernetes_id       = "id_kubernetes_1"
     kubernetes_revision = 1
 
-    apm_name     = "kubernetes-1"
-    apm_id       = "4636a048-7533-5527-94c4-1ff22a1eb48a"
+    apm_name     = "apm-1"
+    apm_id       = "id_apm_1"
     apm_revision = 1
   })
 
