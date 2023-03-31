@@ -55,19 +55,15 @@ locals {
     secret_name              = var.secret_name
   }))
 
-  paths = distinct(flatten([
-    for k, v in var.elastic_agent_custom_log_config : [
-      for instance in v.instance : "'/var/log/containers/${instance}-*.log'"
-    ]
+  logs_general_to_exclude_paths = distinct(flatten([
+    for instance_name in var.dedicated_log_instance_name : "'/var/log/containers/${instance_name}-*.log'"
   ]))
-  #paths_to_exclude = join(", ", local.paths)
 
 
   agent_yaml = templatefile("${path.module}/yaml/agent.yaml", {
-    namespace                       = var.namespace
-    elastic_agent_custom_log_config = var.elastic_agent_custom_log_config
-    paths                           = local.paths
-    #paths_to_exclude       = local.paths_to_exclude
+    namespace                     = var.namespace
+    dedicated_log_instance_name   = var.dedicated_log_instance_name
+    logs_general_to_exclude_paths = local.logs_general_to_exclude_paths
 
     system_name     = "system-1"
     system_id       = "id_system_1"

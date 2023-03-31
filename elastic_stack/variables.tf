@@ -43,10 +43,8 @@ variable "nodeset_config" {
 }
 
 
-variable "elastic_agent_custom_log_config" {
-  type = map(object({
-    instance = list(string)
-  }))
+variable "dedicated_log_instance_name" {
+  type = list(string)
 }
 
 variable "env_short" {

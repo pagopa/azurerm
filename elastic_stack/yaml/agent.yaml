@@ -566,35 +566,33 @@ data:
         use_output: default
         package_policy_id: ${kubernetes_id}
         streams:
-          - id: kubernetes-container-logs-default
+          - id: kubernetes-container-logs-default-${kubernetes_id}
             data_stream:
               type: logs
               dataset: kubernetes.container_logs
             paths:
               - '/var/log/containers/*.log'
             exclude_files:
-              %{~ for path in paths ~}
-              - ${path}
+              %{~ for exclude_path in logs_general_to_exclude_paths ~}
+              - ${exclude_path}
               %{~ endfor ~}
             prospector.scanner.symlinks: true
             parsers:
               - container:
                   stream: all
                   format: auto
-          %{~ for k, v in elastic_agent_custom_log_config ~}
-          %{~ for instance in v.instance ~}
-          - id: kubernetes-container-logs-${k}-${instance}
+          %{~ for instance_name in dedicated_log_instance_name ~}
+          - id: kubernetes-container-logs-${instance_name}-${kubernetes_id}
             data_stream:
               type: logs
-              dataset: ${k}-${instance}
+              dataset: ${instance_name}
             paths:
-              - /var/log/containers/${instance}-*.log
+              - /var/log/containers/${instance_name}-*.log
             prospector.scanner.symlinks: true
             parsers:
               - container:
                   stream: all
                   format: auto
-          %{~ endfor ~}
           %{~ endfor ~}
         meta:
           package:
@@ -886,12 +884,10 @@ data:
             - names:
                 - logs-kubernetes.container_logs-default
               privileges: *ref_0
-            %{~ for k, v in elastic_agent_custom_log_config ~}
-            %{~ for instance in v.instance ~}
+            %{~ for instance_name in dedicated_log_instance_name ~}
             - names:
-                - logs-${k}-${instance}-default
+                - logs-${instance_name}-default
               privileges: *ref_0
-            %{~ endfor ~}
             %{~ endfor ~}
         ${apm_id}:
           indices:
