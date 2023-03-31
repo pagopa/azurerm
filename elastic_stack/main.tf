@@ -55,20 +55,30 @@ locals {
     secret_name              = var.secret_name
   }))
 
-  orig_agent_yaml = file("${path.module}/yaml/agent.yaml")
-  agent_yaml      = replace(local.orig_agent_yaml, "namespace: kube-system", "namespace: ${var.namespace}") #usato il replace per essere più comodi in un futuro cambio versione 
+  logs_general_to_exclude_paths = distinct(flatten([
+    for instance_name in var.dedicated_log_instance_name : "'/var/log/containers/${instance_name}-*.log'"
+  ]))
 
-  logstash_config_yaml = templatefile("${path.module}/yaml/logstash_config.yaml", {
-    namespace = var.namespace
+
+  agent_yaml = templatefile("${path.module}/yaml/agent.yaml", {
+    namespace                     = var.namespace
+    dedicated_log_instance_name   = var.dedicated_log_instance_name
+    logs_general_to_exclude_paths = local.logs_general_to_exclude_paths
+
+    system_name     = "system-1"
+    system_id       = "id_system_1"
+    system_revision = 1
+
+    kubernetes_name     = "kubernetes-1"
+    kubernetes_id       = "id_kubernetes_1"
+    kubernetes_revision = 1
+
+    apm_name     = "apm-1"
+    apm_id       = "id_apm_1"
+    apm_revision = 1
   })
-  logstash_yaml = templatefile("${path.module}/yaml/logstash.yaml", {
-    namespace = var.namespace
-  })
-  # logstash_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_logstash.yaml", {
-  #   namespace                = var.namespace
-  #   kibana_internal_hostname = var.kibana_internal_hostname
-  #   secret_name              = var.secret_name
-  # }))
+
+
 }
 
 resource "kubernetes_manifest" "crd" {
@@ -165,29 +175,12 @@ resource "null_resource" "wait_elasticsearch_cluster" {
     kubernetes_manifest.ingress_elastic_manifest
   ]
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Elasticsearch -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"ELASTIC SUCCEEDED\" ; break ; else echo \"ELASTIC INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
   }
 }
 
-# resource "null_resource" "get_elastic_credential" {
-#   depends_on = [
-#     null_resource.wait_elasticsearch_cluster
-#   ]
-
-#   #############
-#   # Username: elastic
-#   # Password: $(kubectl -n elastic-system get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo)
-#   #############
-#   provisioner "local-exec" {
-#     command     = "ES_PASSWORD=`kubectl -n ${var.namespace} get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`; echo \"\n## ELASTIC #########################\n# USERNAME: elastic \n# PASSWORD: $ES_PASSWORD\n####################################\n\""
-#     interpreter = ["/bin/bash", "-c"]
-#   }
-# }
 data "kubernetes_secret" "get_elastic_credential" {
   depends_on = [
     null_resource.wait_elasticsearch_cluster
@@ -213,9 +206,6 @@ resource "kubernetes_secret" "eck_license" {
   }
 
 }
-
-
-
 
 #############
 # Create cert mounter for certs
@@ -273,9 +263,7 @@ resource "null_resource" "wait_kibana" {
   depends_on = [
     kubernetes_manifest.ingress_kibana_manifest
   ]
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get Kibana -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"KIBANA SUCCEEDED\" ; break ; else echo \"KIBANA INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
@@ -309,9 +297,7 @@ resource "null_resource" "wait_apm" {
   depends_on = [
     kubernetes_manifest.ingress_apm_manifest
   ]
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+
   provisioner "local-exec" {
     command     = "while [ true ]; do STATUS=`kubectl -n ${var.namespace} get ApmServer -ojsonpath='{range .items[*]}{.status.health}'`; if [ \"$STATUS\" = \"green\" ]; then echo \"APM SUCCEEDED\" ; break ; else echo \"APM INPROGRESS\"; sleep 3; fi ; done"
     interpreter = ["/bin/bash", "-c"]
@@ -352,178 +338,4 @@ resource "kubernetes_manifest" "elastic_agent" {
     force_conflicts = true
   }
   computed_fields = ["spec.template.spec.containers[0].resources"]
-}
-
-#############
-# Install Logstash
-# Source: https://medium.com/kocsistem/elk-installation-with-eck-operator-56e8a0a501fa
-#############
-resource "kubernetes_manifest" "logstash_config" {
-  # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
-  # Each element is a separate kubernetes resource.
-  # Must use \n---\n to avoid splitting on strings and comments containing "---".
-  # YAML allows "---" to be the first and last line of a file, so make sure
-  # raw yaml begins and ends with a newline.
-  # The "---" can be followed by spaces, so need to remove those too.
-  # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
-  for_each = {
-    for value in [
-      for yaml in split(
-        "\n---\n",
-        "\n${replace(local.logstash_config_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
-      ) :
-      yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
-      if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
-    ] : "${value["kind"]}--${value["metadata"]["name"]}" => value
-  }
-  manifest = each.value
-  field_manager {
-    force_conflicts = true
-  }
-  computed_fields = [
-    "metadata.labels", "metadata.annotations",
-    "metadata.creationTimestamp", "webhooks",
-  ]
-  depends_on = [
-    null_resource.wait_elasticsearch_cluster
-  ]
-}
-
-resource "kubernetes_manifest" "logstash" {
-  # Create a map { "kind--name" => yaml_doc } from the multi-document yaml text.
-  # Each element is a separate kubernetes resource.
-  # Must use \n---\n to avoid splitting on strings and comments containing "---".
-  # YAML allows "---" to be the first and last line of a file, so make sure
-  # raw yaml begins and ends with a newline.
-  # The "---" can be followed by spaces, so need to remove those too.
-  # Skip blocks that are empty or comments-only in case yaml began with a comment before "---".
-  for_each = {
-    for value in [
-      for yaml in split(
-        "\n---\n",
-        "\n${replace(local.logstash_yaml, "/(?m)^---[[:blank:]]*(#.*)?$/", "---")}\n"
-      ) :
-      yamldecode(replace(yaml, "/(?s:\nstatus:.*)$/", ""))
-      if trimspace(replace(yaml, "/(?m)(^[[:blank:]]*(#.*)?$)+/", "")) != ""
-    ] : "${value["kind"]}--${value["metadata"]["name"]}" => value
-  }
-  manifest = each.value
-  field_manager {
-    force_conflicts = true
-  }
-  computed_fields = [
-    "metadata.labels", "metadata.annotations",
-    "metadata.creationTimestamp", "webhooks",
-  ]
-  depends_on = [
-    kubernetes_manifest.logstash_config
-  ]
-}
-
-# resource "kubernetes_manifest" "ingress_logstash_manifest" {
-#   manifest = local.logstash_ingress_yaml
-#   depends_on = [
-#     kubernetes_manifest.logstash
-#   ]
-# }
-
-
-#################################### [Generic LOG] ####################################
-
-locals {
-  kibana_url  = var.env_short == "p" ? "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.platform.pagopa.it/kibana" : "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.${var.env}.platform.pagopa.it/kibana"
-  elastic_url = var.env_short == "p" ? "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.platform.pagopa.it/elastic" : "https://elastic:${data.kubernetes_secret.get_elastic_credential.data.elastic}@kibana.${var.env}.platform.pagopa.it/elastic"
-
-  generic_ilm_policy         = { for filename in fileset(path.module, "logs-generic/ilm_policy_*.json") : replace(replace(basename(filename), "ilm_policy_", ""), ".json", "") => replace(trimsuffix(trimprefix(file("${path.module}/${filename}"), "\""), "\""), "'", "'\\''") }
-  generic_component_template = { for filename in fileset(path.module, "logs-generic/component_*.json") : replace(replace(basename(filename), "component_", ""), ".json", "") => replace(trimsuffix(trimprefix(file("${path.module}/${filename}"), "\""), "\""), "'", "'\\''") }
-  generic_index_template     = { for filename in fileset(path.module, "logs-generic/index_template_*.json") : replace(replace(basename(filename), "index_template_", ""), ".json", "") => replace(trimsuffix(trimprefix(file("${path.module}/${filename}"), "\""), "\""), "'", "'\\''") }
-  generic_kibana_data_view   = file("${path.module}/logs-generic/data_view.json")
-}
-
-resource "null_resource" "generic_ilm_policy" {
-  depends_on = [kubernetes_manifest.logstash]
-
-  for_each = local.generic_ilm_policy
-
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
-
-  provisioner "local-exec" {
-    command     = <<EOT
-      curl -k -X PUT "${local.elastic_url}/_ilm/policy/${each.key}" \
-      -H 'kbn-xsrf: true' \
-      -H 'Content-Type: application/json' \
-      -d '${each.value}'
-    EOT
-    interpreter = ["/bin/bash", "-c"]
-  }
-}
-
-resource "null_resource" "generic_component_template" {
-  depends_on = [null_resource.generic_ilm_policy]
-
-  for_each = local.generic_component_template
-
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
-
-  provisioner "local-exec" {
-    command     = <<EOT
-      curl -k -X PUT "${local.elastic_url}/_component_template/${each.key}" \
-      -H 'kbn-xsrf: true' \
-      -H 'Content-Type: application/json' \
-      -d '${each.value}'
-    EOT
-    interpreter = ["/bin/bash", "-c"]
-  }
-}
-
-resource "null_resource" "generic_index_template" {
-  depends_on = [null_resource.generic_component_template]
-
-  for_each = local.generic_index_template
-
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
-
-  provisioner "local-exec" {
-    command     = <<EOT
-      curl -k -X PUT "${local.elastic_url}/_index_template/${each.key}" \
-      -H 'kbn-xsrf: true' \
-      -H 'Content-Type: application/json' \
-      -d '${each.value}'
-    EOT
-    interpreter = ["/bin/bash", "-c"]
-  }
-}
-
-resource "null_resource" "generic_kibana_data_view" {
-  depends_on = [null_resource.generic_index_template]
-
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
-
-  provisioner "local-exec" {
-    command     = <<EOT
-      data_view=$(curl -k -X POST "${local.kibana_url}/api/data_views/data_view" \
-        -H 'kbn-xsrf: true' \
-        -H 'Content-Type: application/json' \
-        -d '${local.generic_kibana_data_view}')
-      
-      data_view_id=$(echo $data_view | jq -r ".data_view.id")
-
-      curl -k -X POST "${local.kibana_url}/api/data_views/default" \
-        -H 'kbn-xsrf: true' \
-        -H 'Content-Type: application/json' \
-        -d '{
-              "data_view_id": "'$data_view_id'",
-              "force": true
-            }'
-    EOT
-    interpreter = ["/bin/bash", "-c"]
-  }
 }
