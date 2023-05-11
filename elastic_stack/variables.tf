@@ -42,6 +42,11 @@ variable "nodeset_config" {
   }
 }
 
+
+variable "dedicated_log_instance_name" {
+  type = list(string)
+}
+
 variable "env_short" {
   type = string
 }
