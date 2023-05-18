@@ -310,6 +310,21 @@ variable "error_404_document" {
   type = string
 }
 
+variable "keyvault_resource_group_name" {
+  type        = string
+  description = "Key vault resource group name"
+}
+
+variable "keyvault_subscription_id" {
+  type        = string
+  description = "Key vault subscription id"
+}
+
+variable "keyvault_vault_name" {
+  type        = string
+  description = "Key vault name"
+}
+
 variable "dns_zone_name" {
   type = string
 }
