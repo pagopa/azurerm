@@ -26,24 +26,6 @@ az vmss extension delete \
 
 sleep 30
 
-az vmss extension delete \
-  --vmss-name "${vm_scaleset_name}" \
-  --resource-group "${vm_scaleset_resource_group}" \
-  --name "install_requirements"
-
-sleep 30
-
-az vmss extension set \
-  --vmss-name "${vm_scaleset_name}" \
-  --resource-group "${vm_scaleset_resource_group}" \
-  --name "CustomScript" \
-  --version 2.0 \
-  --publisher "Microsoft.Azure.Extensions" \
-  --extension-instance-name "install_requirements" \
-  --settings "./script-config.json"
-
-sleep 30
-
 az vmss extension set \
   --vmss-name "${vm_scaleset_name}" \
   --resource-group "${vm_scaleset_resource_group}" \
