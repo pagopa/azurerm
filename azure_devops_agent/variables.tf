@@ -75,9 +75,9 @@ variable "authentication_type" {
   default     = "SSH"
   validation {
     condition = (
-    var.authentication_type == "SSH" ||
-    var.authentication_type == "PASSWORD" ||
-    var.authentication_type == "ALL"
+      var.authentication_type == "SSH" ||
+      var.authentication_type == "PASSWORD" ||
+      var.authentication_type == "ALL"
     )
     error_message = "Error: authentication_type can be SSH, PASSWORD or ALL."
   }
