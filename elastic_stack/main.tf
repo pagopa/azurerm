@@ -15,6 +15,7 @@ locals {
   elastic_yaml = templatefile("${path.module}/yaml/elastic.yaml", {
     namespace      = var.namespace
     nodeset_config = var.nodeset_config
+    snapshot_secret_name = var.snapshot_secret_name
   })
 
   elastic_ingress_yaml = yamldecode(templatefile("${path.module}/yaml/ingress_elastic.yaml", {
