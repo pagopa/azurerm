@@ -13,8 +13,8 @@ locals {
   operator_yaml               = local.operator_yaml_set_namespace
 
   elastic_yaml = templatefile("${path.module}/yaml/elastic.yaml", {
-    namespace      = var.namespace
-    nodeset_config = var.nodeset_config
+    namespace            = var.namespace
+    nodeset_config       = var.nodeset_config
     snapshot_secret_name = var.snapshot_secret_name
   })
 
@@ -78,7 +78,6 @@ locals {
     apm_id       = "id_apm_1"
     apm_revision = 1
   })
-
 
 }
 
