@@ -57,3 +57,7 @@ variable "env" {
 variable "eck_license" {
   type = string
 }
+
+variable "snapshot_secret_name" {
+  type = string
+}

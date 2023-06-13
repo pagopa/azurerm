@@ -5,6 +5,8 @@ metadata:
   namespace: ${namespace}
 spec:
   version: 8.6.2
+  secureSettings:
+    - secretName: ${snapshot_secret_name} #secret for repository
   nodeSets:
   %{~ for k, v in nodeset_config ~}
   - name: ${k}
@@ -12,6 +14,9 @@ spec:
     config:
       node.roles: [${join(", ", v.roles)}]
       node.store.allow_mmap: false
+      azure.client.default.endpoint_suffix: core.windows.net
+      azure.client.default.max_retries: 7
+      azure.client.default.timeout: 10s
     podTemplate:
       spec:
         containers:
