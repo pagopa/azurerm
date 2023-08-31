@@ -5095,10 +5095,6 @@ spec:
                 items:
                   description: ElasticsearchCluster is a named reference to an Elasticsearch cluster which can be used in a Logstash pipeline.
                   properties:
-                    clusterName:
-                      description: ClusterName is an alias for the cluster to be used to refer to the Elasticsearch cluster in Logstash configuration files, and will be used to identify "named clusters" in Logstash
-                      minLength: 1
-                      type: string
                     name:
                       description: Name of an existing Kubernetes object corresponding to an Elastic resource managed by ECK.
                       type: string
