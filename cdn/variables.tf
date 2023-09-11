@@ -332,3 +332,9 @@ variable "dns_zone_name" {
 variable "dns_zone_resource_group_name" {
   type = string
 }
+
+variable "advanced_threat_protection" {
+  type        = string
+  default     = false
+  description = "Should Advanced Threat Protection be enabled on this resource?"
+}
