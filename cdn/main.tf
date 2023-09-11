@@ -24,6 +24,8 @@ module "cdn_storage_account" {
   lock_name    = format("%s-%s-sa-lock", var.prefix, var.name)
   lock_level   = "CanNotDelete"
   lock_notes   = null
+  
+  advanced_threat_protection = var.advanced_threat_protection
 
   tags = var.tags
 }
