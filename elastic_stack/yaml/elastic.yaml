@@ -30,7 +30,7 @@ spec:
           #    cpu: 2
           env:
           - name: ES_JAVA_OPTS
-            value: "-Xms2g -Xmx2g"
+            value: "-Xms1024m -Xmx2048m"
         affinity:
           #podAntiAffinity:
           #  preferredDuringSchedulingIgnoredDuringExecution:
