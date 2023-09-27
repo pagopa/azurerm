@@ -671,7 +671,7 @@ data:
         meta:
           package:
             name: apm
-            version: 8.9.1
+            version: 8.10.2
     revision: 4
     agent:
       download:
@@ -951,7 +951,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: elastic-agent
-          image: docker.elastic.co/beats/elastic-agent:8.9.1
+          image: docker.elastic.co/beats/elastic-agent:8.10.2
           args: [
             "-c", "/etc/agent.yml",
             "-e",
