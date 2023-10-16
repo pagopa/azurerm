@@ -81,3 +81,14 @@ variable "target_use_remote_gateways" {
   default     = false
 }
 
+variable "source_peering_custom_name" {
+  type = string
+  description = "Source Peering custom name, to allow to not recreate the peering"
+  default = ""
+}
+
+variable "target_peering_custom_name" {
+  type = string
+  description = "Target Peering custom name, to allow to not recreate the peering"
+  default = ""
+}
