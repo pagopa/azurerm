@@ -31,6 +31,10 @@ variable "nodeset_config" {
     roles            = list(string)
     storage          = string
     storageClassName = string
+    requestMemory    = string
+    requestCPU       = string
+    limitsMemory     = string
+    limitsCPU        = string
   }))
   default = {
     default = {
@@ -38,6 +42,10 @@ variable "nodeset_config" {
       roles            = ["master", "data", "data_content", "data_hot", "data_warm", "data_cold", "data_frozen", "ingest", "ml", "remote_cluster_client", "transform"]
       storage          = "5Gi"
       storageClassName = "standard"
+      requestMemory    = "2Gi"
+      requestCPU       = "1"
+      limitsMemory     = "2Gi"
+      limitsCPU        = "1"
     }
   }
 }
