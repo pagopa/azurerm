@@ -88,13 +88,6 @@ variable "enable_versioning" {
   description = "Enable versioning in the blob storage account."
 }
 
-# versioning
-
-variable "versioning_name" {
-  type    = string
-  default = null
-}
-
 # lock
 
 variable "lock_enabled" {
