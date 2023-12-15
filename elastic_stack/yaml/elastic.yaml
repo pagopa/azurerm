@@ -23,11 +23,11 @@ spec:
         - name: elasticsearch
           resources:
             requests:
-              memory: 4Gi
-              cpu: 1
+              memory: ${v.requestMemory}
+              cpu: ${v.requestCPU}
             limits:
-              memory: 6Gi
-              cpu: 2
+              memory: ${v.limitsMemory}
+              cpu: ${v.limitsCPU}
           #env:
           #- name: ES_JAVA_OPTS
           #  value: "-Xms1024m -Xmx1500m"
