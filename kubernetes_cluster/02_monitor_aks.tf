@@ -2,7 +2,7 @@
 # Monitor Metrics
 #
 resource "azurerm_monitor_metric_alert" "this" {
-  for_each = var.metric_alerts_custom_enabled ? var.custom_metric_alerts : []
+  for_each = var.metric_alerts_custom_enabled ? var.custom_metric_alerts : {}
 
   name                = "${azurerm_kubernetes_cluster.this.name}-${upper(each.key)}"
   resource_group_name = var.resource_group_name
@@ -44,7 +44,7 @@ resource "azurerm_monitor_metric_alert" "this" {
 }
 
 resource "azurerm_monitor_metric_alert" "defaults" {
-  for_each = var.metric_alerts_defaults_enabled ? var.default_metric_alerts : []
+  for_each = var.metric_alerts_defaults_enabled ? var.default_metric_alerts : {}
 
   name                = "${azurerm_kubernetes_cluster.this.name}-${upper(each.key)}"
   resource_group_name = var.resource_group_name
