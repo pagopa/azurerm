@@ -610,12 +610,12 @@ variable "alerts_enabled" {
 
 variable "metric_alerts_defaults_enabled" {
   type = bool
-  default = true
+  default = false
   description = "Allow to disabled default metric alerts"
 }
 
 variable "metric_alerts_custom_enabled" {
   type = bool
-  default = false
+  default = true
   description = "Allow to disabled custom metric alerts"
 }
